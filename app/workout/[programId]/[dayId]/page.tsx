@@ -21,21 +21,19 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
   const { programId, dayId } = await params;
   const headersList = await headers();
   
-  const [session, queryClient] = await Promise.all([
-    auth.api.getSession({ headers: headersList }),
-    Promise.resolve(getQueryClient())
-  ]);
-
+  const session = await auth.api.getSession({ headers: headersList });
   if (!session?.user) redirect("/login");
   const userId = session.user.id;
 
-  // === PARALLEL BLOCK 1: start workout (write) ===
-  console.time("startWorkout");
+  // Create query client after auth check (lighter weight)
+  const queryClient = getQueryClient();
+
+  // Phase 1: Start workout (required - creates workout log)
   const workoutId = await runEffect(
     pipe(
       Effect.gen(function* () {
         const workoutsService = yield* WorkoutsService;
-        const userService     = yield* UserService;
+        const userService = yield* UserService;
         const prefs = yield* userService.getPreferences(userId);
         return yield* workoutsService.startWorkout({
           userId,
@@ -50,11 +48,10 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
       })
     )
   );
-  console.timeEnd("startWorkout");
+  
   if (!workoutId) redirect("/");
 
-  // === PARALLEL BLOCK 2: hydrate session + lastLifts together ===
-  console.time("hydrate");
+  // Phase 2: Fetch session data (must wait for workoutId)
   const sessionData = await runEffect(
     pipe(
       Effect.gen(function* () {
@@ -68,9 +65,12 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
     )
   );
 
-  // lastLifts only after we have exercises
-  const lastLiftsData = sessionData?.exercises?.length
-    ? await runEffect(
+  if (!sessionData) redirect("/");
+
+  // Phase 3: Fetch last lifts in parallel (non-blocking for initial render)
+  // Start fetching but don't await - let client handle it if needed
+  const lastLiftsPromise = sessionData.exercises.length > 0
+    ? runEffect(
         pipe(
           Effect.gen(function* () {
             const workoutsService = yield* WorkoutsService;
@@ -79,22 +79,26 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
           }),
           Effect.catchAll((e) => {
             console.error("getLastLifts failed", e);
-            return Effect.succeed([]);
+            return Effect.succeed(new Map());
           })
         )
       )
-    : [];
-  console.timeEnd("hydrate");
+    : Promise.resolve(new Map());
 
-  // === Seed React Query cache ===
-  if (sessionData) {
-    queryClient.setQueryData(workoutQueryKeys.session(workoutId), sessionData, { updatedAt: Date.now() });
-    if (lastLiftsData.length) {
-      const lastLiftsObject = Object.fromEntries(lastLiftsData);
-      const exerciseIds = sessionData.exercises.map(e => e.id);
-      queryClient.setQueryData(workoutQueryKeys.lastLifts(exerciseIds), lastLiftsObject, { updatedAt: Date.now() });
-    }
-  }
+  // Seed React Query cache with critical data (session)
+  queryClient.setQueryData(
+    workoutQueryKeys.session(workoutId), 
+    sessionData, 
+    { updatedAt: Date.now() }
+  );
+
+  // Prefetch last lifts (non-blocking)
+  const exerciseIds = sessionData.exercises.map(e => e.id);
+  queryClient.prefetchQuery({
+    queryKey: workoutQueryKeys.lastLifts(exerciseIds),
+    queryFn: () => lastLiftsPromise.then(data => Object.fromEntries(data)),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   const dehydratedState = dehydrate(queryClient);
   return (
