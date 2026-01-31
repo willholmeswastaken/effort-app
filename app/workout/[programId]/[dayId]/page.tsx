@@ -96,8 +96,11 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
     }
   }
 
+  // IMPORTANT: dehydrate the client after we seeded it
+  const dehydratedState = dehydrate(queryClient);
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydratedState}>
       <WorkoutSessionClient workoutId={workoutId} />
     </HydrationBoundary>
   );
