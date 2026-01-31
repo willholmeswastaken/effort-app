@@ -84,7 +84,14 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
         })
       );
       
-      const lastLiftsObject = Object.fromEntries(lastLiftsData);
+      const lastLiftsObject: Record<string, Array<{ date: string; sets: Array<{ setNumber: number; reps: number; weight: number }> }>> = {};
+      for (const [exerciseId, entries] of lastLiftsData.entries()) {
+        lastLiftsObject[exerciseId] = entries.map(entry => ({
+          date: entry.date.toISOString(),
+          sets: entry.sets,
+        }));
+      }
+      
       queryClient.setQueryData(workoutKeys.lastLifts(exerciseIds), lastLiftsObject, {
         updatedAt: Date.now(),
       });
