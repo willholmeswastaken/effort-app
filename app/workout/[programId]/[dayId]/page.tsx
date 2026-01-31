@@ -4,7 +4,7 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { auth } from "@/lib/auth";
 import { runEffect, WorkoutsService, UserService } from "@/lib/services";
 import { getQueryClient } from "@/lib/get-query-client";
-import { getWorkoutSessionQueryOptions } from "@/lib/queries/workout-session";
+import { getWorkoutSessionQueryOptions, workoutQueryKeys } from "@/lib/queries/workout-session";
 import { headers } from "next/headers";
 import WorkoutSessionClient from "./client";
 
