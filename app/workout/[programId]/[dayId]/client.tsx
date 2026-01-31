@@ -75,23 +75,43 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
   }, [querySetsList]);
 
   const exercisesWithSets = useMemo(() => 
-    exercises.map((ex, index) => ({
-      current: ex,
-      sets: Array.from({ length: ex.targetSets || 3 }).map((_, i) => {
-        const key = `${ex.id}-${i + 1}`;
-        // Prioritize local state
-        const saved = localSets.get(key);
-        if (saved) {
-             return { reps: saved.reps, weight: saved.weight, completed: true };
+    exercises.map((ex, index) => {
+      // Calculate how many sets to show
+      let maxSetNumber = ex.targetSets || 3;
+      
+      // Check local state for added sets
+      for (const key of localSets.keys()) {
+        if (key.startsWith(`${ex.id}-`)) {
+          const setNum = parseInt(key.split('-').pop() || "0", 10);
+          if (setNum > maxSetNumber) maxSetNumber = setNum;
         }
-        
-        // Fallback to server data (though useEffect should cover this)
-        const serverSet = querySetsList.find(s => s.exerciseId === ex.id && s.setNumber === i + 1);
-        return serverSet
-          ? { reps: serverSet.reps, weight: Number(serverSet.weight), completed: true }
-          : { reps: 0, weight: 0, completed: false };
-      }),
-    }))
+      }
+
+      // Check server state
+      const serverSets = querySetsList.filter(s => s.exerciseId === ex.id);
+      if (serverSets.length > 0) {
+         const maxServerSet = Math.max(...serverSets.map(s => s.setNumber));
+         if (maxServerSet > maxSetNumber) maxSetNumber = maxServerSet;
+      }
+
+      return {
+        current: ex,
+        sets: Array.from({ length: maxSetNumber }).map((_, i) => {
+          const key = `${ex.id}-${i + 1}`;
+          // Prioritize local state
+          const saved = localSets.get(key);
+          if (saved) {
+               return { reps: saved.reps, weight: saved.weight, completed: true };
+          }
+          
+          // Fallback to server data (though useEffect should cover this)
+          const serverSet = querySetsList.find(s => s.exerciseId === ex.id && s.setNumber === i + 1);
+          return serverSet
+            ? { reps: serverSet.reps, weight: Number(serverSet.weight), completed: true }
+            : { reps: 0, weight: 0, completed: false };
+        }),
+      };
+    })
   , [exercises, localSets, querySetsList]);
 
   const exerciseIds = useMemo(() => exercises.map(e => e.id), [exercises]);
