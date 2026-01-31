@@ -18,6 +18,7 @@ import {
   useSwapExercise, 
   useWorkoutSession,
   workoutKeys,
+  homeKeys,
   type MuscleGroupExercise 
 } from "@/lib/queries";
 import {
@@ -221,6 +222,8 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
       rating,
     }, {
       onSuccess: () => {
+        // Invalidate home page query so it shows the completed workout
+        queryClient.invalidateQueries({ queryKey: homeKeys.all });
         router.push("/");
       },
     });
