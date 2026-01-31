@@ -173,6 +173,7 @@ export interface WorkoutSessionData {
 
 export interface WorkoutsServiceInterface {
   readonly startWorkout: (input: StartWorkoutInput) => Effect.Effect<string, Error>;
+  readonly startWorkoutAndGetSession: (input: StartWorkoutInput) => Effect.Effect<{ workoutId: string; session: WorkoutSessionData }, Error>;
   readonly upsertSet: (input: UpsertSetInput & { userId: string }) => Effect.Effect<void, Error>;
   readonly pauseWorkout: (workoutLogId: string, userId: string) => Effect.Effect<void, Error>;
   readonly resumeWorkout: (workoutLogId: string, userId: string) => Effect.Effect<void, Error>;
@@ -931,8 +932,156 @@ export const WorkoutsServiceLive = Layer.effect(
         catch: (e) => new Error(`Failed to fetch workout session: ${e}`),
       });
 
+    const startWorkoutAndGetSession = (input: StartWorkoutInput): Effect.Effect<{ workoutId: string; session: WorkoutSessionData }, Error> =>
+      Effect.tryPromise({
+        try: async () => {
+          // Step 1: Find existing or create new workout log
+          const whereConditions = [
+            eq(schema.workoutLogs.userId, input.userId),
+            eq(schema.workoutLogs.programId, input.programId),
+            eq(schema.workoutLogs.dayId, input.dayId),
+          ];
+          
+          if (input.programInstanceId) {
+            whereConditions.push(eq(schema.workoutLogs.programInstanceId, input.programInstanceId));
+          }
+
+          const existing = await db.query.workoutLogs.findFirst({
+            where: and(...whereConditions),
+            orderBy: (logs, { desc }) => [desc(logs.startedAt)],
+            columns: { id: true },
+          });
+
+          let workoutId: string;
+          
+          if (existing) {
+            workoutId = existing.id;
+          } else {
+            const [log] = await db
+              .insert(schema.workoutLogs)
+              .values({
+                userId: input.userId,
+                programId: input.programId,
+                programInstanceId: input.programInstanceId ?? null,
+                dayId: input.dayId,
+                startedAt: new Date(),
+              })
+              .returning();
+            workoutId = log.id;
+          }
+
+          // Step 2: Immediately fetch the full session data in the same round-trip
+          const session = await db.query.workoutLogs.findFirst({
+            where: eq(schema.workoutLogs.id, workoutId),
+            with: {
+              day: {
+                with: {
+                  week: {
+                    with: {
+                      program: true,
+                    },
+                  },
+                  dayExercises: {
+                    orderBy: (de, { asc }) => [asc(de.exerciseOrder)],
+                    with: {
+                      exercise: true,
+                    },
+                  },
+                },
+              },
+              exerciseLogs: {
+                with: {
+                  exercise: true,
+                  setLogs: {
+                    orderBy: (sets, { asc }) => [asc(sets.setNumber)],
+                  },
+                },
+              },
+            },
+          });
+
+          if (!session || !session.day) {
+            throw new Error("Failed to fetch workout session after creation");
+          }
+
+          const day = session.day;
+          const programName = day.week.program.name;
+          const dayExercises = day.dayExercises;
+          const exerciseLogs = session.exerciseLogs;
+
+          let exercises: WorkoutSessionExercise[] = dayExercises.map((de) => ({
+            id: de.exercise.id,
+            name: de.exercise.name,
+            targetSets: de.exercise.targetSets ?? 3,
+            targetReps: de.exercise.targetReps ?? "8-12",
+            restSeconds: de.exercise.restSeconds ?? 90,
+            videoUrl: de.exercise.videoUrl,
+            thumbnailUrl: de.exercise.thumbnailUrl,
+          }));
+
+          if (exerciseLogs.length > 0) {
+            const orderToExerciseMap = new Map<number, WorkoutSessionExercise>();
+
+            for (const exLog of exerciseLogs) {
+              const exerciseOrder = exLog.exerciseOrder;
+              if (exerciseOrder >= 0) {
+                orderToExerciseMap.set(exerciseOrder, {
+                  id: exLog.exerciseId,
+                  name: exLog.exerciseName,
+                  targetSets: exLog.exercise.targetSets ?? 3,
+                  targetReps: exLog.exercise.targetReps ?? "8-12",
+                  restSeconds: exLog.exercise.restSeconds ?? 90,
+                  videoUrl: exLog.exercise.videoUrl,
+                  thumbnailUrl: exLog.exercise.thumbnailUrl,
+                });
+              }
+            }
+
+            exercises = exercises.map((originalExercise, index) => {
+              const swappedExercise = orderToExerciseMap.get(index);
+              if (swappedExercise && swappedExercise.id !== originalExercise.id) {
+                return swappedExercise;
+              }
+              return originalExercise;
+            });
+          }
+
+          const sets = exerciseLogs.flatMap((exLog) =>
+            exLog.setLogs.map((sLog) => ({
+              exerciseId: exLog.exerciseId,
+              setNumber: sLog.setNumber,
+              reps: sLog.reps,
+              weight: sLog.weight.toString(),
+            }))
+          );
+
+          const sessionData: WorkoutSessionData = {
+            workout: {
+              id: session.id,
+              programId: session.programId,
+              dayId: session.dayId,
+              dayTitle: day.title,
+              programName,
+              startedAt: session.startedAt.toISOString(),
+              completedAt: session.completedAt?.toISOString() ?? null,
+              status: session.status,
+              lastPausedAt: session.lastPausedAt?.toISOString() ?? null,
+              accumulatedPauseSeconds: session.accumulatedPauseSeconds,
+              durationSeconds: session.durationSeconds,
+              rating: session.rating,
+            },
+            exercises,
+            sets,
+          };
+
+          return { workoutId, session: sessionData };
+        },
+        catch: (e) => new Error(`Failed to start workout and get session: ${e}`),
+      });
+
     return {
       startWorkout,
+      startWorkoutAndGetSession,
       upsertSet,
       pauseWorkout,
       resumeWorkout,

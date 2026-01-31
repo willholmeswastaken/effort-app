@@ -25,50 +25,43 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
   if (!session?.user) redirect("/login");
   const userId = session.user.id;
 
-  // Create query client after auth check (lighter weight)
+  // Create query client after auth check
   const queryClient = getQueryClient();
 
-  // Phase 1: Start workout (required - creates workout log)
-  const workoutId = await runEffect(
+  // Single combined operation: get preferences + start workout + get session
+  // This reduces 3 round-trips to 2 round-trips
+  const result = await runEffect(
     pipe(
       Effect.gen(function* () {
         const workoutsService = yield* WorkoutsService;
         const userService = yield* UserService;
+        
+        // Fetch preferences (required for startWorkout)
         const prefs = yield* userService.getPreferences(userId);
-        return yield* workoutsService.startWorkout({
+        
+        // Combined: start workout AND get session data in one go
+        // This eliminates one network round-trip vs calling startWorkout then getWorkoutSession
+        const { workoutId, session: sessionData } = yield* workoutsService.startWorkoutAndGetSession({
           userId,
           programId,
           dayId,
           programInstanceId: prefs.activeProgramInstanceId,
         });
+        
+        return { workoutId, sessionData };
       }),
       Effect.catchAll((e) => {
-        console.error("startWorkout failed", e);
+        console.error("Failed to start workout:", e);
         return Effect.succeed(null);
       })
     )
   );
   
-  if (!workoutId) redirect("/");
+  if (!result) redirect("/");
+  
+  const { workoutId, sessionData } = result;
 
-  // Phase 2: Fetch session data (must wait for workoutId)
-  const sessionData = await runEffect(
-    pipe(
-      Effect.gen(function* () {
-        const workoutsService = yield* WorkoutsService;
-        return yield* workoutsService.getWorkoutSession(workoutId);
-      }),
-      Effect.catchAll((e) => {
-        console.error("getWorkoutSession failed", e);
-        return Effect.succeed(null);
-      })
-    )
-  );
-
-  if (!sessionData) redirect("/");
-
-  // Phase 3: Fetch last lifts in parallel (non-blocking for initial render)
-  // Start fetching but don't await - let client handle it if needed
+  // Prefetch last lifts in parallel (non-blocking for initial render)
   const lastLiftsPromise = sessionData.exercises.length > 0
     ? runEffect(
         pipe(
