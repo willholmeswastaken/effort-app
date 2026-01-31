@@ -25,8 +25,10 @@ export default async function HomePage() {
     redirect(homeData.to);
   }
 
-  // Set the data directly in the query client cache
-  queryClient.setQueryData(homeKeys.data(), homeData);
+  // Set the data directly in the query client cache with a long staleTime
+  queryClient.setQueryData(homeKeys.data(), homeData, {
+    updatedAt: Date.now(),
+  });
 
 
   return (
