@@ -5,7 +5,6 @@ import { auth } from "@/lib/auth";
 import { runEffect, WorkoutsService, UserService } from "@/lib/services";
 import { getQueryClient } from "@/lib/get-query-client";
 import { workoutQueryKeys } from "@/lib/queries/workout-session";
-import { workoutKeys } from "@/lib/queries";
 import { headers } from "next/headers";
 import WorkoutSessionClient from "./client";
 
@@ -91,7 +90,7 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
       );
       
       const lastLiftsObject = Object.fromEntries(lastLiftsData);
-      queryClient.setQueryData(workoutKeys.lastLifts(exerciseIds), lastLiftsObject, {
+      queryClient.setQueryData(workoutQueryKeys.lastLifts(exerciseIds), lastLiftsObject, {
         updatedAt: Date.now(),
       });
     }
