@@ -294,7 +294,7 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
     <div className="min-h-screen bg-black text-white overflow-x-hidden selection:bg-[#0078FF]/30" style={{ overscrollBehaviorX: 'none' }}>
       <header className="sticky top-0 z-50 bg-black border-b border-white/5">
         <div className="flex items-center justify-between h-14 px-4">
-          <Link href='/' className="p-2 -ml-2">
+          <Link href='/' prefetch={true} className="p-2 -ml-2">
             <X className="w-5 h-5 text-[#8E8E93]" />
           </Link>
           
