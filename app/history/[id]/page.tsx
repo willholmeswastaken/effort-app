@@ -77,7 +77,7 @@ export default async function HistoryDetailPage({ params }: HistoryDetailPagePro
       </header>
 
       <div className="px-4 py-6 border-b border-white/5">
-        <h2 className="text-[22px] font-semibold mb-1">{workout.day.title}</h2>
+        <h2 className="text-[22px] font-semibold mb-1">{workout.dayTitle}</h2>
         <p className="text-[15px] text-[#8E8E93]">{formatDate(workout.startedAt)}</p>
         
         <div className="flex gap-6 mt-4">
@@ -87,7 +87,7 @@ export default async function HistoryDetailPage({ params }: HistoryDetailPagePro
           </div>
           <div>
             <p className="text-[13px] text-[#8E8E93]">Exercises</p>
-            <p className="text-[17px] font-medium">{workout.exerciseLogs.length}</p>
+            <p className="text-[17px] font-medium">{workout.exercises.length}</p>
           </div>
           {workout.rating && workout.rating > 0 && (
             <div>
@@ -99,9 +99,9 @@ export default async function HistoryDetailPage({ params }: HistoryDetailPagePro
       </div>
 
       <div className="px-4 py-6">
-        {workout.exerciseLogs.map((ex) => (
+        {workout.exercises.map((ex) => (
           <div key={ex.id} className="mb-6">
-            <h3 className="text-[17px] font-semibold mb-3">{ex.exerciseName}</h3>
+            <h3 className="text-[17px] font-semibold mb-3">{ex.name}</h3>
             
             <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden">
               <div className="grid grid-cols-3 px-4 py-2.5 border-b border-white/5">
@@ -110,7 +110,7 @@ export default async function HistoryDetailPage({ params }: HistoryDetailPagePro
                 <span className="text-[13px] text-[#8E8E93] text-center">Reps</span>
               </div>
               
-              {ex.setLogs.map((set, si) => (
+              {ex.sets.map((set, si) => (
                 <div 
                   key={si} 
                   className={`grid grid-cols-3 items-center px-4 py-2.5 ${si > 0 ? 'border-t border-white/5' : ''}`}
@@ -124,7 +124,7 @@ export default async function HistoryDetailPage({ params }: HistoryDetailPagePro
           </div>
         ))}
         
-        {workout.exerciseLogs.length === 0 && (
+        {workout.exercises.length === 0 && (
           <div className="text-center py-10 text-[#8E8E93]">
             No exercises recorded
           </div>

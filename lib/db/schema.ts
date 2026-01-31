@@ -244,6 +244,10 @@ export const workoutLogs = pgTable(
     durationSeconds: integer("duration_seconds"),
     rating: integer("rating"),
     createdAt: timestamp("created_at").defaultNow(),
+    // Denormalized fields for fast session loading
+    programName: text("program_name"),
+    dayTitle: text("day_title"),
+    dayExercisesSnapshot: text("day_exercises_snapshot"), // JSON string of exercises array
   },
   (table) => [
     index("idx_workout_logs_user").on(table.userId),
@@ -277,6 +281,14 @@ export const exerciseLogs = pgTable(
       .references(() => exercises.id),
     exerciseName: text("exercise_name").notNull(),
     exerciseOrder: integer("exercise_order").notNull().default(0),
+    // Denormalized exercise fields for fast loading
+    targetSets: integer("target_sets").default(3),
+    targetReps: text("target_reps").default("8-12"),
+    restSeconds: integer("rest_seconds").default(90),
+    videoUrl: text("video_url"),
+    thumbnailUrl: text("thumbnail_url"),
+    // Denormalized set logs as JSON (eliminates set_logs table join)
+    setsSnapshot: text("sets_snapshot"), // JSON string of sets array
   },
   (table) => [
     index("idx_exercise_logs_workout").on(table.workoutLogId),

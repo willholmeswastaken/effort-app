@@ -18,35 +18,46 @@ interface WorkoutPageProps {
 }
 
 export default async function WorkoutPage({ params }: WorkoutPageProps) {
+  const startTime = performance.now();
   const { programId, dayId } = await params;
   const headersList = await headers();
   
+  // Timing: Auth
+  const authStart = performance.now();
   const session = await auth.api.getSession({ headers: headersList });
+  const authEnd = performance.now();
+  console.log(`[WorkoutPage] Auth: ${(authEnd - authStart).toFixed(2)}ms`);
+  
   if (!session?.user) redirect("/login");
   const userId = session.user.id;
 
   // Create query client after auth check
   const queryClient = getQueryClient();
 
-  // Single combined operation: get preferences + start workout + get session
-  // This reduces 3 round-trips to 2 round-trips
+  // Timing: Start workout + get session (combined)
+  const dbStart = performance.now();
   const result = await runEffect(
     pipe(
       Effect.gen(function* () {
         const workoutsService = yield* WorkoutsService;
         const userService = yield* UserService;
         
-        // Fetch preferences (required for startWorkout)
+        // Timing: Get preferences
+        const prefsStart = performance.now();
         const prefs = yield* userService.getPreferences(userId);
+        const prefsEnd = performance.now();
+        console.log(`[WorkoutPage] GetPreferences: ${(prefsEnd - prefsStart).toFixed(2)}ms`);
         
-        // Combined: start workout AND get session data in one go
-        // This eliminates one network round-trip vs calling startWorkout then getWorkoutSession
+        // Timing: Start workout and get session (combined operation)
+        const sessionStart = performance.now();
         const { workoutId, session: sessionData } = yield* workoutsService.startWorkoutAndGetSession({
           userId,
           programId,
           dayId,
           programInstanceId: prefs.activeProgramInstanceId,
         });
+        const sessionEnd = performance.now();
+        console.log(`[WorkoutPage] StartWorkoutAndGetSession: ${(sessionEnd - sessionStart).toFixed(2)}ms`);
         
         return { workoutId, sessionData };
       }),
@@ -56,12 +67,15 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
       })
     )
   );
+  const dbEnd = performance.now();
+  console.log(`[WorkoutPage] Total DB operations: ${(dbEnd - dbStart).toFixed(2)}ms`);
   
   if (!result) redirect("/");
   
   const { workoutId, sessionData } = result;
 
-  // Prefetch last lifts in parallel (non-blocking for initial render)
+  // Timing: Last lifts prefetch (non-blocking, logged for observability)
+  const lastLiftsStart = performance.now();
   const lastLiftsPromise = sessionData.exercises.length > 0
     ? runEffect(
         pipe(
@@ -75,7 +89,11 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
             return Effect.succeed(new Map());
           })
         )
-      )
+      ).then(result => {
+        const lastLiftsEnd = performance.now();
+        console.log(`[WorkoutPage] GetLastLifts (async): ${(lastLiftsEnd - lastLiftsStart).toFixed(2)}ms`);
+        return result;
+      })
     : Promise.resolve(new Map());
 
   // Seed React Query cache with critical data (session)
@@ -92,6 +110,9 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
     queryFn: () => lastLiftsPromise.then(data => Object.fromEntries(data)),
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
+
+  const endTime = performance.now();
+  console.log(`[WorkoutPage] Total server render: ${(endTime - startTime).toFixed(2)}ms`);
 
   const dehydratedState = dehydrate(queryClient);
   return (

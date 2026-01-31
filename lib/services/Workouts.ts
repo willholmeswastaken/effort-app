@@ -48,35 +48,45 @@ export interface WorkoutHistoryEntry {
 
 export interface ExerciseHistoryEntry {
   workoutDate: Date;
-  sets: Array<{
-    setNumber: number;
-    reps: number;
-    weight: string;
-  }>;
+  sets: { setNumber: number; reps: number; weight: string }[];
+}
+
+export interface WorkoutDetail {
+  id: string;
+  programId: string;
+  dayId: string;
+  dayTitle: string;
+  startedAt: Date;
+  completedAt: Date | null;
+  durationSeconds: number | null;
+  rating: number | null;
+  status: string | null;
+  lastPausedAt: Date | null;
+  accumulatedPauseSeconds: number | null;
+  exercises: {
+    id: string;
+    name: string;
+    exerciseOrder: number;
+    targetSets: number;
+    targetReps: string;
+    restSeconds: number;
+    videoUrl: string | null;
+    thumbnailUrl: string | null;
+    sets: { setNumber: number; reps: number; weight: string }[];
+  }[];
 }
 
 export interface LastLiftEntry {
   date: Date;
-  sets: Array<{ setNumber: number; reps: number; weight: number }>;
+  sets: { setNumber: number; reps: number; weight: number }[];
 }
 
-
 export interface InProgressWorkout {
-  id: string;
+  workoutLogId: string;
+  programId: string;
+  dayId: string;
   startedAt: Date;
-  sets: Array<{
-    exerciseId: string;
-    setNumber: number;
-    reps: number;
-    weight: string;
-  }>;
-  status: "active" | "paused";
-  lastPausedAt: Date | null;
-  accumulatedPauseSeconds: number;
-  isCompleted: boolean;
-  completedAt: Date | null;
-  durationSeconds: number | null;
-  rating: number | null;
+  lastSetAt: Date | null;
 }
 
 export interface CompletedWorkout {
@@ -85,7 +95,7 @@ export interface CompletedWorkout {
   completedAt: Date;
   durationSeconds: number;
   rating: number | null;
-  exercises: Array<{
+  exercises: {
     id: string;
     name: string;
     targetSets: number;
@@ -93,46 +103,15 @@ export interface CompletedWorkout {
     restSeconds: number;
     videoUrl: string | null;
     thumbnailUrl: string | null;
-    setLogs: Array<{
-      setNumber: number;
-      reps: number;
-      weight: string;
-    }>;
-  }>;
+    setLogs: { setNumber: number; reps: number; weight: string }[];
+  }[];
 }
 
-export interface WorkoutDetail {
-  id: string;
-  programId: string;
-  dayId: string;
-  userId: string;
-  startedAt: Date;
-  completedAt: Date | null;
-  status: "active" | "paused" | "completed";
-  lastPausedAt: Date | null;
-  accumulatedPauseSeconds: number;
-  durationSeconds: number | null;
-  rating: number | null;
-  day: {
-    id: string;
-    title: string;
-  };
-  exerciseLogs: Array<{
-    id: string;
-    exerciseId: string;
-    exerciseName: string;
-    exerciseOrder: number;
-    targetSets: number;
-    targetReps: string;
-    restSeconds: number;
-    videoUrl: string | null;
-    thumbnailUrl: string | null;
-    setLogs: Array<{
-      setNumber: number;
-      reps: number;
-      weight: string;
-    }>;
-  }>;
+export interface WorkoutSessionSet {
+  exerciseId: string;
+  setNumber: number;
+  reps: number;
+  weight: string;
 }
 
 export interface WorkoutSessionExercise {
@@ -145,28 +124,23 @@ export interface WorkoutSessionExercise {
   thumbnailUrl: string | null;
 }
 
-export interface WorkoutSessionSet {
-  exerciseId: string;
-  setNumber: number;
-  reps: number;
-  weight: string;
+export interface WorkoutSessionWorkout {
+  id: string;
+  programId: string;
+  dayId: string;
+  dayTitle: string;
+  programName: string;
+  startedAt: string;
+  completedAt: string | null;
+  status: string;
+  lastPausedAt: string | null;
+  accumulatedPauseSeconds: number | null;
+  durationSeconds: number | null;
+  rating: number | null;
 }
 
 export interface WorkoutSessionData {
-  workout: {
-    id: string;
-    programId: string;
-    dayId: string;
-    dayTitle: string;
-    programName: string;
-    startedAt: string;
-    completedAt: string | null;
-    status: "active" | "paused" | "completed";
-    lastPausedAt: string | null;
-    accumulatedPauseSeconds: number;
-    durationSeconds: number | null;
-    rating: number | null;
-  };
+  workout: WorkoutSessionWorkout;
   exercises: WorkoutSessionExercise[];
   sets: WorkoutSessionSet[];
 }
@@ -284,6 +258,11 @@ export const WorkoutsServiceLive = Layer.effect(
           });
 
           if (!exerciseLog) {
+            // Get exercise details for denormalization
+            const exercise = await db.query.exercises.findFirst({
+              where: eq(schema.exercises.id, input.exerciseId),
+            });
+            
             const [newLog] = await db
               .insert(schema.exerciseLogs)
               .values({
@@ -291,11 +270,18 @@ export const WorkoutsServiceLive = Layer.effect(
                 exerciseId: input.exerciseId,
                 exerciseName: input.exerciseName,
                 exerciseOrder: input.exerciseOrder,
+                // Denormalized exercise fields
+                targetSets: exercise?.targetSets ?? 3,
+                targetReps: exercise?.targetReps ?? "8-12",
+                restSeconds: exercise?.restSeconds ?? 90,
+                videoUrl: exercise?.videoUrl ?? null,
+                thumbnailUrl: exercise?.thumbnailUrl ?? null,
               })
               .returning();
             exerciseLog = newLog;
           }
 
+          // Insert/update the set log
           await db
             .insert(schema.setLogs)
             .values({
@@ -312,6 +298,28 @@ export const WorkoutsServiceLive = Layer.effect(
                 updatedAt: new Date(),
               },
             });
+
+          // Update denormalized setsSnapshot
+          const allSets = await db
+            .select({
+              setNumber: schema.setLogs.setNumber,
+              reps: schema.setLogs.reps,
+              weight: schema.setLogs.weight,
+            })
+            .from(schema.setLogs)
+            .where(eq(schema.setLogs.exerciseLogId, exerciseLog.id))
+            .orderBy(schema.setLogs.setNumber);
+
+          await db
+            .update(schema.exerciseLogs)
+            .set({
+              setsSnapshot: JSON.stringify(allSets.map(s => ({
+                setNumber: s.setNumber,
+                reps: s.reps,
+                weight: s.weight.toString(),
+              }))),
+            })
+            .where(eq(schema.exerciseLogs.id, exerciseLog.id));
         },
         catch: (e) => new Error(`Failed to upsert set: ${e}`),
       });
@@ -375,60 +383,46 @@ export const WorkoutsServiceLive = Layer.effect(
     const resetWorkout = (workoutLogId: string, userId: string): Effect.Effect<{ programId: string; dayId: string }, Error> =>
       Effect.tryPromise({
         try: async () => {
-          const [updatedLog] = await db
-            .update(schema.workoutLogs)
-            .set({
-              startedAt: new Date(),
-              status: "active",
-              lastPausedAt: null,
-              accumulatedPauseSeconds: 0,
-              completedAt: null,
-            })
-            .where(and(
+          const workout = await db.query.workoutLogs.findFirst({
+            where: and(
               eq(schema.workoutLogs.id, workoutLogId),
               eq(schema.workoutLogs.userId, userId)
-            ))
-            .returning({
-              programId: schema.workoutLogs.programId,
-              dayId: schema.workoutLogs.dayId,
-            });
+            ),
+            columns: { programId: true, dayId: true },
+          });
 
-          if (!updatedLog) {
+          if (!workout) {
             throw new Error("Workout not found or unauthorized");
           }
 
-          const exerciseLogs = await db.query.exerciseLogs.findMany({
-            where: eq(schema.exerciseLogs.workoutLogId, workoutLogId),
-            columns: { id: true },
-          });
+          // Delete all exercise logs (cascade deletes set_logs)
+          await db
+            .delete(schema.exerciseLogs)
+            .where(eq(schema.exerciseLogs.workoutLogId, workoutLogId));
 
-          if (exerciseLogs.length > 0) {
-            const exerciseLogIds = exerciseLogs.map((log) => log.id);
-            await db.delete(schema.setLogs).where(inArray(schema.setLogs.exerciseLogId, exerciseLogIds));
-            await db.delete(schema.exerciseLogs).where(inArray(schema.exerciseLogs.id, exerciseLogIds));
-          }
+          // Reset workout log
+          await db
+            .update(schema.workoutLogs)
+            .set({
+              startedAt: new Date(),
+              completedAt: null,
+              durationSeconds: null,
+              rating: null,
+              status: "active",
+              lastPausedAt: null,
+              accumulatedPauseSeconds: 0,
+              dayExercisesSnapshot: null, // Clear denormalized snapshot
+            })
+            .where(eq(schema.workoutLogs.id, workoutLogId));
 
-          return updatedLog;
+          return { programId: workout.programId, dayId: workout.dayId };
         },
         catch: (e) => new Error(`Failed to reset workout: ${e}`),
       });
 
     const deleteWorkout = (workoutLogId: string, userId: string): Effect.Effect<void, Error> =>
       Effect.tryPromise({
-
         try: async () => {
-          const exerciseLogs = await db.query.exerciseLogs.findMany({
-            where: eq(schema.exerciseLogs.workoutLogId, workoutLogId),
-            columns: { id: true },
-          });
-
-          if (exerciseLogs.length > 0) {
-            const exerciseLogIds = exerciseLogs.map((log) => log.id);
-            await db.delete(schema.setLogs).where(inArray(schema.setLogs.exerciseLogId, exerciseLogIds));
-            await db.delete(schema.exerciseLogs).where(inArray(schema.exerciseLogs.id, exerciseLogIds));
-          }
-
-
           const result = await db
             .delete(schema.workoutLogs)
             .where(and(
@@ -436,7 +430,7 @@ export const WorkoutsServiceLive = Layer.effect(
               eq(schema.workoutLogs.userId, userId)
             ))
             .returning({ id: schema.workoutLogs.id });
-          
+
           if (result.length === 0) {
             throw new Error("Workout not found or unauthorized");
           }
@@ -451,16 +445,16 @@ export const WorkoutsServiceLive = Layer.effect(
             .update(schema.workoutLogs)
             .set({
               completedAt: new Date(),
-              status: "completed",
               durationSeconds: input.durationSeconds,
               rating: input.rating,
+              status: "completed",
             })
             .where(and(
               eq(schema.workoutLogs.id, input.workoutLogId),
               eq(schema.workoutLogs.userId, input.userId)
             ))
             .returning({ id: schema.workoutLogs.id });
-          
+
           if (result.length === 0) {
             throw new Error("Workout not found or unauthorized");
           }
@@ -471,35 +465,66 @@ export const WorkoutsServiceLive = Layer.effect(
     const swapExercise = (input: SwapExerciseInput): Effect.Effect<void, Error> =>
       Effect.tryPromise({
         try: async () => {
-          await db.delete(schema.exerciseLogs)
-            .where(and(
+          // First, find the existing exercise log at this order position
+          const existingLog = await db.query.exerciseLogs.findFirst({
+            where: and(
               eq(schema.exerciseLogs.workoutLogId, input.workoutLogId),
               eq(schema.exerciseLogs.exerciseOrder, input.exerciseOrder)
-            ));
-
-          await db.insert(schema.exerciseLogs).values({
-            workoutLogId: input.workoutLogId,
-            exerciseId: input.newExerciseId,
-            exerciseName: input.newExerciseName,
-            exerciseOrder: input.exerciseOrder,
+            ),
           });
+
+          // Get the new exercise details for denormalization
+          const newExercise = await db.query.exercises.findFirst({
+            where: eq(schema.exercises.id, input.newExerciseId),
+          });
+
+          if (existingLog) {
+            // Update existing exercise log with new exercise
+            await db
+              .update(schema.exerciseLogs)
+              .set({
+                exerciseId: input.newExerciseId,
+                exerciseName: input.newExerciseName,
+                // Update denormalized fields
+                targetSets: newExercise?.targetSets ?? 3,
+                targetReps: newExercise?.targetReps ?? "8-12",
+                restSeconds: newExercise?.restSeconds ?? 90,
+                videoUrl: newExercise?.videoUrl ?? null,
+                thumbnailUrl: newExercise?.thumbnailUrl ?? null,
+              })
+              .where(eq(schema.exerciseLogs.id, existingLog.id));
+          } else {
+            // Insert new exercise log
+            await db.insert(schema.exerciseLogs).values({
+              workoutLogId: input.workoutLogId,
+              exerciseId: input.newExerciseId,
+              exerciseName: input.newExerciseName,
+              exerciseOrder: input.exerciseOrder,
+              // Denormalized exercise fields
+              targetSets: newExercise?.targetSets ?? 3,
+              targetReps: newExercise?.targetReps ?? "8-12",
+              restSeconds: newExercise?.restSeconds ?? 90,
+              videoUrl: newExercise?.videoUrl ?? null,
+              thumbnailUrl: newExercise?.thumbnailUrl ?? null,
+            });
+          }
         },
         catch: (e) => new Error(`Failed to swap exercise: ${e}`),
       });
 
-    const getHistory = (
-      userId: string,
-      limit: number = 50
-    ): Effect.Effect<WorkoutHistoryEntry[], Error> =>
+    const getHistory = (userId: string, limit: number = 20): Effect.Effect<WorkoutHistoryEntry[], Error> =>
       Effect.tryPromise({
         try: async () => {
           const logs = await db.query.workoutLogs.findMany({
-            where: eq(schema.workoutLogs.userId, userId),
-            orderBy: [desc(schema.workoutLogs.startedAt)],
+            where: and(
+              eq(schema.workoutLogs.userId, userId),
+              isNotNull(schema.workoutLogs.completedAt)
+            ),
+            orderBy: [desc(schema.workoutLogs.completedAt)],
             limit,
             with: {
-              day: true,
               exerciseLogs: true,
+              day: true,
             },
           });
 
@@ -507,12 +532,12 @@ export const WorkoutsServiceLive = Layer.effect(
             id: log.id,
             programId: log.programId,
             dayId: log.dayId,
-            dayTitle: log.day.title,
+            dayTitle: log.day?.title ?? "Unknown Day",
             startedAt: log.startedAt,
             completedAt: log.completedAt,
             durationSeconds: log.durationSeconds,
             rating: log.rating,
-            exerciseCount: log.exerciseLogs.length,
+            exerciseCount: log.exerciseLogs.filter((el) => el.exerciseId).length,
           }));
         },
         catch: (e) => new Error(`Failed to fetch workout history: ${e}`),
@@ -521,52 +546,47 @@ export const WorkoutsServiceLive = Layer.effect(
     const getWorkoutById = (id: string): Effect.Effect<WorkoutDetail | null, Error> =>
       Effect.tryPromise({
         try: async () => {
-          const log = await db.query.workoutLogs.findFirst({
+          const workout = await db.query.workoutLogs.findFirst({
             where: eq(schema.workoutLogs.id, id),
             with: {
               day: true,
               exerciseLogs: {
                 with: {
-                  exercise: true,
                   setLogs: {
-                    orderBy: (setLogs, { asc }) => [asc(setLogs.setNumber)],
+                    orderBy: (sets, { asc }) => [asc(sets.setNumber)],
                   },
                 },
               },
             },
           });
-          if (!log) return null;
-          
+
+          if (!workout) return null;
+
           return {
-            id: log.id,
-            programId: log.programId,
-            dayId: log.dayId,
-            userId: log.userId,
-            startedAt: log.startedAt,
-            completedAt: log.completedAt,
-            status: log.status,
-            lastPausedAt: log.lastPausedAt,
-            accumulatedPauseSeconds: log.accumulatedPauseSeconds,
-            durationSeconds: log.durationSeconds,
-            rating: log.rating,
-            day: {
-              id: log.day.id,
-              title: log.day.title,
-            },
-            exerciseLogs: log.exerciseLogs.map((exLog) => ({
-              id: exLog.id,
-              exerciseId: exLog.exerciseId,
-              exerciseName: exLog.exercise.name,
-              exerciseOrder: exLog.exerciseOrder,
-              targetSets: exLog.exercise.targetSets ?? 3,
-              targetReps: exLog.exercise.targetReps ?? "8-12",
-              restSeconds: exLog.exercise.restSeconds ?? 90,
-              videoUrl: exLog.exercise.videoUrl,
-              thumbnailUrl: exLog.exercise.thumbnailUrl,
-              setLogs: exLog.setLogs.map((setLog) => ({
-                setNumber: setLog.setNumber,
-                reps: setLog.reps,
-                weight: setLog.weight.toString(),
+            id: workout.id,
+            programId: workout.programId,
+            dayId: workout.dayId,
+            dayTitle: workout.day?.title ?? "Unknown Day",
+            startedAt: workout.startedAt,
+            completedAt: workout.completedAt,
+            durationSeconds: workout.durationSeconds,
+            rating: workout.rating,
+            status: workout.status,
+            lastPausedAt: workout.lastPausedAt,
+            accumulatedPauseSeconds: workout.accumulatedPauseSeconds,
+            exercises: workout.exerciseLogs.map((el) => ({
+              id: el.exerciseId,
+              name: el.exerciseName,
+              exerciseOrder: el.exerciseOrder,
+              targetSets: el.targetSets ?? 3,
+              targetReps: el.targetReps ?? "8-12",
+              restSeconds: el.restSeconds ?? 90,
+              videoUrl: el.videoUrl ?? null,
+              thumbnailUrl: el.thumbnailUrl ?? null,
+              sets: el.setLogs.map((sl) => ({
+                setNumber: sl.setNumber,
+                reps: sl.reps,
+                weight: sl.weight.toString(),
               })),
             })),
           };
@@ -581,88 +601,54 @@ export const WorkoutsServiceLive = Layer.effect(
     ): Effect.Effect<ExerciseHistoryEntry[], Error> =>
       Effect.tryPromise({
         try: async () => {
-          const logs = await db.query.workoutLogs.findMany({
-            where: eq(schema.workoutLogs.userId, userId),
-            orderBy: [desc(schema.workoutLogs.startedAt)],
-            limit,
-            with: {
-              exerciseLogs: {
-                where: eq(schema.exerciseLogs.exerciseId, exerciseId),
-                with: {
-                  setLogs: {
-                    orderBy: (sets, { asc }) => [asc(sets.setNumber)],
-                  },
-                },
-              },
-            },
-          });
+          const logs = await db
+            .select({
+              workoutDate: schema.workoutLogs.startedAt,
+              setNumber: schema.setLogs.setNumber,
+              reps: schema.setLogs.reps,
+              weight: schema.setLogs.weight,
+            })
+            .from(schema.exerciseLogs)
+            .innerJoin(
+              schema.workoutLogs,
+              eq(schema.exerciseLogs.workoutLogId, schema.workoutLogs.id)
+            )
+            .innerJoin(
+              schema.setLogs,
+              eq(schema.setLogs.exerciseLogId, schema.exerciseLogs.id)
+            )
+            .where(
+              and(
+                eq(schema.exerciseLogs.exerciseId, exerciseId),
+                eq(schema.workoutLogs.userId, userId),
+                isNotNull(schema.workoutLogs.completedAt)
+              )
+            )
+            .orderBy(desc(schema.workoutLogs.startedAt))
+            .limit(limit * 5);
 
-          return logs
-            .filter((log) => log.exerciseLogs.length > 0)
-            .map((log) => ({
-              workoutDate: log.startedAt,
-              sets: log.exerciseLogs[0].setLogs.map((set) => ({
-                setNumber: set.setNumber,
-                reps: set.reps,
-                weight: set.weight,
+          // Group by workout date
+          const byDate = new Map<string, typeof logs>();
+          for (const log of logs) {
+            const dateKey = log.workoutDate.toISOString();
+            const existing = byDate.get(dateKey) || [];
+            existing.push(log);
+            byDate.set(dateKey, existing);
+          }
+
+          return Array.from(byDate.entries())
+            .slice(0, limit)
+            .map(([date, sets]) => ({
+              workoutDate: new Date(date),
+              sets: sets.map((s) => ({
+                setNumber: s.setNumber,
+                reps: s.reps,
+                weight: s.weight.toString(),
               })),
             }));
         },
         catch: (e) => new Error(`Failed to fetch exercise history: ${e}`),
       });
-
-    const getMostRecentWorkout = (
-      userId: string,
-      programId: string,
-      dayId: string
-    ): Effect.Effect<InProgressWorkout | null, Error> =>
-      Effect.tryPromise({
-
-        try: async () => {
-          const workout = await db.query.workoutLogs.findFirst({
-            where: and(
-              eq(schema.workoutLogs.userId, userId),
-              eq(schema.workoutLogs.programId, programId),
-              eq(schema.workoutLogs.dayId, dayId)
-            ),
-            orderBy: [desc(schema.workoutLogs.startedAt)],
-            with: {
-              exerciseLogs: {
-                with: {
-                  setLogs: true,
-                },
-              },
-            },
-          });
-
-
-          if (!workout) return null;
-
-          const sets = workout.exerciseLogs.flatMap((exLog) =>
-            exLog.setLogs.map((setLog) => ({
-              exerciseId: exLog.exerciseId,
-              setNumber: setLog.setNumber,
-              reps: setLog.reps,
-              weight: setLog.weight.toString(),
-            }))
-          );
-
-          return {
-            id: workout.id,
-            startedAt: workout.startedAt,
-            sets,
-            status: workout.status as "active" | "paused",
-            lastPausedAt: workout.lastPausedAt,
-            accumulatedPauseSeconds: workout.accumulatedPauseSeconds,
-            isCompleted: workout.completedAt !== null,
-            completedAt: workout.completedAt,
-            durationSeconds: workout.durationSeconds,
-            rating: workout.rating,
-          };
-        },
-        catch: (e) => new Error(`Failed to fetch most recent workout: ${e}`),
-      });
-
 
     const getCompletedDayIds = (
       userId: string,
@@ -684,6 +670,51 @@ export const WorkoutsServiceLive = Layer.effect(
           return new Set(completedLogs.map((log) => log.dayId));
         },
         catch: (e) => new Error(`Failed to fetch completed day IDs: ${e}`),
+      });
+
+    const getMostRecentWorkout = (
+      userId: string,
+      programId: string,
+      dayId: string
+    ): Effect.Effect<InProgressWorkout | null, Error> =>
+      Effect.tryPromise({
+        try: async () => {
+          const workout = await db.query.workoutLogs.findFirst({
+            where: and(
+              eq(schema.workoutLogs.userId, userId),
+              eq(schema.workoutLogs.programId, programId),
+              eq(schema.workoutLogs.dayId, dayId),
+              isNull(schema.workoutLogs.completedAt)
+            ),
+            orderBy: [desc(schema.workoutLogs.startedAt)],
+            with: {
+              exerciseLogs: {
+                orderBy: [desc(schema.exerciseLogs.id)],
+                limit: 1,
+                with: {
+                  setLogs: {
+                    orderBy: [desc(schema.setLogs.updatedAt)],
+                    limit: 1,
+                  },
+                },
+              },
+            },
+          });
+
+          if (!workout) return null;
+
+          const lastSetLog = workout.exerciseLogs[0]?.setLogs[0];
+          const lastSetAt = lastSetLog?.updatedAt ?? null;
+
+          return {
+            workoutLogId: workout.id,
+            programId: workout.programId,
+            dayId: workout.dayId,
+            startedAt: workout.startedAt,
+            lastSetAt,
+          };
+        },
+        catch: (e) => new Error(`Failed to fetch most recent workout: ${e}`),
       });
 
     const getLastLifts = (
@@ -766,7 +797,6 @@ export const WorkoutsServiceLive = Layer.effect(
         catch: (e) => new Error(`Failed to fetch last lifts: ${e}`),
       });
 
-
     const getCompletedWorkout = (
       userId: string,
       programId: string,
@@ -823,57 +853,75 @@ export const WorkoutsServiceLive = Layer.effect(
         catch: (e) => new Error(`Failed to fetch completed workout: ${e}`),
       });
 
+    // OPTIMIZED: Uses only denormalized data (no joins - single table lookup)
     const getWorkoutSession = (workoutId: string): Effect.Effect<WorkoutSessionData | null, Error> =>
       Effect.tryPromise({
         try: async () => {
-          // Fetch everything in a single optimized relational query
-          const workout = await db.query.workoutLogs.findFirst({
+          // Fetch workout log with denormalized data (no joins needed!)
+          const workoutLog = await db.query.workoutLogs.findFirst({
             where: eq(schema.workoutLogs.id, workoutId),
-            with: {
-              day: {
-                with: {
-                  week: {
-                    with: {
-                      program: true,
-                    },
-                  },
-                  dayExercises: {
-                    orderBy: (de, { asc }) => [asc(de.exerciseOrder)],
-                    with: {
-                      exercise: true,
-                    },
-                  },
-                },
-              },
-              exerciseLogs: {
-                with: {
-                  exercise: true,
-                  setLogs: {
-                    orderBy: (sets, { asc }) => [asc(sets.setNumber)],
-                  },
-                },
-              },
+            columns: {
+              id: true,
+              programId: true,
+              dayId: true,
+              startedAt: true,
+              completedAt: true,
+              status: true,
+              lastPausedAt: true,
+              accumulatedPauseSeconds: true,
+              durationSeconds: true,
+              rating: true,
+              programName: true,
+              dayTitle: true,
+              dayExercisesSnapshot: true,
             },
           });
 
-          if (!workout || !workout.day) return null;
+          if (!workoutLog) return null;
 
-          const day = workout.day;
-          const programName = day.week.program.name;
-          const dayExercises = day.dayExercises;
-          const exerciseLogs = workout.exerciseLogs;
+          // Require denormalized data - no fallback for legacy data
+          if (!workoutLog.programName || !workoutLog.dayExercisesSnapshot) {
+            throw new Error("Workout missing denormalized data - please reset and restart workout");
+          }
 
-          // ... existing logic to merge dayExercises with exerciseLogs ...
-          let exercises: WorkoutSessionExercise[] = dayExercises.map((de) => ({
-            id: de.exercise.id,
-            name: de.exercise.name,
-            targetSets: de.exercise.targetSets ?? 3,
-            targetReps: de.exercise.targetReps ?? "8-12",
-            restSeconds: de.exercise.restSeconds ?? 90,
-            videoUrl: de.exercise.videoUrl,
-            thumbnailUrl: de.exercise.thumbnailUrl,
+          // Parse denormalized exercises
+          const parsedExercises = JSON.parse(workoutLog.dayExercisesSnapshot) as Array<{
+            id: string;
+            name: string;
+            targetSets?: number;
+            targetReps?: string;
+            restSeconds?: number;
+            videoUrl?: string | null;
+            thumbnailUrl?: string | null;
+          }>;
+          
+          let exercises: WorkoutSessionExercise[] = parsedExercises.map(e => ({
+            id: e.id,
+            name: e.name,
+            targetSets: e.targetSets ?? 3,
+            targetReps: e.targetReps ?? "8-12",
+            restSeconds: e.restSeconds ?? 90,
+            videoUrl: e.videoUrl ?? null,
+            thumbnailUrl: e.thumbnailUrl ?? null,
           }));
 
+          // Fetch exercise logs with denormalized data (single table query)
+          const exerciseLogs = await db.query.exerciseLogs.findMany({
+            where: eq(schema.exerciseLogs.workoutLogId, workoutId),
+            columns: {
+              exerciseId: true,
+              exerciseName: true,
+              exerciseOrder: true,
+              targetSets: true,
+              targetReps: true,
+              restSeconds: true,
+              videoUrl: true,
+              thumbnailUrl: true,
+              setsSnapshot: true,
+            },
+          });
+
+          // Apply exercise swaps from exercise_logs
           if (exerciseLogs.length > 0) {
             const orderToExerciseMap = new Map<number, WorkoutSessionExercise>();
 
@@ -883,11 +931,11 @@ export const WorkoutsServiceLive = Layer.effect(
                 orderToExerciseMap.set(exerciseOrder, {
                   id: exLog.exerciseId,
                   name: exLog.exerciseName,
-                  targetSets: exLog.exercise.targetSets ?? 3,
-                  targetReps: exLog.exercise.targetReps ?? "8-12",
-                  restSeconds: exLog.exercise.restSeconds ?? 90,
-                  videoUrl: exLog.exercise.videoUrl,
-                  thumbnailUrl: exLog.exercise.thumbnailUrl,
+                  targetSets: exLog.targetSets ?? 3,
+                  targetReps: exLog.targetReps ?? "8-12",
+                  restSeconds: exLog.restSeconds ?? 90,
+                  videoUrl: exLog.videoUrl ?? null,
+                  thumbnailUrl: exLog.thumbnailUrl ?? null,
                 });
               }
             }
@@ -901,29 +949,42 @@ export const WorkoutsServiceLive = Layer.effect(
             });
           }
 
-          const sets = exerciseLogs.flatMap((exLog) =>
-            exLog.setLogs.map((sLog) => ({
-              exerciseId: exLog.exerciseId,
-              setNumber: sLog.setNumber,
-              reps: sLog.reps,
-              weight: sLog.weight.toString(),
-            }))
-          );
+          // Build sets from denormalized snapshots
+          let sets: WorkoutSessionSet[] = [];
+          for (const exLog of exerciseLogs) {
+            if (exLog.setsSnapshot) {
+              try {
+                const parsedSets = JSON.parse(exLog.setsSnapshot) as Array<{
+                  setNumber: number;
+                  reps: number;
+                  weight: string;
+                }>;
+                sets.push(...parsedSets.map(s => ({
+                  exerciseId: exLog.exerciseId,
+                  setNumber: s.setNumber,
+                  reps: s.reps,
+                  weight: s.weight,
+                })));
+              } catch {
+                // If parsing fails, skip this exercise's sets
+              }
+            }
+          }
 
           return {
             workout: {
-              id: workout.id,
-              programId: workout.programId,
-              dayId: workout.dayId,
-              dayTitle: day.title,
-              programName,
-              startedAt: workout.startedAt.toISOString(),
-              completedAt: workout.completedAt?.toISOString() ?? null,
-              status: workout.status,
-              lastPausedAt: workout.lastPausedAt?.toISOString() ?? null,
-              accumulatedPauseSeconds: workout.accumulatedPauseSeconds,
-              durationSeconds: workout.durationSeconds,
-              rating: workout.rating,
+              id: workoutLog.id,
+              programId: workoutLog.programId,
+              dayId: workoutLog.dayId,
+              dayTitle: workoutLog.dayTitle!,
+              programName: workoutLog.programName!,
+              startedAt: workoutLog.startedAt.toISOString(),
+              completedAt: workoutLog.completedAt?.toISOString() ?? null,
+              status: workoutLog.status,
+              lastPausedAt: workoutLog.lastPausedAt?.toISOString() ?? null,
+              accumulatedPauseSeconds: workoutLog.accumulatedPauseSeconds,
+              durationSeconds: workoutLog.durationSeconds,
+              rating: workoutLog.rating,
             },
             exercises,
             sets,
@@ -932,6 +993,7 @@ export const WorkoutsServiceLive = Layer.effect(
         catch: (e) => new Error(`Failed to fetch workout session: ${e}`),
       });
 
+    // OPTIMIZED: Populates denormalized fields on create for fast future reads
     const startWorkoutAndGetSession = (input: StartWorkoutInput): Effect.Effect<{ workoutId: string; session: WorkoutSessionData }, Error> =>
       Effect.tryPromise({
         try: async () => {
@@ -953,10 +1015,47 @@ export const WorkoutsServiceLive = Layer.effect(
           });
 
           let workoutId: string;
+          let isNewWorkout = false;
           
           if (existing) {
             workoutId = existing.id;
           } else {
+            isNewWorkout = true;
+            
+            // Fetch day data for denormalization BEFORE creating the log
+            const dayData = await db.query.workoutDays.findFirst({
+              where: eq(schema.workoutDays.id, input.dayId),
+              with: {
+                week: {
+                  with: {
+                    program: true,
+                  },
+                },
+                dayExercises: {
+                  orderBy: (de, { asc }) => [asc(de.exerciseOrder)],
+                  with: {
+                    exercise: true,
+                  },
+                },
+              },
+            });
+
+            if (!dayData || !dayData.week || !dayData.week.program) {
+              throw new Error("Day data not found for denormalization");
+            }
+
+            // Build denormalized exercises array
+            const denormalizedExercises = dayData.dayExercises.map((de) => ({
+              id: de.exercise.id,
+              name: de.exercise.name,
+              targetSets: de.exercise.targetSets ?? 3,
+              targetReps: de.exercise.targetReps ?? "8-12",
+              restSeconds: de.exercise.restSeconds ?? 90,
+              videoUrl: de.exercise.videoUrl ?? null,
+              thumbnailUrl: de.exercise.thumbnailUrl ?? null,
+            }));
+
+            // Create workout log WITH denormalized data
             const [log] = await db
               .insert(schema.workoutLogs)
               .values({
@@ -965,116 +1064,26 @@ export const WorkoutsServiceLive = Layer.effect(
                 programInstanceId: input.programInstanceId ?? null,
                 dayId: input.dayId,
                 startedAt: new Date(),
+                // Denormalized fields for fast reads
+                programName: dayData.week.program.name,
+                dayTitle: dayData.title,
+                dayExercisesSnapshot: JSON.stringify(denormalizedExercises),
               })
               .returning();
+            
             workoutId = log.id;
           }
 
-          // Step 2: Immediately fetch the full session data in the same round-trip
-          const session = await db.query.workoutLogs.findFirst({
-            where: eq(schema.workoutLogs.id, workoutId),
-            with: {
-              day: {
-                with: {
-                  week: {
-                    with: {
-                      program: true,
-                    },
-                  },
-                  dayExercises: {
-                    orderBy: (de, { asc }) => [asc(de.exerciseOrder)],
-                    with: {
-                      exercise: true,
-                    },
-                  },
-                },
-              },
-              exerciseLogs: {
-                with: {
-                  exercise: true,
-                  setLogs: {
-                    orderBy: (sets, { asc }) => [asc(sets.setNumber)],
-                  },
-                },
-              },
-            },
-          });
-
-          if (!session || !session.day) {
-            throw new Error("Failed to fetch workout session after creation");
-          }
-
-          const day = session.day;
-          const programName = day.week.program.name;
-          const dayExercises = day.dayExercises;
-          const exerciseLogs = session.exerciseLogs;
-
-          let exercises: WorkoutSessionExercise[] = dayExercises.map((de) => ({
-            id: de.exercise.id,
-            name: de.exercise.name,
-            targetSets: de.exercise.targetSets ?? 3,
-            targetReps: de.exercise.targetReps ?? "8-12",
-            restSeconds: de.exercise.restSeconds ?? 90,
-            videoUrl: de.exercise.videoUrl,
-            thumbnailUrl: de.exercise.thumbnailUrl,
-          }));
-
-          if (exerciseLogs.length > 0) {
-            const orderToExerciseMap = new Map<number, WorkoutSessionExercise>();
-
-            for (const exLog of exerciseLogs) {
-              const exerciseOrder = exLog.exerciseOrder;
-              if (exerciseOrder >= 0) {
-                orderToExerciseMap.set(exerciseOrder, {
-                  id: exLog.exerciseId,
-                  name: exLog.exerciseName,
-                  targetSets: exLog.exercise.targetSets ?? 3,
-                  targetReps: exLog.exercise.targetReps ?? "8-12",
-                  restSeconds: exLog.exercise.restSeconds ?? 90,
-                  videoUrl: exLog.exercise.videoUrl,
-                  thumbnailUrl: exLog.exercise.thumbnailUrl,
-                });
-              }
-            }
-
-            exercises = exercises.map((originalExercise, index) => {
-              const swappedExercise = orderToExerciseMap.get(index);
-              if (swappedExercise && swappedExercise.id !== originalExercise.id) {
-                return swappedExercise;
-              }
-              return originalExercise;
-            });
-          }
-
-          const sets = exerciseLogs.flatMap((exLog) =>
-            exLog.setLogs.map((sLog) => ({
-              exerciseId: exLog.exerciseId,
-              setNumber: sLog.setNumber,
-              reps: sLog.reps,
-              weight: sLog.weight.toString(),
-            }))
+          // Step 2: Fetch session using optimized path
+          const session = await getWorkoutSession(workoutId).pipe(
+            Effect.runPromise
           );
 
-          const sessionData: WorkoutSessionData = {
-            workout: {
-              id: session.id,
-              programId: session.programId,
-              dayId: session.dayId,
-              dayTitle: day.title,
-              programName,
-              startedAt: session.startedAt.toISOString(),
-              completedAt: session.completedAt?.toISOString() ?? null,
-              status: session.status,
-              lastPausedAt: session.lastPausedAt?.toISOString() ?? null,
-              accumulatedPauseSeconds: session.accumulatedPauseSeconds,
-              durationSeconds: session.durationSeconds,
-              rating: session.rating,
-            },
-            exercises,
-            sets,
-          };
+          if (!session) {
+            throw new Error("Failed to fetch workout session");
+          }
 
-          return { workoutId, session: sessionData };
+          return { workoutId, session };
         },
         catch: (e) => new Error(`Failed to start workout and get session: ${e}`),
       });

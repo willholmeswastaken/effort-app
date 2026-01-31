@@ -38,7 +38,7 @@ export async function GET(
           // Build exercises list with swaps applied
           let exercises = day.exercises;
           
-          if (workout.exerciseLogs && workout.exerciseLogs.length > 0) {
+          if (workout.exercises && workout.exercises.length > 0) {
             // Build a map of exerciseOrder -> logged exercise info
             const orderToExerciseMap = new Map<number, {
               id: string;
@@ -50,17 +50,17 @@ export async function GET(
               thumbnailUrl: string | null;
             }>();
             
-            for (const exLog of workout.exerciseLogs) {
-              const exerciseOrder = exLog.exerciseOrder;
+            for (const exercise of workout.exercises) {
+              const exerciseOrder = exercise.exerciseOrder;
               if (exerciseOrder >= 0) {
                 orderToExerciseMap.set(exerciseOrder, {
-                  id: exLog.exerciseId,
-                  name: exLog.exerciseName,
-                  targetSets: exLog.targetSets,
-                  targetReps: exLog.targetReps,
-                  restSeconds: exLog.restSeconds,
-                  videoUrl: exLog.videoUrl,
-                  thumbnailUrl: exLog.thumbnailUrl,
+                  id: exercise.id,
+                  name: exercise.name,
+                  targetSets: exercise.targetSets,
+                  targetReps: exercise.targetReps,
+                  restSeconds: exercise.restSeconds,
+                  videoUrl: exercise.videoUrl,
+                  thumbnailUrl: exercise.thumbnailUrl,
                 });
               }
             }
@@ -75,13 +75,13 @@ export async function GET(
             });
           }
 
-          // Build sets from exerciseLogs
-          const sets = workout.exerciseLogs?.flatMap((exLog) =>
-            exLog.setLogs.map((sLog) => ({
-              exerciseId: exLog.exerciseId,
-              setNumber: sLog.setNumber,
-              reps: sLog.reps,
-              weight: sLog.weight,
+          // Build sets from exercises
+          const sets = workout.exercises?.flatMap((exercise) =>
+            exercise.sets.map((s) => ({
+              exerciseId: exercise.id,
+              setNumber: s.setNumber,
+              reps: s.reps,
+              weight: s.weight,
             }))
           ) ?? [];
 
