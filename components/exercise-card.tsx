@@ -268,7 +268,7 @@ export function ExerciseCard({ exercise, exerciseNumber, sets, onSetsChange, las
                   const val = e.target.value;
                   updateSet(index, 'reps', Number(val) || 0);
                   if (val.length >= 2) {
-                    weightInputRefs.current[index]?.focus();
+                    weightInputRefs.current[index]?.focus({ preventScroll: true });
                   }
                 }}
                 disabled={readOnly}

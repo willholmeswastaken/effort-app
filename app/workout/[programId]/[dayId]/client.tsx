@@ -291,7 +291,7 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
   const displayTime = isCompleted ? (workout?.durationSeconds ?? 0) : elapsed;
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden selection:bg-[#0078FF]/30" style={{ overscrollBehaviorX: 'none' }}>
       <header className="sticky top-0 z-50 bg-black border-b border-white/5">
         <div className="flex items-center justify-between h-14 px-4">
           <Link href='/' className="p-2 -ml-2">
