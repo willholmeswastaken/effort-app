@@ -123,14 +123,18 @@ export const programWeeksRelations = relations(programWeeks, ({ one, many }) => 
   days: many(workoutDays),
 }));
 
-export const workoutDays = pgTable("workout_days", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  weekId: text("week_id")
-    .notNull()
-    .references(() => programWeeks.id, { onDelete: "cascade" }),
-  title: text("title").notNull(),
-  dayOrder: integer("day_order").notNull(),
-});
+export const workoutDays = pgTable(
+  "workout_days",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    weekId: text("week_id")
+      .notNull()
+      .references(() => programWeeks.id, { onDelete: "cascade" }),
+    title: text("title").notNull(),
+    dayOrder: integer("day_order").notNull(),
+  },
+  (table) => [index("idx_workout_days_week").on(table.weekId)]
+);
 
 export const workoutDaysRelations = relations(workoutDays, ({ one, many }) => ({
   week: one(programWeeks, {
@@ -245,6 +249,7 @@ export const workoutLogs = pgTable(
     index("idx_workout_logs_user").on(table.userId),
     index("idx_workout_logs_date").on(table.startedAt),
     index("idx_workout_logs_instance").on(table.programInstanceId),
+    index("idx_workout_logs_start_lookup").on(table.userId, table.programId, table.dayId, table.programInstanceId, table.startedAt),
   ]
 );
 
@@ -276,6 +281,8 @@ export const exerciseLogs = pgTable(
   (table) => [
     index("idx_exercise_logs_workout").on(table.workoutLogId),
     index("idx_exercise_logs_exercise").on(table.exerciseId),
+    index("idx_exercise_logs_workout_exercise").on(table.workoutLogId, table.exerciseId),
+    index("idx_exercise_logs_lookup").on(table.workoutLogId, table.exerciseOrder),
   ]
 );
 
@@ -306,6 +313,7 @@ export const setLogs = pgTable(
   },
   (table) => [
     index("idx_set_logs_exercise").on(table.exerciseLogId),
+    index("idx_set_logs_exercise_number").on(table.exerciseLogId, table.setNumber),
     unique("uniq_set_log").on(table.exerciseLogId, table.setNumber),
   ]
 );
