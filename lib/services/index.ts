@@ -16,6 +16,9 @@ export {
   type WorkoutHistoryEntry,
   type ExerciseHistoryEntry,
   type WorkoutDetail,
+  type WorkoutSessionData,
+  type WorkoutSessionExercise,
+  type WorkoutSessionSet,
 } from "./Workouts";
 export { InsightsService, type InsightsSummary, type ExerciseProgressionPoint } from "./Insights";
 export { UserService, type UserPreferencesData } from "./User";

@@ -2,9 +2,9 @@ import { redirect } from "next/navigation";
 import { Effect, pipe } from "effect";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { auth } from "@/lib/auth";
-import { runEffect, WorkoutsService, UserService } from "@/lib/services";
+import { runEffect, WorkoutsService, UserService, ProgramsService } from "@/lib/services";
 import { getQueryClient } from "@/lib/get-query-client";
-import { getWorkoutSessionQueryOptions, workoutQueryKeys } from "@/lib/queries/workout-session";
+import { workoutQueryKeys } from "@/lib/queries/workout-session";
 import { headers } from "next/headers";
 import WorkoutSessionClient from "./client";
 
@@ -59,18 +59,22 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
     redirect("/");
   }
 
-  // Prefetch the workout session data for hydration
+  // Fetch workout session data directly from service layer and populate cache
   const queryClient = getQueryClient();
-  const host = headersList.get("host") || "localhost:3000";
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-  const baseUrl = `${protocol}://${host}`;
+  
+  const sessionData = await runEffect(
+    Effect.gen(function* () {
+      const workoutsService = yield* WorkoutsService;
+      const programsService = yield* ProgramsService;
+      return yield* workoutsService.getWorkoutSession(workoutId, programsService);
+    })
+  );
 
-  await queryClient.prefetchQuery(getWorkoutSessionQueryOptions(workoutId, {
-    baseUrl,
-    headers: {
-      cookie: headersList.get("cookie") || "",
-    },
-  }));
+  if (sessionData) {
+    queryClient.setQueryData(workoutQueryKeys.session(workoutId), sessionData, {
+      updatedAt: Date.now(),
+    });
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
