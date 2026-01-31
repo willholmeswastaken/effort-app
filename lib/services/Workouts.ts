@@ -825,6 +825,7 @@ export const WorkoutsServiceLive = Layer.effect(
     const getWorkoutSession = (workoutId: string): Effect.Effect<WorkoutSessionData | null, Error> =>
       Effect.tryPromise({
         try: async () => {
+          // Fetch everything in a single optimized relational query
           const workout = await db.query.workoutLogs.findFirst({
             where: eq(schema.workoutLogs.id, workoutId),
             with: {
@@ -835,6 +836,20 @@ export const WorkoutsServiceLive = Layer.effect(
                       program: true,
                     },
                   },
+                  dayExercises: {
+                    orderBy: (de, { asc }) => [asc(de.exerciseOrder)],
+                    with: {
+                      exercise: true,
+                    },
+                  },
+                },
+              },
+              exerciseLogs: {
+                with: {
+                  exercise: true,
+                  setLogs: {
+                    orderBy: (sets, { asc }) => [asc(sets.setNumber)],
+                  },
                 },
               },
             },
@@ -844,26 +859,10 @@ export const WorkoutsServiceLive = Layer.effect(
 
           const day = workout.day;
           const programName = day.week.program.name;
+          const dayExercises = day.dayExercises;
+          const exerciseLogs = workout.exerciseLogs;
 
-          const [dayExercises, exerciseLogs] = await Promise.all([
-            db.query.dayExercises.findMany({
-              where: eq(schema.dayExercises.dayId, day.id),
-              orderBy: (de, { asc }) => [asc(de.exerciseOrder)],
-              with: {
-                exercise: true,
-              },
-            }),
-            db.query.exerciseLogs.findMany({
-              where: eq(schema.exerciseLogs.workoutLogId, workoutId),
-              with: {
-                exercise: true,
-                setLogs: {
-                  orderBy: (setLogs, { asc }) => [asc(setLogs.setNumber)],
-                },
-              },
-            }),
-          ]);
-
+          // ... existing logic to merge dayExercises with exerciseLogs ...
           let exercises: WorkoutSessionExercise[] = dayExercises.map((de) => ({
             id: de.exercise.id,
             name: de.exercise.name,
