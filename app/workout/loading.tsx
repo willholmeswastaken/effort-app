@@ -1,5 +1,5 @@
-// Workout page loading state - matches the actual page layout
-// Structure: Header (X | Title | Reset), Timer, Exercise Cards, Finish Button
+// Workout page loading state - matches the actual page layout exactly
+// Uses subtle animations to indicate content is coming (Revolut-style)
 export default function WorkoutLoading() {
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
@@ -48,7 +48,7 @@ export default function WorkoutLoading() {
                 <div className="h-5 w-40 bg-white/20 rounded" />
               </div>
               {/* Swap icon */}
-              <div className="w-5 h-5 bg-white/10 rounded" />
+              <div className="w-5 h-5 rounded bg-white/10" />
             </div>
             
             {/* Set inputs */}
