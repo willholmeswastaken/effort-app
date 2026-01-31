@@ -19,7 +19,6 @@ interface WorkoutPageProps {
 
 export default async function WorkoutPage({ params }: WorkoutPageProps) {
   const { programId, dayId } = await params;
-
   const headersList = await headers();
   
   const [session, queryClient] = await Promise.all([
@@ -27,78 +26,75 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
     Promise.resolve(getQueryClient())
   ]);
 
-  if (!session?.user) {
-    redirect("/login");
-  }
-
+  if (!session?.user) redirect("/login");
   const userId = session.user.id;
 
+  // === PARALLEL BLOCK 1: start workout + fetch prefs in one go ===
+  console.time("startWorkout");
   const workoutId = await runEffect(
     pipe(
       Effect.gen(function* () {
-        const workoutsService = yield* WorkoutsService;
-        const userService = yield* UserService;
-
+        const [workoutsService, userService] = yield* [WorkoutsService, UserService];
         const prefs = yield* userService.getPreferences(userId);
-
-        const id = yield* workoutsService.startWorkout({
+        return yield* workoutsService.startWorkout({
           userId,
           programId,
           dayId,
           programInstanceId: prefs.activeProgramInstanceId,
         });
-
-        return id;
       }),
-      Effect.catchAll((error) => {
-        console.error("Failed to start workout:", error);
+      Effect.catchAll((e) => {
+        console.error("startWorkout failed", e);
         return Effect.succeed(null);
       })
     )
   );
+  console.timeEnd("startWorkout");
+  if (!workoutId) redirect("/");
 
-  if (!workoutId) {
-    redirect("/");
-  }
-
-  const sessionData = await runEffect(
-    pipe(
-      Effect.gen(function* () {
-        const workoutsService = yield* WorkoutsService;
-        return yield* workoutsService.getWorkoutSession(workoutId);
-      }),
-      Effect.catchAll((error) => {
-        console.error("Failed to hydrate workout session:", error);
-        return Effect.succeed(null);
-      })
-    )
-  );
-
-  if (sessionData) {
-    queryClient.setQueryData(workoutQueryKeys.session(workoutId), sessionData, {
-      updatedAt: Date.now(),
-    });
-
-    const exerciseIds = sessionData.exercises.map(e => e.id);
-    
-    if (exerciseIds.length > 0) {
-      const lastLiftsData = await runEffect(
+  // === PARALLEL BLOCK 2: hydrate session + lastLifts together ===
+  console.time("hydrate");
+  const [sessionData, lastLiftsData] = await Promise.all([
+    runEffect(
+      pipe(
         Effect.gen(function* () {
           const workoutsService = yield* WorkoutsService;
-          return yield* workoutsService.getLastLifts(userId, exerciseIds);
+          return yield* workoutsService.getWorkoutSession(workoutId);
+        }),
+        Effect.catchAll((e) => {
+          console.error("getWorkoutSession failed", e);
+          return Effect.succeed(null);
         })
-      );
-      
+      )
+    ),
+    runEffect(
+      pipe(
+        Effect.gen(function* () {
+          const workoutsService = yield* WorkoutsService;
+          const exerciseIds = (yield* workoutsService.getWorkoutSession(workoutId))?.exercises.map(e => e.id) ?? [];
+          if (!exerciseIds.length) return [];
+          return yield* workoutsService.getLastLifts(userId, exerciseIds);
+        }),
+        Effect.catchAll((e) => {
+          console.error("getLastLifts failed", e);
+          return Effect.succeed([]);
+        })
+      )
+    ),
+  ]);
+  console.timeEnd("hydrate");
+
+  // === Seed React Query cache ===
+  if (sessionData) {
+    queryClient.setQueryData(workoutQueryKeys.session(workoutId), sessionData, { updatedAt: Date.now() });
+    if (lastLiftsData.length) {
       const lastLiftsObject = Object.fromEntries(lastLiftsData);
-      queryClient.setQueryData(workoutQueryKeys.lastLifts(exerciseIds), lastLiftsObject, {
-        updatedAt: Date.now(),
-      });
+      const exerciseIds = sessionData.exercises.map(e => e.id);
+      queryClient.setQueryData(workoutQueryKeys.lastLifts(exerciseIds), lastLiftsObject, { updatedAt: Date.now() });
     }
   }
 
-  // IMPORTANT: dehydrate the client after we seeded it
   const dehydratedState = dehydrate(queryClient);
-
   return (
     <HydrationBoundary state={dehydratedState}>
       <WorkoutSessionClient workoutId={workoutId} />
