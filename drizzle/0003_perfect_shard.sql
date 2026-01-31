@@ -1,0 +1,1 @@
+ALTER TABLE "exercise_logs" ADD COLUMN "exercise_order" integer DEFAULT 0 NOT NULL;

@@ -1,26 +1,139 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-primary);
+  
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Revolut True Dark Palette */
+  --background: #000000;
+  --foreground: #FFFFFF;
+  
+  /* Card background - key Revolut gray */
+  --card: #1C1C1E;
+  --card-foreground: #FFFFFF;
+  
+  /* Primary - Revolut uses softer blue tones */
+  --primary: #0078FF;
+  --primary-foreground: #FFFFFF;
+  
+  /* Secondary surfaces */
+  --secondary: #2C2C2E;
+  --secondary-foreground: #FFFFFF;
+  
+  /* Muted text and surfaces */
+  --muted: #3A3A3C;
+  --muted-foreground: #8E8E93;
+  
+  /* Accent - subtle highlight */
+  --accent: #1C1C1E;
+  --accent-foreground: #FFFFFF;
+  
+  /* Semantic colors */
+  --destructive: #FF3B30;
+  --success: #34C759;
+  
+  /* Borders - extremely subtle */
+  --border: rgba(255, 255, 255, 0.08);
+  --input: #2C2C2E;
+  --ring: #0078FF;
+  
+  --font-primary: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: var(--font-primary);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Utility classes */
+.text-secondary {
+  color: var(--muted-foreground);
+}
+
+/* Animations */
+@keyframes gradient-slow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-slow {
+  animation: gradient-slow 8s ease infinite;
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Hide scrollbar for horizontal tabs */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Countdown animation for progress bars */
+@keyframes countdown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-countdown {
+  animation: countdown 2s linear forwards;
 }

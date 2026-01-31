@@ -1,0 +1,1709 @@
+{
+  "muscleGroups": [
+    {
+      "id": "shoulders",
+      "name": "Shoulders",
+      "coverImage": "https://img.genflow.com/thrst/libraryimages/shoulders.jpg",
+      "orderIndex": 0
+    },
+    {
+      "id": "chest",
+      "name": "Chest",
+      "coverImage": "https://img.genflow.com/thrst/libraryimages/chest.jpg",
+      "orderIndex": 1
+    },
+    {
+      "id": "arms",
+      "name": "Arms",
+      "coverImage": "https://img.genflow.com/thrst/libraryimages/arms.jpg",
+      "orderIndex": 2
+    },
+    {
+      "id": "back",
+      "name": "Back",
+      "coverImage": "https://img.genflow.com/thrst/libraryimages/back.jpg",
+      "orderIndex": 3
+    },
+    {
+      "id": "quads",
+      "name": "Quads",
+      "coverImage": "https://img.genflow.com/thrst/libraryimages/new-exercises-covers/Quads.png",
+      "orderIndex": 4
+    },
+    {
+      "id": "glutes",
+      "name": "Glutes",
+      "coverImage": "https://img.genflow.com/thrst/libraryimages/new-exercises-covers/Glutes.png",
+      "orderIndex": 5
+    },
+    {
+      "id": "abs",
+      "name": "Abs",
+      "coverImage": "https://img.genflow.com/thrst/libraryimages/new-exercises-covers/Abs-2.png",
+      "orderIndex": 6
+    },
+    {
+      "id": "hamstrings",
+      "name": "Hamstrings",
+      "coverImage": "https://img.genflow.com/thrst/libraryimages/new-exercises-covers/Hamstrings.png",
+      "orderIndex": 7
+    }
+  ],
+  "exercises": [
+    {
+      "id": "single-arm-lateral-raise",
+      "name": "Single Arm Lateral Raise",
+      "muscleGroupId": "shoulders",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ea9ed4ba181be4c763/e87a87b3218cd5a0/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Single_Arm_Lateral_Raise.png"
+    },
+    {
+      "id": "reverse-pec-deck",
+      "name": "Reverse Pec Deck",
+      "muscleGroupId": "shoulders",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39ed4ba181be4c25a/cf87af658b69e3c6/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Reverse_Pec_Deck.png"
+    },
+    {
+      "id": "overhead-bb-press",
+      "name": "Overhead BB Press",
+      "muscleGroupId": "shoulders",
+      "videoUrl": "https://api-files.sproutvideo.com/file/a79ed4ba181be2c02e/1cc0d19c637d665e/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Overhead_BB_Press.png"
+    },
+    {
+      "id": "cable-y-raise",
+      "name": "Cable Y Raise",
+      "muscleGroupId": "shoulders",
+      "videoUrl": "https://api-files.sproutvideo.com/file/799ed4ba181be2c6f0/574a38c81c05c51c/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Cable_Y_Raise.png"
+    },
+    {
+      "id": "seated-db-overhead-press",
+      "name": "Seated DB Overhead Press",
+      "muscleGroupId": "shoulders",
+      "videoUrl": "https://api-files.sproutvideo.com/file/709ddbb21b1ee3c0f9/8f071d2a3e7ea9ca/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2616b8211aa189472dc42c503fb88e8e/poster_frames/frame_0002.jpg"
+    },
+    {
+      "id": "face-pull",
+      "name": "Face Pull",
+      "muscleGroupId": "shoulders",
+      "videoUrl": "https://api-files.sproutvideo.com/file/119ddbb21b1ee2cc98/bd4af6c2485934ef/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/b519d551a0bb2966b219515acd351123/poster_frames/frame_0002.jpg"
+    },
+    {
+      "id": "db-rear-delt-fly",
+      "name": "DB Rear Delt Fly",
+      "muscleGroupId": "shoulders",
+      "videoUrl": "https://api-files.sproutvideo.com/file/069ddbb21b1ee2c78f/457481da87d37fbf/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/c79cb64bb85798573b7cbf73ecb8f5e9/poster_frames/frame_0003.jpg"
+    },
+    {
+      "id": "db-lateral-raise",
+      "name": "DB Lateral Raise",
+      "muscleGroupId": "shoulders",
+      "videoUrl": "https://api-files.sproutvideo.com/file/799ddbb21814e8c7f0/35c30a89716d5a52/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/24a4ec037b703694c107d021906876c5/poster_frames/frame_0003.jpg"
+    },
+    {
+      "id": "cable-lateral-raise",
+      "name": "Cable Lateral Raise",
+      "muscleGroupId": "shoulders",
+      "videoUrl": "https://api-files.sproutvideo.com/file/119ddbb21814eacd98/d4cafcf23bb6bef1/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/d464c1e87ee05c6ad6a613be137159c6/poster_frames/frame_0003.jpg"
+    },
+    {
+      "id": "press-up",
+      "name": "Press Up",
+      "muscleGroupId": "chest",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ea9ed4ba181be3c063/a546a1783c50295e/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Press_Up.png"
+    },
+    {
+      "id": "pec-deck",
+      "name": "Pec Deck",
+      "muscleGroupId": "chest",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39ed4ba181be3c55a/bf63bd8be14a7116/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Pec_Deck.png"
+    },
+    {
+      "id": "decline-bb-press",
+      "name": "Decline BB Press",
+      "muscleGroupId": "chest",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39ed4ba181be2c45a/2f127f959179c8b6/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Decline_BB_Press.png"
+    },
+    {
+      "id": "incline-db-press",
+      "name": "Incline DB Press",
+      "muscleGroupId": "chest",
+      "videoUrl": "https://api-files.sproutvideo.com/file/799ddbb41918e5c1f0/5dff8735373893f6/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/3081aed673cd3419dee762ec0ec10d18/poster_frames/frame_0002.jpg"
+    },
+    {
+      "id": "incline-bench-press",
+      "name": "Incline Bench Press",
+      "muscleGroupId": "chest",
+      "videoUrl": "https://api-files.sproutvideo.com/file/4d9ddbb41918e1c1c4/f757dae5331285d2/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/1461e09f33247c1032f0430b41825da5/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "flat-db-press",
+      "name": "Flat DB Press",
+      "muscleGroupId": "chest",
+      "videoUrl": "https://api-files.sproutvideo.com/file/a79ddbb2191ae3c52e/4dbddfe9c7c7cc99/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/16343fc6fc7de3b460ae3e8e20c747f8/poster_frames/frame_0002.jpg"
+    },
+    {
+      "id": "cable-chest-fly",
+      "name": "Cable Chest Fly",
+      "muscleGroupId": "chest",
+      "videoUrl": "https://api-files.sproutvideo.com/file/799ddbb2191ae7c7f0/ad98e1db4b53fb64/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/59f777dd852397b62949fde4b502b468/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "bb-bench-press",
+      "name": "BB Bench Press",
+      "muscleGroupId": "chest",
+      "videoUrl": "https://api-files.sproutvideo.com/file/799ddbb2191ae5c5f0/36b4a931398fa321/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/c4138a1f5327f6710724ef50b9b9c174/poster_frames/frame_0003.jpg"
+    },
+    {
+      "id": "tricep-dips",
+      "name": "Tricep Dips",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/799ed4ba181be5c1f0/7555425fa0045e21/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Tricep_Dips.png"
+    },
+    {
+      "id": "bb-ez-bar-curl",
+      "name": "BB EZ Bar Curl",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/799ed4ba181be1c5f0/4d17b9434cf63a2b/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/BB_EZ_Bar_Curl.png"
+    },
+    {
+      "id": "overhead-rope-extension",
+      "name": "Overhead Rope Extension",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/119ed4ba181be2ce98/9a41294400c6b701/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/a1087a46eafd8c15ea7ba26b75e96695/poster_frames/frame_1666190600.jpg"
+    },
+    {
+      "id": "cable-tricep-crossover",
+      "name": "Cable Tricep Crossover",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/709ddbb21e12eec4f9/c72372b550766325/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/ef38373edad7e83f01e4fd3e8f69b519/poster_frames/frame_0002.jpg"
+    },
+    {
+      "id": "cable-tricep-extension",
+      "name": "Cable Tricep Extension",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39ddbb21e12e3ce5a/6d4fe8df1035b8c3/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2b969b6756c0ec52601fd5afac10f308/poster_frames/frame_0002.jpg"
+    },
+    {
+      "id": "close-grip-bb-press",
+      "name": "Close Grip BB Press",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ac9ddbb21114e2c525/565f40f8fd6eab1c/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/1167a0987563ebd6f0cbac995d3275ca/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "db-bicep-curl",
+      "name": "DB Bicep Curl",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ac9ddbb21114e0c725/ecad1696d9c33234/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/e3c4ea57c8963efd5b0efdf6c65e63b8/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "db-preacher-curl",
+      "name": "DB Preacher Curl",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ac9ddbb21114e6c125/e00e44fc177e907c/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/6fb4ce2cd5583b51378bb8220330614d/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "db-tricep-extension",
+      "name": "DB Tricep Extension",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/a79ddbb21114e7c72e/fbbc15e17618035c/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/3b3342775fb350be39291a84708705ed/poster_frames/frame_0003.jpg"
+    },
+    {
+      "id": "db-tricep-kickback",
+      "name": "DB Tricep Kickback",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/a79ddbb21114e4c42e/16a799390a82959a/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/a5088851abba8766394864c9ff9a26b4/poster_frames/frame_0003.jpg"
+    },
+    {
+      "id": "reverse-curl",
+      "name": "Reverse Curl",
+      "muscleGroupId": "arms",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ea9ddbb21114e5c463/bb1ebf3150600095/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/67cf1cc85bd7f221b810954cddb9062f/poster_frames/frame_0003.jpg"
+    },
+    {
+      "id": "rack-deadlifts",
+      "name": "Rack Deadlifts",
+      "muscleGroupId": "back",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ac9ed4ba181be4c125/b16adb96d0da6e19/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Rack_Deadlifts.png"
+    },
+    {
+      "id": "single-arm-cable-row",
+      "name": "Single Arm Cable Row",
+      "muscleGroupId": "back",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39ddbb21919e4c55a/5e9a3f3279ecf40b/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/20cba6b062bd91c1747423103dffb9ba/poster_frames/frame_0003.jpg"
+    },
+    {
+      "id": "one-arm-db-row",
+      "name": "One Arm DB Row",
+      "muscleGroupId": "back",
+      "videoUrl": "https://api-files.sproutvideo.com/file/4d9ddbb2191ee8c8c4/707dde45b5c63e11/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/1c556432e2d6eedb710428a0dc8789d2/poster_frames/frame_1666188963.jpg"
+    },
+    {
+      "id": "lat-pulldown",
+      "name": "Lat Pulldown",
+      "muscleGroupId": "back",
+      "videoUrl": "https://api-files.sproutvideo.com/file/a79ddbb2191ee5c72e/9bb7e8f1a944cf66/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/202885ee95ead3b9d8f4cae0ebf09f37/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "incline-bench-db-row",
+      "name": "Incline Bench DB Row",
+      "muscleGroupId": "back",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449ddbb2191ee1cccd/5f2c1a33eb425ac8/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/8dbeede16b62e41ce36d7b6d37d9f8d2/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "chin-up-pull-up",
+      "name": "Chin Up & Pull Up",
+      "muscleGroupId": "back",
+      "videoUrl": "https://api-files.sproutvideo.com/file/4d9ddbb2191deac9c4/1e65efc7154f6ddc/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/119e551ec3b740477876c887674add0c/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "cable-pulldown-db-pullover",
+      "name": "Cable Pulldown & DB Pullover",
+      "muscleGroupId": "back",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449ddbb2191de6c8cd/9a4e256730bfe4bf/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/24f1743fb495cf9a80d060bc2f6c5717/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "bb-deadlift",
+      "name": "BB Deadlift",
+      "muscleGroupId": "back",
+      "videoUrl": "https://api-files.sproutvideo.com/file/709ddbb2191de0c2f9/47455364fd6d64bd/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/a7a19f01f089f6de09d39e58b47a0762/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "bb-bent-over-row",
+      "name": "BB Bent Over Row",
+      "muscleGroupId": "back",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449ddbb2191cebc4cd/9fe16d7b4a3b38fd/480.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/1ca5e2f6c0f2c197f507ee89d554d9a0/poster_frames/frame_0001.jpg"
+    },
+    {
+      "id": "pendulum-squat",
+      "name": "Pendulum Squat",
+      "muscleGroupId": "quads",
+      "videoUrl": "https://api-files.sproutvideo.com/file/a79ed4ba181be3c12e/ef2b1c1fa6b43b0e/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Pendulum_Squat.png"
+    },
+    {
+      "id": "hack-squat",
+      "name": "Hack Squat",
+      "muscleGroupId": "quads",
+      "videoUrl": "https://api-files.sproutvideo.com/file/709ed4ba181be2c3f9/5995fc0c0d912874/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Hack_Squat.png"
+    },
+    {
+      "id": "walking-lunge",
+      "name": "Walking Lunge",
+      "muscleGroupId": "quads",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ea9ddbb61f1be4c063/f88bf34d28e08174/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/Walking-Lunge.png"
+    },
+    {
+      "id": "leg-press",
+      "name": "Leg Press",
+      "muscleGroupId": "quads",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ea9ddbb61f1be5c163/74951e79c1eebf7a/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/Leg-Press.png"
+    },
+    {
+      "id": "leg-extension",
+      "name": "Leg Extension",
+      "muscleGroupId": "quads",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ac9ddbb61f1be7c525/34ad3d5a15206258/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/Leg-Extension.png"
+    },
+    {
+      "id": "heel-elevated-squat",
+      "name": "Heel Elevated Squat",
+      "muscleGroupId": "quads",
+      "videoUrl": "https://api-files.sproutvideo.com/file/119ddbb61f1ae0ca98/f1d5a3898d365c67/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/Heel-Elevated-Squat.png"
+    },
+    {
+      "id": "db-bulgarian-split-squat",
+      "name": "DB Bulgarian Split Squat",
+      "muscleGroupId": "quads",
+      "videoUrl": "https://api-files.sproutvideo.com/file/709ddbb61f1ae5c2f9/440cd62970474f93/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/DB-Bulgarian-Split-Squat.png"
+    },
+    {
+      "id": "box-squat",
+      "name": "Box Squat",
+      "muscleGroupId": "quads",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ac9ddbb61f1ae7c425/44e7918f653ba17e/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/Box-Squat.png"
+    },
+    {
+      "id": "bb-squat",
+      "name": "BB Squat",
+      "muscleGroupId": "quads",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ea9ddbb61f1de8ca63/cffaa82f98be8345/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/BB-Squat.png"
+    },
+    {
+      "id": "sumo-deadlift",
+      "name": "Sumo Deadlift",
+      "muscleGroupId": "glutes",
+      "videoUrl": "https://api-files.sproutvideo.com/file/709ddbb61f1ce9c8f9/cc7d28d618e6b54f/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/glutes/sumo-deadlift.png"
+    },
+    {
+      "id": "smith-machine-bulgarian-split-squat",
+      "name": "Smith Machine Bulgarian Split Squat",
+      "muscleGroupId": "glutes",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449ddbb61f1ce6cbcd/b4ed0150a44ca292/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/glutes/smith-machine-bulgarian-split-squat.png"
+    },
+    {
+      "id": "hyperextensions-glute-focus",
+      "name": "Hyperextensions (Glute Focus)",
+      "muscleGroupId": "glutes",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449ddbb61f1ce3cecd/01486a3d510207cf/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/glutes/hyperextensions.png"
+    },
+    {
+      "id": "hip-thrust",
+      "name": "Hip Thrust",
+      "muscleGroupId": "glutes",
+      "videoUrl": "https://api-files.sproutvideo.com/file/069ddbb61f1ce1c68f/b25d8c26d4dbf042/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/glutes/hip-thrust.png"
+    },
+    {
+      "id": "rope-crunch",
+      "name": "Rope Crunch",
+      "muscleGroupId": "abs",
+      "videoUrl": "https://api-files.sproutvideo.com/file/119ddbb61f16ecca98/18064048137ce764/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Ball-Crunch.png"
+    },
+    {
+      "id": "reverse-crunch",
+      "name": "Reverse Crunch",
+      "muscleGroupId": "abs",
+      "videoUrl": "https://api-files.sproutvideo.com/file/4d9ddbb61f16efc5c4/af5990fb3b60c107/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Reverse-Crunch.png"
+    },
+    {
+      "id": "knee-raise",
+      "name": "Knee Raise",
+      "muscleGroupId": "abs",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39ddbb61f16e8c45a/cc14feb873ee4f03/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Knee-Raise.png"
+    },
+    {
+      "id": "hanging-knee-raise",
+      "name": "Hanging Knee Raise",
+      "muscleGroupId": "abs",
+      "videoUrl": "https://api-files.sproutvideo.com/file/119ddbb61f16eacc98/1840935333641dcf/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Hanging-Knee-Raise.png"
+    },
+    {
+      "id": "decline-crunch",
+      "name": "Decline Crunch",
+      "muscleGroupId": "abs",
+      "videoUrl": "https://api-files.sproutvideo.com/file/069ddbb61f19e2c08f/13dbd831b22247a7/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Reverse-Crunch.png"
+    },
+    {
+      "id": "crunch",
+      "name": "Crunch",
+      "muscleGroupId": "abs",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449ddbb61f19e6cecd/853b558ac73111d1/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Crunch.png"
+    },
+    {
+      "id": "ball-crunch",
+      "name": "Ball Crunch",
+      "muscleGroupId": "abs",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449ddbb61c1be5cccd/03e5897bb948d077/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Ball-Crunch.png"
+    },
+    {
+      "id": "ab-rollout",
+      "name": "Ab Rollout",
+      "muscleGroupId": "abs",
+      "videoUrl": "https://api-files.sproutvideo.com/file/069ddbb61c1be4c78f/54c800091dc68148/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Ab-Rollout.png"
+    },
+    {
+      "id": "rowing-machine-leg-curl",
+      "name": "Rowing Machine Leg Curl",
+      "muscleGroupId": "hamstrings",
+      "videoUrl": "https://api-files.sproutvideo.com/file/709ed4ba181be4c5f9/41345ae87177f8d4/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Rowing_Machine_Leg_Curl.png"
+    },
+    {
+      "id": "seated-leg-curl",
+      "name": "Seated Leg Curl",
+      "muscleGroupId": "hamstrings",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39ddbb61c18e3c25a/74581c8041690713/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/hamstrings/Seated-Leg-Curl.png"
+    },
+    {
+      "id": "romanian-deadlift",
+      "name": "Romanian Deadlift",
+      "muscleGroupId": "hamstrings",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ac9ddbb61c18e4c625/3f23d3bb7665aa40/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/hamstrings/Romanian-Deadlift.png"
+    },
+    {
+      "id": "lying-leg-curl",
+      "name": "Lying Leg Curl",
+      "muscleGroupId": "hamstrings",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39ddbb61c18e6c75a/fa2c9a9cfa60509f/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/hamstrings/Lying-Leg-Curl.png"
+    },
+    {
+      "id": "lying-db-hamstring-curl",
+      "name": "Lying DB Hamstring Curl",
+      "muscleGroupId": "hamstrings",
+      "videoUrl": "https://api-files.sproutvideo.com/file/119ddbb61c19efc598/5ba93b5df9fcd764/480.mp4",
+      "thumbnailUrl": "https://img.genflow.com/1080x1920/thrst/asset-tns/hamstrings/Lying-DB-Leg-Curl.png"
+    },
+    {
+      "id": "hammer-plate-press-flat",
+      "name": "Hammer Plate Press (Flat)",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449fdab31b1fe3cfcd/973e24cbb3b8e1e7/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/8984c4bdd16465691209de954b76323f/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "smith-machine-shoulder-press",
+      "name": "Smith Machine Shoulder Press",
+      "videoUrl": "https://api-files.sproutvideo.com/file/0690d3b11913ebc78f/86becdbfaa694d08/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/45cdad730403a2aa555c928d7815dbc2/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "flat-or-incline-db-fly",
+      "name": "Flat or Incline DB Fly",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ac9ddeb61c19e3c525/2821cf70b19173a4/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/6208874b11dedda5b4f087fe9d93e39b/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "machine-lateral-raise",
+      "name": "Machine Lateral Raise",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39dd7b91b18e6c35a/289e8aea482ce777/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2529706782335d4496142ebc974ef96f/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "tricep-dip-machine",
+      "name": "Tricep Dip Machine",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449fdab31b1fe2cecd/db4053ca3d4ca157/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/aa9cc62813ddb8ff11fc98a68f8986f0/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "single-arm-cable-tricep-extension",
+      "name": "Single Arm Cable Tricep Extension",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ea90d5bb151de5c363/3d1af45d11be5f47/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/4ee7fa2ee301f9e21d3587710dd92e13/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "overhead-tricep-extension-machine",
+      "name": "Overhead Tricep Extension Machine",
+      "videoUrl": "https://api-files.sproutvideo.com/file/4491d2bd1418e9c5cd/9cb057db063ac760/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/cdcfc513efb528ef07a50a2943eadfb1/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "seated-one-arm-iso-row-neutral-grip",
+      "name": "Seated One Arm Iso Row (Neutral Grip)",
+      "videoUrl": "https://api-files.sproutvideo.com/file/799ddeb11e19e5c7f0/be1be7bed8d2f667/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/d486432a54cb116b05b4d2568b2fe812/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "lat-pulldown-underhand-grip",
+      "name": "Lat Pulldown (Underhand Grip)",
+      "videoUrl": "https://api-files.sproutvideo.com/file/1191d0b51b1ee3cd98/cb53b46929d33340/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/476acf4a67ed32587b345155500692c4/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "low-row",
+      "name": "Low Row",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ac90d5bb151de5c525/814fbb2625fa4b2c/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/f720d04bbb8bb46fe085e4dfae069237/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "incline-bench-db-rear-delt-fly-slow",
+      "name": "Incline Bench DB Rear Delt Fly (Slow)",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39ddcb41c10e2ce5a/298f9ecd40923f49/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/81d6ef894a7235ef5693c104372a7057/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "single-arm-db-hammer-curl",
+      "name": "Single Arm DB Hammer Curl",
+      "videoUrl": "https://api-files.sproutvideo.com/file/4d9fdab31b1fe5c4c4/3f382d23121a07dd/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/5920ee8671eb4005f8133516281f230c/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "bb-ez-bar-bicep-curl",
+      "name": "BB/EZ Bar Bicep Curl",
+      "videoUrl": "https://api-files.sproutvideo.com/file/069ddeb61c1ae4c38f/d70af0718380deba/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2c8e5171f4f14e88c46518077535eefe/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "bicep-focus-chin-up",
+      "name": "Bicep Focus Chin Up",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39fdab31b1fe3c45a/f0c805456b1a6fe7/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/98fbe4141e30bdc4d47a833e0087a6c2/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "romanian-deadlift-glute-focus",
+      "name": "Romanian Deadlift (Glute Focus)",
+      "videoUrl": "https://api-files.sproutvideo.com/file/4d91d0b51b1ee3c1c4/569d228759292420/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2e5ea86c65ff4f49e35fae0763e37f7a/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "lying-leg-curl-single-leg",
+      "name": "Lying Leg Curl (Single Leg)",
+      "videoUrl": "https://api-files.sproutvideo.com/file/1190d5bb151cedc598/dbef554386bbfbbc/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/62729853d19ec5ce374be4370de7e9a4/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "standing-calf-raise",
+      "name": "Standing Calf Raise",
+      "videoUrl": "https://api-files.sproutvideo.com/file/4d9ddeb61c1de0c7c4/bf401df4a709b0ed/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/c0f553454f3e4ac1486a22a80ac06471/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "t-bar-row",
+      "name": "T-Bar Row",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449dd7b91b18e1cfcd/b32c61ad812522c3/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/7adec48486d3627af10e50eb32d76634/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "incline-bb-bench-press",
+      "name": "Incline BB Bench Press",
+      "videoUrl": "https://api-files.sproutvideo.com/file/799fdab31b1ee0c4f0/7909d7a592948de6/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/4530b0eee7df5304aad06ef02903eed2/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "iso-lateral-high-row",
+      "name": "Iso Lateral High Row",
+      "videoUrl": "https://api-files.sproutvideo.com/file/d39ddeb11e19e5c55a/24ebfe58997a67f9/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/cd57962e0c160c20dc63dff4d30e77e6/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "chest-supported-db-lateral-raise",
+      "name": "Chest Supported DB Lateral Raise",
+      "videoUrl": "https://api-files.sproutvideo.com/file/a79ddeb61c1ae1c32e/9ceb369806f6cf5c/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/300b290a579911da0a60acf78ffae2d6/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "dy-db-shrugs",
+      "name": "DY DB Shrugs",
+      "videoUrl": "https://api-files.sproutvideo.com/file/1190d3b11912e3c598/f65f698d345999c4/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/d48329dffca32afb80a7642c05a7abbc/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "cable-rear-delt-fly-single-arm",
+      "name": "Cable Rear Delt Fly (Single Arm)",
+      "videoUrl": "https://api-files.sproutvideo.com/file/a790d5bb151cecca2e/e74ded03ba83eed8/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/0dbcd91c159e3e8426fe208539fda72e/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "machine-preacher-curl",
+      "name": "Machine Preacher Curl",
+      "videoUrl": "https://api-files.sproutvideo.com/file/449dd7b91b18e6c8cd/3af613c0cb16bf03/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/ff80d0f60c2ebe115339bd8837bfe131/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "close-grip-bb-press-smith-machine",
+      "name": "Close Grip BB Press (Smith Machine)",
+      "videoUrl": "https://api-files.sproutvideo.com/file/069ddeb61c1ce7c68f/078e9c6be9ef8501/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/93246f041e414b4c290afc5c6c0f81d6/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "smith-machine-hip-thrust",
+      "name": "Smith Machine Hip Thrust",
+      "videoUrl": "https://api-files.sproutvideo.com/file/a79fdab31b1fe5c62e/909efd64dd40a9f5/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/a98d0906a1e2cbd5eda0e22021647eef/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "weighted-45-s",
+      "name": "Weighted 45's",
+      "videoUrl": "https://api-files.sproutvideo.com/file/a49bd8bf111ae3c52e/d86e3f2e4ac921cf/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2f01c94020a1235a2043f894ea32c2f8/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "leg-press-quad-focus",
+      "name": "Leg Press (Quad Focus)",
+      "videoUrl": "https://api-files.sproutvideo.com/file/ea9ddeb61c1ceecb63/8b1bfd16f064e927/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/143ca3617ae39d5f449a9356e5af3393/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "leg-press-calf-raise",
+      "name": "Leg Press Calf Raise",
+      "videoUrl": "https://api-files.sproutvideo.com/file/069ddeb61c1defcf8f/2723e65958e73bd4/360.mp4",
+      "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/f199b9c903d047b3b8eccd515c3db749/poster_frames/frame_0000.jpg"
+    }
+  ],
+  "programs": [
+    {
+      "id": "gym-5-day-ppl-upper-lower",
+      "name": "GYM: 5 DAY PPL Upper/Lower",
+      "description": "The PPL Upper/Lower is Mike's favourite split of 2025. It combines the infamous PPL split with an added upper and lower day allowing for all muscle groups to be trained twice per week. This is for intermediate - advanced lifters who are focused on building strength, size and hitting all muscle groups equally. A great opportunity to increase weights lifted and hit PR's with the reduced rep ranges and increased rest periods. *This is only available as a 5 day option.",
+      "daysPerWeek": 5,
+      "isSystem": true
+    }
+  ],
+  "programWeeks": [
+    {
+      "id": "gym-5-day-ppl-upper-lower-week-1",
+      "programId": "gym-5-day-ppl-upper-lower",
+      "weekNumber": 1
+    },
+    {
+      "id": "gym-5-day-ppl-upper-lower-week-2",
+      "programId": "gym-5-day-ppl-upper-lower",
+      "weekNumber": 2
+    },
+    {
+      "id": "gym-5-day-ppl-upper-lower-week-3",
+      "programId": "gym-5-day-ppl-upper-lower",
+      "weekNumber": 3
+    },
+    {
+      "id": "gym-5-day-ppl-upper-lower-week-4",
+      "programId": "gym-5-day-ppl-upper-lower",
+      "weekNumber": 4
+    },
+    {
+      "id": "gym-5-day-ppl-upper-lower-week-5",
+      "programId": "gym-5-day-ppl-upper-lower",
+      "weekNumber": 5
+    }
+  ],
+  "workoutDays": [
+    {
+      "id": "d1efda8b-2fff-40f1-ba06-00c04aa00aa9",
+      "weekId": "gym-5-day-ppl-upper-lower-week-1",
+      "title": "Push 4",
+      "dayOrder": 0
+    },
+    {
+      "id": "b63da339-0cdb-4c90-8ccd-0aee7ebadb08",
+      "weekId": "gym-5-day-ppl-upper-lower-week-1",
+      "title": "Pull 4",
+      "dayOrder": 1
+    },
+    {
+      "id": "4ddd3cc2-46dd-4c6b-9555-64bd8721ec42",
+      "weekId": "gym-5-day-ppl-upper-lower-week-1",
+      "title": "Legs 4",
+      "dayOrder": 2
+    },
+    {
+      "id": "76b21fdb-b4d9-4ee7-add4-23fd340ee815",
+      "weekId": "gym-5-day-ppl-upper-lower-week-1",
+      "title": "Upper C",
+      "dayOrder": 3
+    },
+    {
+      "id": "e8495f62-b9cf-414d-b298-f9ed7504fb0b",
+      "weekId": "gym-5-day-ppl-upper-lower-week-1",
+      "title": "Lower 4",
+      "dayOrder": 4
+    },
+    {
+      "id": "fbbf9743-7b0e-481a-8ac7-83a4c41c927f",
+      "weekId": "gym-5-day-ppl-upper-lower-week-2",
+      "title": "Push 4",
+      "dayOrder": 0
+    },
+    {
+      "id": "37796d97-88c4-4303-9ace-cca4d7b5ec79",
+      "weekId": "gym-5-day-ppl-upper-lower-week-2",
+      "title": "Pull 4",
+      "dayOrder": 1
+    },
+    {
+      "id": "bb99a911-d468-4234-8590-678fa59369ac",
+      "weekId": "gym-5-day-ppl-upper-lower-week-2",
+      "title": "Legs 4",
+      "dayOrder": 2
+    },
+    {
+      "id": "c5998af1-b3e1-4272-abef-303ced3cc86b",
+      "weekId": "gym-5-day-ppl-upper-lower-week-2",
+      "title": "Upper C",
+      "dayOrder": 3
+    },
+    {
+      "id": "0f8cc6ce-aa76-4afd-a845-3cd8574d58ad",
+      "weekId": "gym-5-day-ppl-upper-lower-week-2",
+      "title": "Lower 4",
+      "dayOrder": 4
+    },
+    {
+      "id": "394b0dc3-a36e-4678-93f7-1468fcba83ed",
+      "weekId": "gym-5-day-ppl-upper-lower-week-3",
+      "title": "Push 4",
+      "dayOrder": 0
+    },
+    {
+      "id": "81e04afc-b3b7-4dd6-a13d-3e0bdc12bcaa",
+      "weekId": "gym-5-day-ppl-upper-lower-week-3",
+      "title": "Pull 4",
+      "dayOrder": 1
+    },
+    {
+      "id": "5c448d98-479d-4ee5-925e-ca47e8e71c40",
+      "weekId": "gym-5-day-ppl-upper-lower-week-3",
+      "title": "Legs 4",
+      "dayOrder": 2
+    },
+    {
+      "id": "5859d354-974a-471f-b45e-08de2aac6b79",
+      "weekId": "gym-5-day-ppl-upper-lower-week-3",
+      "title": "Upper C",
+      "dayOrder": 3
+    },
+    {
+      "id": "fd8fe8bd-cc02-48b2-a56b-e84f71b222b7",
+      "weekId": "gym-5-day-ppl-upper-lower-week-3",
+      "title": "Lower 4",
+      "dayOrder": 4
+    },
+    {
+      "id": "c35c2b32-ab33-4688-86dd-88c39c55406e",
+      "weekId": "gym-5-day-ppl-upper-lower-week-4",
+      "title": "Push 4",
+      "dayOrder": 0
+    },
+    {
+      "id": "2cb17635-0ea4-44d2-ab67-0b527b37e6ff",
+      "weekId": "gym-5-day-ppl-upper-lower-week-4",
+      "title": "Pull 4",
+      "dayOrder": 1
+    },
+    {
+      "id": "1d7a501d-3690-4679-b3b6-d69693a628c9",
+      "weekId": "gym-5-day-ppl-upper-lower-week-4",
+      "title": "Legs 4",
+      "dayOrder": 2
+    },
+    {
+      "id": "38ab43a2-fb34-4a84-a5a7-b2f0dded1725",
+      "weekId": "gym-5-day-ppl-upper-lower-week-4",
+      "title": "Upper C",
+      "dayOrder": 3
+    },
+    {
+      "id": "0c1a6c94-92de-4e09-99d5-83fe81b9ed34",
+      "weekId": "gym-5-day-ppl-upper-lower-week-4",
+      "title": "Lower 4",
+      "dayOrder": 4
+    },
+    {
+      "id": "9a58ef6c-0089-462c-8808-e29857588d07",
+      "weekId": "gym-5-day-ppl-upper-lower-week-5",
+      "title": "Push 4",
+      "dayOrder": 0
+    },
+    {
+      "id": "2497d8d6-76be-4541-ae51-330d4809a53a",
+      "weekId": "gym-5-day-ppl-upper-lower-week-5",
+      "title": "Pull 4",
+      "dayOrder": 1
+    },
+    {
+      "id": "3a2dfc9d-2f31-45c3-831f-8b5cd7db21a0",
+      "weekId": "gym-5-day-ppl-upper-lower-week-5",
+      "title": "Legs 4",
+      "dayOrder": 2
+    },
+    {
+      "id": "9ce4a26c-7037-4255-8817-158a71dc14fa",
+      "weekId": "gym-5-day-ppl-upper-lower-week-5",
+      "title": "Upper C",
+      "dayOrder": 3
+    },
+    {
+      "id": "3d8a10a6-6eed-4f62-9f63-35f3b5bbd621",
+      "weekId": "gym-5-day-ppl-upper-lower-week-5",
+      "title": "Lower 4",
+      "dayOrder": 4
+    }
+  ],
+  "dayExercises": [
+    {
+      "dayId": "d1efda8b-2fff-40f1-ba06-00c04aa00aa9",
+      "exerciseId": "hammer-plate-press-flat",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "d1efda8b-2fff-40f1-ba06-00c04aa00aa9",
+      "exerciseId": "smith-machine-shoulder-press",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "d1efda8b-2fff-40f1-ba06-00c04aa00aa9",
+      "exerciseId": "flat-or-incline-db-fly",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "d1efda8b-2fff-40f1-ba06-00c04aa00aa9",
+      "exerciseId": "machine-lateral-raise",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "d1efda8b-2fff-40f1-ba06-00c04aa00aa9",
+      "exerciseId": "tricep-dip-machine",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "d1efda8b-2fff-40f1-ba06-00c04aa00aa9",
+      "exerciseId": "single-arm-cable-tricep-extension",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "d1efda8b-2fff-40f1-ba06-00c04aa00aa9",
+      "exerciseId": "overhead-tricep-extension-machine",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "b63da339-0cdb-4c90-8ccd-0aee7ebadb08",
+      "exerciseId": "seated-one-arm-iso-row-neutral-grip",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "b63da339-0cdb-4c90-8ccd-0aee7ebadb08",
+      "exerciseId": "lat-pulldown-underhand-grip",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "b63da339-0cdb-4c90-8ccd-0aee7ebadb08",
+      "exerciseId": "low-row",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "b63da339-0cdb-4c90-8ccd-0aee7ebadb08",
+      "exerciseId": "incline-bench-db-rear-delt-fly-slow",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "b63da339-0cdb-4c90-8ccd-0aee7ebadb08",
+      "exerciseId": "single-arm-db-hammer-curl",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "b63da339-0cdb-4c90-8ccd-0aee7ebadb08",
+      "exerciseId": "bb-ez-bar-bicep-curl",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "b63da339-0cdb-4c90-8ccd-0aee7ebadb08",
+      "exerciseId": "bicep-focus-chin-up",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "4ddd3cc2-46dd-4c6b-9555-64bd8721ec42",
+      "exerciseId": "romanian-deadlift-glute-focus",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "4ddd3cc2-46dd-4c6b-9555-64bd8721ec42",
+      "exerciseId": "hack-squat",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "4ddd3cc2-46dd-4c6b-9555-64bd8721ec42",
+      "exerciseId": "seated-leg-curl",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "4ddd3cc2-46dd-4c6b-9555-64bd8721ec42",
+      "exerciseId": "leg-extension",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "4ddd3cc2-46dd-4c6b-9555-64bd8721ec42",
+      "exerciseId": "lying-leg-curl-single-leg",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "4ddd3cc2-46dd-4c6b-9555-64bd8721ec42",
+      "exerciseId": "standing-calf-raise",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "76b21fdb-b4d9-4ee7-add4-23fd340ee815",
+      "exerciseId": "t-bar-row",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "76b21fdb-b4d9-4ee7-add4-23fd340ee815",
+      "exerciseId": "incline-bb-bench-press",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "76b21fdb-b4d9-4ee7-add4-23fd340ee815",
+      "exerciseId": "iso-lateral-high-row",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "76b21fdb-b4d9-4ee7-add4-23fd340ee815",
+      "exerciseId": "chest-supported-db-lateral-raise",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "76b21fdb-b4d9-4ee7-add4-23fd340ee815",
+      "exerciseId": "dy-db-shrugs",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "76b21fdb-b4d9-4ee7-add4-23fd340ee815",
+      "exerciseId": "cable-rear-delt-fly-single-arm",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "76b21fdb-b4d9-4ee7-add4-23fd340ee815",
+      "exerciseId": "machine-preacher-curl",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "76b21fdb-b4d9-4ee7-add4-23fd340ee815",
+      "exerciseId": "close-grip-bb-press-smith-machine",
+      "exerciseOrder": 7
+    },
+    {
+      "dayId": "e8495f62-b9cf-414d-b298-f9ed7504fb0b",
+      "exerciseId": "smith-machine-hip-thrust",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "e8495f62-b9cf-414d-b298-f9ed7504fb0b",
+      "exerciseId": "pendulum-squat",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "e8495f62-b9cf-414d-b298-f9ed7504fb0b",
+      "exerciseId": "smith-machine-bulgarian-split-squat",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "e8495f62-b9cf-414d-b298-f9ed7504fb0b",
+      "exerciseId": "weighted-45-s",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "e8495f62-b9cf-414d-b298-f9ed7504fb0b",
+      "exerciseId": "leg-press-quad-focus",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "e8495f62-b9cf-414d-b298-f9ed7504fb0b",
+      "exerciseId": "leg-press-calf-raise",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "fbbf9743-7b0e-481a-8ac7-83a4c41c927f",
+      "exerciseId": "hammer-plate-press-flat",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "fbbf9743-7b0e-481a-8ac7-83a4c41c927f",
+      "exerciseId": "smith-machine-shoulder-press",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "fbbf9743-7b0e-481a-8ac7-83a4c41c927f",
+      "exerciseId": "flat-or-incline-db-fly",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "fbbf9743-7b0e-481a-8ac7-83a4c41c927f",
+      "exerciseId": "machine-lateral-raise",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "fbbf9743-7b0e-481a-8ac7-83a4c41c927f",
+      "exerciseId": "tricep-dip-machine",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "fbbf9743-7b0e-481a-8ac7-83a4c41c927f",
+      "exerciseId": "single-arm-cable-tricep-extension",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "fbbf9743-7b0e-481a-8ac7-83a4c41c927f",
+      "exerciseId": "overhead-tricep-extension-machine",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "37796d97-88c4-4303-9ace-cca4d7b5ec79",
+      "exerciseId": "seated-one-arm-iso-row-neutral-grip",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "37796d97-88c4-4303-9ace-cca4d7b5ec79",
+      "exerciseId": "lat-pulldown-underhand-grip",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "37796d97-88c4-4303-9ace-cca4d7b5ec79",
+      "exerciseId": "low-row",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "37796d97-88c4-4303-9ace-cca4d7b5ec79",
+      "exerciseId": "incline-bench-db-rear-delt-fly-slow",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "37796d97-88c4-4303-9ace-cca4d7b5ec79",
+      "exerciseId": "single-arm-db-hammer-curl",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "37796d97-88c4-4303-9ace-cca4d7b5ec79",
+      "exerciseId": "bb-ez-bar-bicep-curl",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "37796d97-88c4-4303-9ace-cca4d7b5ec79",
+      "exerciseId": "bicep-focus-chin-up",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "bb99a911-d468-4234-8590-678fa59369ac",
+      "exerciseId": "romanian-deadlift-glute-focus",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "bb99a911-d468-4234-8590-678fa59369ac",
+      "exerciseId": "hack-squat",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "bb99a911-d468-4234-8590-678fa59369ac",
+      "exerciseId": "seated-leg-curl",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "bb99a911-d468-4234-8590-678fa59369ac",
+      "exerciseId": "leg-extension",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "bb99a911-d468-4234-8590-678fa59369ac",
+      "exerciseId": "lying-leg-curl-single-leg",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "bb99a911-d468-4234-8590-678fa59369ac",
+      "exerciseId": "standing-calf-raise",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "c5998af1-b3e1-4272-abef-303ced3cc86b",
+      "exerciseId": "t-bar-row",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "c5998af1-b3e1-4272-abef-303ced3cc86b",
+      "exerciseId": "incline-bb-bench-press",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "c5998af1-b3e1-4272-abef-303ced3cc86b",
+      "exerciseId": "iso-lateral-high-row",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "c5998af1-b3e1-4272-abef-303ced3cc86b",
+      "exerciseId": "chest-supported-db-lateral-raise",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "c5998af1-b3e1-4272-abef-303ced3cc86b",
+      "exerciseId": "dy-db-shrugs",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "c5998af1-b3e1-4272-abef-303ced3cc86b",
+      "exerciseId": "cable-rear-delt-fly-single-arm",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "c5998af1-b3e1-4272-abef-303ced3cc86b",
+      "exerciseId": "machine-preacher-curl",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "c5998af1-b3e1-4272-abef-303ced3cc86b",
+      "exerciseId": "close-grip-bb-press-smith-machine",
+      "exerciseOrder": 7
+    },
+    {
+      "dayId": "0f8cc6ce-aa76-4afd-a845-3cd8574d58ad",
+      "exerciseId": "smith-machine-hip-thrust",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "0f8cc6ce-aa76-4afd-a845-3cd8574d58ad",
+      "exerciseId": "pendulum-squat",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "0f8cc6ce-aa76-4afd-a845-3cd8574d58ad",
+      "exerciseId": "smith-machine-bulgarian-split-squat",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "0f8cc6ce-aa76-4afd-a845-3cd8574d58ad",
+      "exerciseId": "weighted-45-s",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "0f8cc6ce-aa76-4afd-a845-3cd8574d58ad",
+      "exerciseId": "leg-press-quad-focus",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "0f8cc6ce-aa76-4afd-a845-3cd8574d58ad",
+      "exerciseId": "leg-press-calf-raise",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "394b0dc3-a36e-4678-93f7-1468fcba83ed",
+      "exerciseId": "hammer-plate-press-flat",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "394b0dc3-a36e-4678-93f7-1468fcba83ed",
+      "exerciseId": "smith-machine-shoulder-press",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "394b0dc3-a36e-4678-93f7-1468fcba83ed",
+      "exerciseId": "flat-or-incline-db-fly",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "394b0dc3-a36e-4678-93f7-1468fcba83ed",
+      "exerciseId": "machine-lateral-raise",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "394b0dc3-a36e-4678-93f7-1468fcba83ed",
+      "exerciseId": "tricep-dip-machine",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "394b0dc3-a36e-4678-93f7-1468fcba83ed",
+      "exerciseId": "single-arm-cable-tricep-extension",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "394b0dc3-a36e-4678-93f7-1468fcba83ed",
+      "exerciseId": "overhead-tricep-extension-machine",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "81e04afc-b3b7-4dd6-a13d-3e0bdc12bcaa",
+      "exerciseId": "seated-one-arm-iso-row-neutral-grip",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "81e04afc-b3b7-4dd6-a13d-3e0bdc12bcaa",
+      "exerciseId": "lat-pulldown-underhand-grip",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "81e04afc-b3b7-4dd6-a13d-3e0bdc12bcaa",
+      "exerciseId": "low-row",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "81e04afc-b3b7-4dd6-a13d-3e0bdc12bcaa",
+      "exerciseId": "incline-bench-db-rear-delt-fly-slow",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "81e04afc-b3b7-4dd6-a13d-3e0bdc12bcaa",
+      "exerciseId": "single-arm-db-hammer-curl",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "81e04afc-b3b7-4dd6-a13d-3e0bdc12bcaa",
+      "exerciseId": "bb-ez-bar-bicep-curl",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "81e04afc-b3b7-4dd6-a13d-3e0bdc12bcaa",
+      "exerciseId": "bicep-focus-chin-up",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "5c448d98-479d-4ee5-925e-ca47e8e71c40",
+      "exerciseId": "romanian-deadlift-glute-focus",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "5c448d98-479d-4ee5-925e-ca47e8e71c40",
+      "exerciseId": "hack-squat",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "5c448d98-479d-4ee5-925e-ca47e8e71c40",
+      "exerciseId": "seated-leg-curl",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "5c448d98-479d-4ee5-925e-ca47e8e71c40",
+      "exerciseId": "leg-extension",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "5c448d98-479d-4ee5-925e-ca47e8e71c40",
+      "exerciseId": "lying-leg-curl-single-leg",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "5c448d98-479d-4ee5-925e-ca47e8e71c40",
+      "exerciseId": "standing-calf-raise",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "5859d354-974a-471f-b45e-08de2aac6b79",
+      "exerciseId": "t-bar-row",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "5859d354-974a-471f-b45e-08de2aac6b79",
+      "exerciseId": "incline-bb-bench-press",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "5859d354-974a-471f-b45e-08de2aac6b79",
+      "exerciseId": "iso-lateral-high-row",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "5859d354-974a-471f-b45e-08de2aac6b79",
+      "exerciseId": "chest-supported-db-lateral-raise",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "5859d354-974a-471f-b45e-08de2aac6b79",
+      "exerciseId": "dy-db-shrugs",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "5859d354-974a-471f-b45e-08de2aac6b79",
+      "exerciseId": "cable-rear-delt-fly-single-arm",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "5859d354-974a-471f-b45e-08de2aac6b79",
+      "exerciseId": "machine-preacher-curl",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "5859d354-974a-471f-b45e-08de2aac6b79",
+      "exerciseId": "close-grip-bb-press-smith-machine",
+      "exerciseOrder": 7
+    },
+    {
+      "dayId": "fd8fe8bd-cc02-48b2-a56b-e84f71b222b7",
+      "exerciseId": "smith-machine-hip-thrust",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "fd8fe8bd-cc02-48b2-a56b-e84f71b222b7",
+      "exerciseId": "pendulum-squat",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "fd8fe8bd-cc02-48b2-a56b-e84f71b222b7",
+      "exerciseId": "smith-machine-bulgarian-split-squat",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "fd8fe8bd-cc02-48b2-a56b-e84f71b222b7",
+      "exerciseId": "weighted-45-s",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "fd8fe8bd-cc02-48b2-a56b-e84f71b222b7",
+      "exerciseId": "leg-press-quad-focus",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "fd8fe8bd-cc02-48b2-a56b-e84f71b222b7",
+      "exerciseId": "leg-press-calf-raise",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "c35c2b32-ab33-4688-86dd-88c39c55406e",
+      "exerciseId": "hammer-plate-press-flat",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "c35c2b32-ab33-4688-86dd-88c39c55406e",
+      "exerciseId": "smith-machine-shoulder-press",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "c35c2b32-ab33-4688-86dd-88c39c55406e",
+      "exerciseId": "flat-or-incline-db-fly",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "c35c2b32-ab33-4688-86dd-88c39c55406e",
+      "exerciseId": "machine-lateral-raise",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "c35c2b32-ab33-4688-86dd-88c39c55406e",
+      "exerciseId": "tricep-dip-machine",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "c35c2b32-ab33-4688-86dd-88c39c55406e",
+      "exerciseId": "single-arm-cable-tricep-extension",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "c35c2b32-ab33-4688-86dd-88c39c55406e",
+      "exerciseId": "overhead-tricep-extension-machine",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "2cb17635-0ea4-44d2-ab67-0b527b37e6ff",
+      "exerciseId": "seated-one-arm-iso-row-neutral-grip",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "2cb17635-0ea4-44d2-ab67-0b527b37e6ff",
+      "exerciseId": "lat-pulldown-underhand-grip",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "2cb17635-0ea4-44d2-ab67-0b527b37e6ff",
+      "exerciseId": "low-row",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "2cb17635-0ea4-44d2-ab67-0b527b37e6ff",
+      "exerciseId": "incline-bench-db-rear-delt-fly-slow",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "2cb17635-0ea4-44d2-ab67-0b527b37e6ff",
+      "exerciseId": "single-arm-db-hammer-curl",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "2cb17635-0ea4-44d2-ab67-0b527b37e6ff",
+      "exerciseId": "bb-ez-bar-bicep-curl",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "2cb17635-0ea4-44d2-ab67-0b527b37e6ff",
+      "exerciseId": "bicep-focus-chin-up",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "1d7a501d-3690-4679-b3b6-d69693a628c9",
+      "exerciseId": "romanian-deadlift-glute-focus",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "1d7a501d-3690-4679-b3b6-d69693a628c9",
+      "exerciseId": "hack-squat",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "1d7a501d-3690-4679-b3b6-d69693a628c9",
+      "exerciseId": "seated-leg-curl",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "1d7a501d-3690-4679-b3b6-d69693a628c9",
+      "exerciseId": "leg-extension",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "1d7a501d-3690-4679-b3b6-d69693a628c9",
+      "exerciseId": "lying-leg-curl-single-leg",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "1d7a501d-3690-4679-b3b6-d69693a628c9",
+      "exerciseId": "standing-calf-raise",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "38ab43a2-fb34-4a84-a5a7-b2f0dded1725",
+      "exerciseId": "t-bar-row",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "38ab43a2-fb34-4a84-a5a7-b2f0dded1725",
+      "exerciseId": "incline-bb-bench-press",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "38ab43a2-fb34-4a84-a5a7-b2f0dded1725",
+      "exerciseId": "iso-lateral-high-row",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "38ab43a2-fb34-4a84-a5a7-b2f0dded1725",
+      "exerciseId": "chest-supported-db-lateral-raise",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "38ab43a2-fb34-4a84-a5a7-b2f0dded1725",
+      "exerciseId": "dy-db-shrugs",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "38ab43a2-fb34-4a84-a5a7-b2f0dded1725",
+      "exerciseId": "cable-rear-delt-fly-single-arm",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "38ab43a2-fb34-4a84-a5a7-b2f0dded1725",
+      "exerciseId": "machine-preacher-curl",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "38ab43a2-fb34-4a84-a5a7-b2f0dded1725",
+      "exerciseId": "close-grip-bb-press-smith-machine",
+      "exerciseOrder": 7
+    },
+    {
+      "dayId": "0c1a6c94-92de-4e09-99d5-83fe81b9ed34",
+      "exerciseId": "smith-machine-hip-thrust",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "0c1a6c94-92de-4e09-99d5-83fe81b9ed34",
+      "exerciseId": "pendulum-squat",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "0c1a6c94-92de-4e09-99d5-83fe81b9ed34",
+      "exerciseId": "smith-machine-bulgarian-split-squat",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "0c1a6c94-92de-4e09-99d5-83fe81b9ed34",
+      "exerciseId": "weighted-45-s",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "0c1a6c94-92de-4e09-99d5-83fe81b9ed34",
+      "exerciseId": "leg-press-quad-focus",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "0c1a6c94-92de-4e09-99d5-83fe81b9ed34",
+      "exerciseId": "leg-press-calf-raise",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "9a58ef6c-0089-462c-8808-e29857588d07",
+      "exerciseId": "hammer-plate-press-flat",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "9a58ef6c-0089-462c-8808-e29857588d07",
+      "exerciseId": "smith-machine-shoulder-press",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "9a58ef6c-0089-462c-8808-e29857588d07",
+      "exerciseId": "flat-or-incline-db-fly",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "9a58ef6c-0089-462c-8808-e29857588d07",
+      "exerciseId": "machine-lateral-raise",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "9a58ef6c-0089-462c-8808-e29857588d07",
+      "exerciseId": "tricep-dip-machine",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "9a58ef6c-0089-462c-8808-e29857588d07",
+      "exerciseId": "single-arm-cable-tricep-extension",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "9a58ef6c-0089-462c-8808-e29857588d07",
+      "exerciseId": "overhead-tricep-extension-machine",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "2497d8d6-76be-4541-ae51-330d4809a53a",
+      "exerciseId": "seated-one-arm-iso-row-neutral-grip",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "2497d8d6-76be-4541-ae51-330d4809a53a",
+      "exerciseId": "lat-pulldown-underhand-grip",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "2497d8d6-76be-4541-ae51-330d4809a53a",
+      "exerciseId": "low-row",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "2497d8d6-76be-4541-ae51-330d4809a53a",
+      "exerciseId": "incline-bench-db-rear-delt-fly-slow",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "2497d8d6-76be-4541-ae51-330d4809a53a",
+      "exerciseId": "single-arm-db-hammer-curl",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "2497d8d6-76be-4541-ae51-330d4809a53a",
+      "exerciseId": "bb-ez-bar-bicep-curl",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "2497d8d6-76be-4541-ae51-330d4809a53a",
+      "exerciseId": "bicep-focus-chin-up",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "3a2dfc9d-2f31-45c3-831f-8b5cd7db21a0",
+      "exerciseId": "romanian-deadlift-glute-focus",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "3a2dfc9d-2f31-45c3-831f-8b5cd7db21a0",
+      "exerciseId": "hack-squat",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "3a2dfc9d-2f31-45c3-831f-8b5cd7db21a0",
+      "exerciseId": "seated-leg-curl",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "3a2dfc9d-2f31-45c3-831f-8b5cd7db21a0",
+      "exerciseId": "leg-extension",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "3a2dfc9d-2f31-45c3-831f-8b5cd7db21a0",
+      "exerciseId": "lying-leg-curl-single-leg",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "3a2dfc9d-2f31-45c3-831f-8b5cd7db21a0",
+      "exerciseId": "standing-calf-raise",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "9ce4a26c-7037-4255-8817-158a71dc14fa",
+      "exerciseId": "t-bar-row",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "9ce4a26c-7037-4255-8817-158a71dc14fa",
+      "exerciseId": "incline-bb-bench-press",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "9ce4a26c-7037-4255-8817-158a71dc14fa",
+      "exerciseId": "iso-lateral-high-row",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "9ce4a26c-7037-4255-8817-158a71dc14fa",
+      "exerciseId": "chest-supported-db-lateral-raise",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "9ce4a26c-7037-4255-8817-158a71dc14fa",
+      "exerciseId": "dy-db-shrugs",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "9ce4a26c-7037-4255-8817-158a71dc14fa",
+      "exerciseId": "cable-rear-delt-fly-single-arm",
+      "exerciseOrder": 5
+    },
+    {
+      "dayId": "9ce4a26c-7037-4255-8817-158a71dc14fa",
+      "exerciseId": "machine-preacher-curl",
+      "exerciseOrder": 6
+    },
+    {
+      "dayId": "9ce4a26c-7037-4255-8817-158a71dc14fa",
+      "exerciseId": "close-grip-bb-press-smith-machine",
+      "exerciseOrder": 7
+    },
+    {
+      "dayId": "3d8a10a6-6eed-4f62-9f63-35f3b5bbd621",
+      "exerciseId": "smith-machine-hip-thrust",
+      "exerciseOrder": 0
+    },
+    {
+      "dayId": "3d8a10a6-6eed-4f62-9f63-35f3b5bbd621",
+      "exerciseId": "pendulum-squat",
+      "exerciseOrder": 1
+    },
+    {
+      "dayId": "3d8a10a6-6eed-4f62-9f63-35f3b5bbd621",
+      "exerciseId": "smith-machine-bulgarian-split-squat",
+      "exerciseOrder": 2
+    },
+    {
+      "dayId": "3d8a10a6-6eed-4f62-9f63-35f3b5bbd621",
+      "exerciseId": "weighted-45-s",
+      "exerciseOrder": 3
+    },
+    {
+      "dayId": "3d8a10a6-6eed-4f62-9f63-35f3b5bbd621",
+      "exerciseId": "leg-press-quad-focus",
+      "exerciseOrder": 4
+    },
+    {
+      "dayId": "3d8a10a6-6eed-4f62-9f63-35f3b5bbd621",
+      "exerciseId": "leg-press-calf-raise",
+      "exerciseOrder": 5
+    }
+  ]
+}

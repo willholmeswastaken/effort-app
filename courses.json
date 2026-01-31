@@ -1,0 +1,1537 @@
+{
+  "data": {
+    "getCourse": {
+      "data": {
+        "name": "Exercise Execution",
+        "description": "\r",
+        "meta_data": "[]",
+        "sections": [
+          {
+            "id": "135",
+            "name": "Shoulders",
+            "order": 0,
+            "meta_data": "{\"coverImage\":\"https://img.genflow.com/thrst/libraryimages/shoulders.jpg\"}",
+            "lessons": [
+              {
+                "id": "2051",
+                "name": "Single Arm Lateral Raise",
+                "order": 0,
+                "assets": [
+                  {
+                    "id": "604404",
+                    "title": "Single Arm Lateral Raise",
+                    "url": "https://api-files.sproutvideo.com/file/ea9ed4ba181be4c763/e87a87b3218cd5a0/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Single_Arm_Lateral_Raise.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2052",
+                "name": "Reverse Pec Deck",
+                "order": 1,
+                "assets": [
+                  {
+                    "id": "604405",
+                    "title": "Reverse Pec Deck",
+                    "url": "https://api-files.sproutvideo.com/file/d39ed4ba181be4c25a/cf87af658b69e3c6/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Reverse_Pec_Deck.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2053",
+                "name": "Overhead BB Press",
+                "order": 2,
+                "assets": [
+                  {
+                    "id": "604406",
+                    "title": "Overhead BB Press",
+                    "url": "https://api-files.sproutvideo.com/file/a79ed4ba181be2c02e/1cc0d19c637d665e/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Overhead_BB_Press.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2054",
+                "name": "Cable Y Raise",
+                "order": 3,
+                "assets": [
+                  {
+                    "id": "604407",
+                    "title": "Cable Y Raise",
+                    "url": "https://api-files.sproutvideo.com/file/799ed4ba181be2c6f0/574a38c81c05c51c/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Cable_Y_Raise.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2067",
+                "name": "Seated DB Overhead Press",
+                "order": 10,
+                "assets": [
+                  {
+                    "id": "597153",
+                    "title": "Seated DB Overhead Press",
+                    "url": "https://api-files.sproutvideo.com/file/709ddbb21b1ee3c0f9/8f071d2a3e7ea9ca/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2616b8211aa189472dc42c503fb88e8e/poster_frames/frame_0002.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2068",
+                "name": "Face Pull",
+                "order": 11,
+                "assets": [
+                  {
+                    "id": "597154",
+                    "title": "Face Pull",
+                    "url": "https://api-files.sproutvideo.com/file/119ddbb21b1ee2cc98/bd4af6c2485934ef/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/b519d551a0bb2966b219515acd351123/poster_frames/frame_0002.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2069",
+                "name": "DB Rear Delt Fly",
+                "order": 12,
+                "assets": [
+                  {
+                    "id": "597155",
+                    "title": "DB Rear Delt Fly",
+                    "url": "https://api-files.sproutvideo.com/file/069ddbb21b1ee2c78f/457481da87d37fbf/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/c79cb64bb85798573b7cbf73ecb8f5e9/poster_frames/frame_0003.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2070",
+                "name": "DB Lateral Raise",
+                "order": 13,
+                "assets": [
+                  {
+                    "id": "597156",
+                    "title": "DB Lateral Raise",
+                    "url": "https://api-files.sproutvideo.com/file/799ddbb21814e8c7f0/35c30a89716d5a52/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/24a4ec037b703694c107d021906876c5/poster_frames/frame_0003.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2071",
+                "name": "Cable Lateral Raise",
+                "order": 14,
+                "assets": [
+                  {
+                    "id": "597157",
+                    "title": "Cable Lateral Raise",
+                    "url": "https://api-files.sproutvideo.com/file/119ddbb21814eacd98/d4cafcf23bb6bef1/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/d464c1e87ee05c6ad6a613be137159c6/poster_frames/frame_0003.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              }
+            ],
+            "__typename": "CourseItemSectionItem"
+          },
+          {
+            "id": "136",
+            "name": "Chest",
+            "order": 1,
+            "meta_data": "{\"coverImage\":\"https://img.genflow.com/thrst/libraryimages/chest.jpg\"}",
+            "lessons": [
+              {
+                "id": "2055",
+                "name": "Press Up",
+                "order": 2,
+                "assets": [
+                  {
+                    "id": "604398",
+                    "title": "Press Up",
+                    "url": "https://api-files.sproutvideo.com/file/ea9ed4ba181be3c063/a546a1783c50295e/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Press_Up.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2056",
+                "name": "Pec Deck",
+                "order": 0,
+                "assets": [
+                  {
+                    "id": "604399",
+                    "title": "Pec Deck",
+                    "url": "https://api-files.sproutvideo.com/file/d39ed4ba181be3c55a/bf63bd8be14a7116/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Pec_Deck.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2057",
+                "name": "Decline BB Press",
+                "order": 1,
+                "assets": [
+                  {
+                    "id": "604400",
+                    "title": "Decline BB Press",
+                    "url": "https://api-files.sproutvideo.com/file/d39ed4ba181be2c45a/2f127f959179c8b6/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Decline_BB_Press.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2072",
+                "name": "Incline DB Press",
+                "order": 9,
+                "assets": [
+                  {
+                    "id": "597158",
+                    "title": "Incline DB Press",
+                    "url": "https://api-files.sproutvideo.com/file/799ddbb41918e5c1f0/5dff8735373893f6/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/3081aed673cd3419dee762ec0ec10d18/poster_frames/frame_0002.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2073",
+                "name": "Incline Bench Press",
+                "order": 10,
+                "assets": [
+                  {
+                    "id": "597239",
+                    "title": "Incline Bench Press",
+                    "url": "https://api-files.sproutvideo.com/file/4d9ddbb41918e1c1c4/f757dae5331285d2/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/1461e09f33247c1032f0430b41825da5/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2074",
+                "name": "Flat DB Press",
+                "order": 11,
+                "assets": [
+                  {
+                    "id": "597160",
+                    "title": "Flat DB Press",
+                    "url": "https://api-files.sproutvideo.com/file/a79ddbb2191ae3c52e/4dbddfe9c7c7cc99/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/16343fc6fc7de3b460ae3e8e20c747f8/poster_frames/frame_0002.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2075",
+                "name": "Cable Chest Fly",
+                "order": 12,
+                "assets": [
+                  {
+                    "id": "597161",
+                    "title": "Cable Chest Fly",
+                    "url": "https://api-files.sproutvideo.com/file/799ddbb2191ae7c7f0/ad98e1db4b53fb64/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/59f777dd852397b62949fde4b502b468/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2076",
+                "name": "BB Bench Press",
+                "order": 13,
+                "assets": [
+                  {
+                    "id": "597162",
+                    "title": "BB Bench Press",
+                    "url": "https://api-files.sproutvideo.com/file/799ddbb2191ae5c5f0/36b4a931398fa321/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/c4138a1f5327f6710724ef50b9b9c174/poster_frames/frame_0003.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              }
+            ],
+            "__typename": "CourseItemSectionItem"
+          },
+          {
+            "id": "137",
+            "name": "Arms",
+            "order": 2,
+            "meta_data": "{\"coverImage\":\"https://img.genflow.com/thrst/libraryimages/arms.jpg\"}",
+            "lessons": [
+              {
+                "id": "2058",
+                "name": "Tricep Dips",
+                "order": 0,
+                "assets": [
+                  {
+                    "id": "604395",
+                    "title": "Tricep Dips",
+                    "url": "https://api-files.sproutvideo.com/file/799ed4ba181be5c1f0/7555425fa0045e21/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Tricep_Dips.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2059",
+                "name": "BB EZ Bar Curl",
+                "order": 1,
+                "assets": [
+                  {
+                    "id": "604397",
+                    "title": "BB EZ Bar Curl",
+                    "url": "https://api-files.sproutvideo.com/file/799ed4ba181be1c5f0/4d17b9434cf63a2b/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/BB_EZ_Bar_Curl.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2066",
+                "name": "Overhead Rope Extension",
+                "order": 2,
+                "assets": [
+                  {
+                    "id": "604415",
+                    "title": "Overhead Rope Extension",
+                    "url": "https://api-files.sproutvideo.com/file/119ed4ba181be2ce98/9a41294400c6b701/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/a1087a46eafd8c15ea7ba26b75e96695/poster_frames/frame_1666190600.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2077",
+                "name": "Cable Tricep Crossover",
+                "order": 12,
+                "assets": [
+                  {
+                    "id": "597171",
+                    "title": "Cable Tricep Crossover",
+                    "url": "https://api-files.sproutvideo.com/file/709ddbb21e12eec4f9/c72372b550766325/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/ef38373edad7e83f01e4fd3e8f69b519/poster_frames/frame_0002.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2078",
+                "name": "Cable Tricep Extension",
+                "order": 13,
+                "assets": [
+                  {
+                    "id": "597172",
+                    "title": "Cable Tricep Extension",
+                    "url": "https://api-files.sproutvideo.com/file/d39ddbb21e12e3ce5a/6d4fe8df1035b8c3/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2b969b6756c0ec52601fd5afac10f308/poster_frames/frame_0002.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2079",
+                "name": "Close Grip BB Press",
+                "order": 14,
+                "assets": [
+                  {
+                    "id": "597173",
+                    "title": "Close Grip BB Press",
+                    "url": "https://api-files.sproutvideo.com/file/ac9ddbb21114e2c525/565f40f8fd6eab1c/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/1167a0987563ebd6f0cbac995d3275ca/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2080",
+                "name": "DB Bicep Curl",
+                "order": 15,
+                "assets": [
+                  {
+                    "id": "597174",
+                    "title": "DB Bicep Curl",
+                    "url": "https://api-files.sproutvideo.com/file/ac9ddbb21114e0c725/ecad1696d9c33234/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/e3c4ea57c8963efd5b0efdf6c65e63b8/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2081",
+                "name": "DB Preacher Curl",
+                "order": 16,
+                "assets": [
+                  {
+                    "id": "597175",
+                    "title": "DB Preacher Curl",
+                    "url": "https://api-files.sproutvideo.com/file/ac9ddbb21114e6c125/e00e44fc177e907c/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/6fb4ce2cd5583b51378bb8220330614d/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2082",
+                "name": "DB Tricep Extension",
+                "order": 17,
+                "assets": [
+                  {
+                    "id": "597176",
+                    "title": "DB Tricep Extension",
+                    "url": "https://api-files.sproutvideo.com/file/a79ddbb21114e7c72e/fbbc15e17618035c/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/3b3342775fb350be39291a84708705ed/poster_frames/frame_0003.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2083",
+                "name": "DB Tricep Kickback",
+                "order": 18,
+                "assets": [
+                  {
+                    "id": "597177",
+                    "title": "DB Tricep Kickback",
+                    "url": "https://api-files.sproutvideo.com/file/a79ddbb21114e4c42e/16a799390a82959a/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/a5088851abba8766394864c9ff9a26b4/poster_frames/frame_0003.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2084",
+                "name": "Reverse Curl",
+                "order": 19,
+                "assets": [
+                  {
+                    "id": "597178",
+                    "title": "Reverse Curl",
+                    "url": "https://api-files.sproutvideo.com/file/ea9ddbb21114e5c463/bb1ebf3150600095/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/67cf1cc85bd7f221b810954cddb9062f/poster_frames/frame_0003.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              }
+            ],
+            "__typename": "CourseItemSectionItem"
+          },
+          {
+            "id": "138",
+            "name": "Back",
+            "order": 3,
+            "meta_data": "{\"coverImage\":\"https://img.genflow.com/thrst/libraryimages/back.jpg\"}",
+            "lessons": [
+              {
+                "id": "2060",
+                "name": "Rack Deadlifts",
+                "order": 0,
+                "assets": [
+                  {
+                    "id": "604396",
+                    "title": "Rack Deadlifts",
+                    "url": "https://api-files.sproutvideo.com/file/ac9ed4ba181be4c125/b16adb96d0da6e19/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Rack_Deadlifts.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2085",
+                "name": "Single Arm Cable Row",
+                "order": 10,
+                "assets": [
+                  {
+                    "id": "597163",
+                    "title": "Single Arm Cable Row",
+                    "url": "https://api-files.sproutvideo.com/file/d39ddbb21919e4c55a/5e9a3f3279ecf40b/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/20cba6b062bd91c1747423103dffb9ba/poster_frames/frame_0003.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2086",
+                "name": "One Arm DB Row",
+                "order": 11,
+                "assets": [
+                  {
+                    "id": "597164",
+                    "title": "One Arm DB Row",
+                    "url": "https://api-files.sproutvideo.com/file/4d9ddbb2191ee8c8c4/707dde45b5c63e11/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/1c556432e2d6eedb710428a0dc8789d2/poster_frames/frame_1666188963.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2087",
+                "name": "Lat Pulldown",
+                "order": 12,
+                "assets": [
+                  {
+                    "id": "597165",
+                    "title": "Lat Pulldown",
+                    "url": "https://api-files.sproutvideo.com/file/a79ddbb2191ee5c72e/9bb7e8f1a944cf66/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/202885ee95ead3b9d8f4cae0ebf09f37/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2088",
+                "name": "Incline Bench DB Row",
+                "order": 13,
+                "assets": [
+                  {
+                    "id": "597166",
+                    "title": "Incline Bench DB Row",
+                    "url": "https://api-files.sproutvideo.com/file/449ddbb2191ee1cccd/5f2c1a33eb425ac8/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/8dbeede16b62e41ce36d7b6d37d9f8d2/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2089",
+                "name": "Chin Up & Pull Up",
+                "order": 14,
+                "assets": [
+                  {
+                    "id": "597167",
+                    "title": "Chin Up & Pull Up",
+                    "url": "https://api-files.sproutvideo.com/file/4d9ddbb2191deac9c4/1e65efc7154f6ddc/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/119e551ec3b740477876c887674add0c/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2090",
+                "name": "Cable Pulldown & DB Pullover",
+                "order": 15,
+                "assets": [
+                  {
+                    "id": "597168",
+                    "title": "Cable Pulldown & DB Pullover",
+                    "url": "https://api-files.sproutvideo.com/file/449ddbb2191de6c8cd/9a4e256730bfe4bf/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/24f1743fb495cf9a80d060bc2f6c5717/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2091",
+                "name": "BB Deadlift",
+                "order": 16,
+                "assets": [
+                  {
+                    "id": "597169",
+                    "title": "BB Deadlift",
+                    "url": "https://api-files.sproutvideo.com/file/709ddbb2191de0c2f9/47455364fd6d64bd/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/a7a19f01f089f6de09d39e58b47a0762/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2092",
+                "name": "BB Bent Over Row",
+                "order": 17,
+                "assets": [
+                  {
+                    "id": "597170",
+                    "title": "BB Bent Over Row",
+                    "url": "https://api-files.sproutvideo.com/file/449ddbb2191cebc4cd/9fe16d7b4a3b38fd/480.mp4",
+                    "thumbnail": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/1ca5e2f6c0f2c197f507ee89d554d9a0/poster_frames/frame_0001.jpg",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              }
+            ],
+            "__typename": "CourseItemSectionItem"
+          },
+          {
+            "id": "140",
+            "name": "Quads",
+            "order": 4,
+            "meta_data": "{\"coverImage\":\"https://img.genflow.com/thrst/libraryimages/new-exercises-covers/Quads.png\"}",
+            "lessons": [
+              {
+                "id": "2061",
+                "name": "Pendulum Squat",
+                "order": 0,
+                "assets": [
+                  {
+                    "id": "604402",
+                    "title": "Pendulum Squat",
+                    "url": "https://api-files.sproutvideo.com/file/a79ed4ba181be3c12e/ef2b1c1fa6b43b0e/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Pendulum_Squat.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2062",
+                "name": "Hack Squat",
+                "order": 1,
+                "assets": [
+                  {
+                    "id": "604403",
+                    "title": "Hack Squat",
+                    "url": "https://api-files.sproutvideo.com/file/709ed4ba181be2c3f9/5995fc0c0d912874/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Hack_Squat.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2093",
+                "name": "Walking Lunge",
+                "order": 10,
+                "assets": [
+                  {
+                    "id": "597345",
+                    "title": "Walking Lunge",
+                    "url": "https://api-files.sproutvideo.com/file/ea9ddbb61f1be4c063/f88bf34d28e08174/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/Walking-Lunge.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2094",
+                "name": "Leg Press",
+                "order": 11,
+                "assets": [
+                  {
+                    "id": "597346",
+                    "title": "Leg Press",
+                    "url": "https://api-files.sproutvideo.com/file/ea9ddbb61f1be5c163/74951e79c1eebf7a/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/Leg-Press.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2095",
+                "name": "Leg Extension",
+                "order": 12,
+                "assets": [
+                  {
+                    "id": "597347",
+                    "title": "Leg Press",
+                    "url": "https://api-files.sproutvideo.com/file/ac9ddbb61f1be7c525/34ad3d5a15206258/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/Leg-Extension.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2096",
+                "name": "Heel Elevated Squat",
+                "order": 13,
+                "assets": [
+                  {
+                    "id": "601717",
+                    "title": "Heel Elevated Squat",
+                    "url": "https://api-files.sproutvideo.com/file/119ddbb61f1ae0ca98/f1d5a3898d365c67/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/Heel-Elevated-Squat.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2097",
+                "name": "DB Bulgarian Split Squat",
+                "order": 14,
+                "assets": [
+                  {
+                    "id": "597348",
+                    "title": "DB Bulgarian Split Squat",
+                    "url": "https://api-files.sproutvideo.com/file/709ddbb61f1ae5c2f9/440cd62970474f93/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/DB-Bulgarian-Split-Squat.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2098",
+                "name": "Box Squat",
+                "order": 15,
+                "assets": [
+                  {
+                    "id": "597349",
+                    "title": "Box Squat",
+                    "url": "https://api-files.sproutvideo.com/file/ac9ddbb61f1ae7c425/44e7918f653ba17e/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/Box-Squat.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2099",
+                "name": "BB Squat",
+                "order": 16,
+                "assets": [
+                  {
+                    "id": "597350",
+                    "title": "BB Squat",
+                    "url": "https://api-files.sproutvideo.com/file/ea9ddbb61f1de8ca63/cffaa82f98be8345/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/quads/BB-Squat.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              }
+            ],
+            "__typename": "CourseItemSectionItem"
+          },
+          {
+            "id": "141",
+            "name": "Glutes",
+            "order": 5,
+            "meta_data": "{\"coverImage\":\"https://img.genflow.com/thrst/libraryimages/new-exercises-covers/Glutes.png\"}",
+            "lessons": [
+              {
+                "id": "687",
+                "name": "Sumo Deadlift",
+                "order": 0,
+                "assets": [
+                  {
+                    "id": "597351",
+                    "title": "Sumo Deadlift",
+                    "url": "https://api-files.sproutvideo.com/file/709ddbb61f1ce9c8f9/cc7d28d618e6b54f/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/glutes/sumo-deadlift.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "688",
+                "name": "Smith Machine Bulgarian Split Squat",
+                "order": 1,
+                "assets": [
+                  {
+                    "id": "597352",
+                    "title": "Smith Machine Bulgarian Split Squat",
+                    "url": "https://api-files.sproutvideo.com/file/449ddbb61f1ce6cbcd/b4ed0150a44ca292/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/glutes/smith-machine-bulgarian-split-squat.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "689",
+                "name": "Hyperextensions (Glute Focus)",
+                "order": 2,
+                "assets": [
+                  {
+                    "id": "597353",
+                    "title": "Hyperextensions (Glute Focus)",
+                    "url": "https://api-files.sproutvideo.com/file/449ddbb61f1ce3cecd/01486a3d510207cf/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/glutes/hyperextensions.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "690",
+                "name": "Hip Thrust",
+                "order": 3,
+                "assets": [
+                  {
+                    "id": "597354",
+                    "title": "Hip Thrust",
+                    "url": "https://api-files.sproutvideo.com/file/069ddbb61f1ce1c68f/b25d8c26d4dbf042/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/glutes/hip-thrust.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              }
+            ],
+            "__typename": "CourseItemSectionItem"
+          },
+          {
+            "id": "142",
+            "name": "Abs",
+            "order": 6,
+            "meta_data": "{\"coverImage\":\"https://img.genflow.com/thrst/libraryimages/new-exercises-covers/Abs-2.png\"}",
+            "lessons": [
+              {
+                "id": "691",
+                "name": "Rope Crunch",
+                "order": 0,
+                "assets": [
+                  {
+                    "id": "597355",
+                    "title": "Rope Crunch",
+                    "url": "https://api-files.sproutvideo.com/file/119ddbb61f16ecca98/18064048137ce764/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Ball-Crunch.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "692",
+                "name": "Reverse Crunch",
+                "order": 1,
+                "assets": [
+                  {
+                    "id": "597356",
+                    "title": "Reverse Crunch",
+                    "url": "https://api-files.sproutvideo.com/file/4d9ddbb61f16efc5c4/af5990fb3b60c107/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Reverse-Crunch.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "693",
+                "name": "Knee Raise",
+                "order": 2,
+                "assets": [
+                  {
+                    "id": "597358",
+                    "title": "Knee Raise",
+                    "url": "https://api-files.sproutvideo.com/file/d39ddbb61f16e8c45a/cc14feb873ee4f03/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Knee-Raise.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "694",
+                "name": "Hanging Knee Raise",
+                "order": 3,
+                "assets": [
+                  {
+                    "id": "597359",
+                    "title": "Hanging Knee Raise",
+                    "url": "https://api-files.sproutvideo.com/file/119ddbb61f16eacc98/1840935333641dcf/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Hanging-Knee-Raise.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "695",
+                "name": "Decline Crunch",
+                "order": 4,
+                "assets": [
+                  {
+                    "id": "597360",
+                    "title": "Decline Crunch",
+                    "url": "https://api-files.sproutvideo.com/file/069ddbb61f19e2c08f/13dbd831b22247a7/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Reverse-Crunch.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "696",
+                "name": "Crunch",
+                "order": 5,
+                "assets": [
+                  {
+                    "id": "597361",
+                    "title": "Crunch",
+                    "url": "https://api-files.sproutvideo.com/file/449ddbb61f19e6cecd/853b558ac73111d1/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Crunch.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "697",
+                "name": "Ball Crunch",
+                "order": 6,
+                "assets": [
+                  {
+                    "id": "597362",
+                    "title": "Ball Crunch",
+                    "url": "https://api-files.sproutvideo.com/file/449ddbb61c1be5cccd/03e5897bb948d077/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Ball-Crunch.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "698",
+                "name": "Ab Rollout",
+                "order": 7,
+                "assets": [
+                  {
+                    "id": "597363",
+                    "title": "Ab Rollout",
+                    "url": "https://api-files.sproutvideo.com/file/069ddbb61c1be4c78f/54c800091dc68148/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/abs/Ab-Rollout.png",
+                    "description": null,
+                    "order": 0,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              }
+            ],
+            "__typename": "CourseItemSectionItem"
+          },
+          {
+            "id": "143",
+            "name": "Hamstrings",
+            "order": 7,
+            "meta_data": "{\"coverImage\":\"https://img.genflow.com/thrst/libraryimages/new-exercises-covers/Hamstrings.png\"}",
+            "lessons": [
+              {
+                "id": "2063",
+                "name": "Rowing Machine Leg Curl",
+                "order": 0,
+                "assets": [
+                  {
+                    "id": "604401",
+                    "title": "Rowing Machine Leg Curl",
+                    "url": "https://api-files.sproutvideo.com/file/709ed4ba181be4c5f9/41345ae87177f8d4/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/2022-october/Rowing_Machine_Leg_Curl.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2100",
+                "name": "Seated Leg Curl",
+                "order": 6,
+                "assets": [
+                  {
+                    "id": "597364",
+                    "title": "Seated Leg Curl",
+                    "url": "https://api-files.sproutvideo.com/file/d39ddbb61c18e3c25a/74581c8041690713/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/hamstrings/Seated-Leg-Curl.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2101",
+                "name": "Romanian Deadlift",
+                "order": 7,
+                "assets": [
+                  {
+                    "id": "597365",
+                    "title": "Romanian Deadlift",
+                    "url": "https://api-files.sproutvideo.com/file/ac9ddbb61c18e4c625/3f23d3bb7665aa40/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/hamstrings/Romanian-Deadlift.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2102",
+                "name": "Lying Leg Curl",
+                "order": 8,
+                "assets": [
+                  {
+                    "id": "597366",
+                    "title": "Lying Leg Curl",
+                    "url": "https://api-files.sproutvideo.com/file/d39ddbb61c18e6c75a/fa2c9a9cfa60509f/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/hamstrings/Lying-Leg-Curl.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              },
+              {
+                "id": "2103",
+                "name": "Lying DB Hamstring Curl",
+                "order": 9,
+                "assets": [
+                  {
+                    "id": "597367",
+                    "title": "Lying DB Hamstring Curl",
+                    "url": "https://api-files.sproutvideo.com/file/119ddbb61c19efc598/5ba93b5df9fcd764/480.mp4",
+                    "thumbnail": "https://img.genflow.com/1080x1920/thrst/asset-tns/hamstrings/Lying-DB-Leg-Curl.png",
+                    "description": null,
+                    "order": 2,
+                    "meta_data": "[]",
+                    "asset_type": {
+                      "id": 1,
+                      "name": "Video",
+                      "__typename": "CourseItemSectionItemAssetItemAssetType"
+                    },
+                    "__typename": "CourseItemSectionItemAssetItem"
+                  }
+                ],
+                "__typename": "CourseItemSectionItemLessonItem"
+              }
+            ],
+            "__typename": "CourseItemSectionItem"
+          }
+        ],
+        "__typename": "CourseItem"
+      },
+      "error": null,
+      "__typename": "CourseSectionsResponse"
+    }
+  }
+}
