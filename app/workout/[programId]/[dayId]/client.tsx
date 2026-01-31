@@ -52,25 +52,47 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
   const accumulatedPause = workout?.accumulatedPauseSeconds ?? 0;
   const lastPausedAtTime = workout?.lastPausedAt ? new Date(workout.lastPausedAt).getTime() : null;
 
-  const setsLookup = useMemo(() => {
-    const lookup = new Map<string, { reps: number; weight: number }>();
-    querySetsList.forEach(s => {
-      lookup.set(`${s.exerciseId}-${s.setNumber}`, { reps: s.reps, weight: Number(s.weight) });
-    });
-    return lookup;
+  // Local state to handle immediate UI updates while typing
+  const [localSets, setLocalSets] = useState<Map<string, { reps: number; weight: number }>>(new Map());
+  const timeoutsRef = useRef<Record<string, NodeJS.Timeout>>({});
+
+  // Sync server data to local state on load (only for missing keys to preserve typing)
+  useEffect(() => {
+    if (querySetsList.length > 0) {
+      setLocalSets(prev => {
+        const next = new Map(prev);
+        let changed = false;
+        querySetsList.forEach(s => {
+          const key = `${s.exerciseId}-${s.setNumber}`;
+          if (!next.has(key)) {
+            next.set(key, { reps: s.reps, weight: Number(s.weight) });
+            changed = true;
+          }
+        });
+        return changed ? next : prev;
+      });
+    }
   }, [querySetsList]);
 
   const exercisesWithSets = useMemo(() => 
     exercises.map((ex, index) => ({
       current: ex,
       sets: Array.from({ length: ex.targetSets || 3 }).map((_, i) => {
-        const saved = setsLookup.get(`${ex.id}-${i + 1}`);
-        return saved 
-          ? { reps: saved.reps, weight: saved.weight, completed: true }
+        const key = `${ex.id}-${i + 1}`;
+        // Prioritize local state
+        const saved = localSets.get(key);
+        if (saved) {
+             return { reps: saved.reps, weight: saved.weight, completed: true };
+        }
+        
+        // Fallback to server data (though useEffect should cover this)
+        const serverSet = querySetsList.find(s => s.exerciseId === ex.id && s.setNumber === i + 1);
+        return serverSet
+          ? { reps: serverSet.reps, weight: Number(serverSet.weight), completed: true }
           : { reps: 0, weight: 0, completed: false };
       }),
     }))
-  , [exercises, setsLookup]);
+  , [exercises, localSets, querySetsList]);
 
   const exerciseIds = useMemo(() => exercises.map(e => e.id), [exercises]);
   const { data: lastLifts } = useLastLifts(exerciseIds);
@@ -82,10 +104,6 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
   const [rating, setRating] = useState(0);
   const [showSwapDrawer, setShowSwapDrawer] = useState(false);
   const [swapExerciseIndex, setSwapExerciseIndex] = useState<number | null>(null);
-
-  const savedSetsRef = useRef<Set<string>>(new Set(
-    querySetsList.map(s => `${s.exerciseId}-${s.setNumber}-${s.reps}-${s.weight}`)
-  ));
 
   const upsertSet = useUpsertSet();
   const completeWorkout = useCompleteWorkout();
@@ -137,22 +155,37 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
     const exercise = exercises[exerciseIndex];
     if (!exercise) return;
 
-    newSets.forEach((set, setIndex) => {
-      if (set.reps > 0 && set.weight > 0) {
-        const setKey = `${exercise.id}-${setIndex + 1}-${set.reps}-${set.weight}`;
-        if (!savedSetsRef.current.has(setKey)) {
-          savedSetsRef.current.add(setKey);
-          upsertSet.mutate({
-            workoutLogId: workoutId,
-            exerciseId: exercise.id,
-            exerciseName: exercise.name,
-            exerciseOrder: exerciseIndex,
-            setNumber: setIndex + 1,
-            reps: set.reps,
-            weight: set.weight,
-          });
+    setLocalSets(prev => {
+      const next = new Map(prev);
+      newSets.forEach((set, setIndex) => {
+        const key = `${exercise.id}-${setIndex + 1}`;
+        const previousVal = next.get(key);
+        
+        // Update local state immediately
+        next.set(key, { reps: set.reps, weight: set.weight });
+        
+        // Only mutate if values changed and are valid
+        // Debounce the mutation to prevent server spam/jank
+        const setKey = `${exercise.id}-${setIndex + 1}`;
+        if (timeoutsRef.current[setKey]) {
+          clearTimeout(timeoutsRef.current[setKey]);
         }
-      }
+        
+        timeoutsRef.current[setKey] = setTimeout(() => {
+           if (set.reps > 0 && set.weight > 0) {
+             upsertSet.mutate({
+                workoutLogId: workoutId,
+                exerciseId: exercise.id,
+                exerciseName: exercise.name,
+                exerciseOrder: exerciseIndex,
+                setNumber: setIndex + 1,
+                reps: set.reps,
+                weight: set.weight,
+             });
+           }
+        }, 500); // 500ms debounce
+      });
+      return next;
     });
   }, [exercises, workoutId, upsertSet]);
 
@@ -177,7 +210,7 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
     resetWorkout.mutate(workoutId, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: workoutKeys.session(workoutId) });
-        savedSetsRef.current.clear();
+        setLocalSets(new Map());
         setElapsed(0);
         setFinishedAt(null);
         setRating(0);
