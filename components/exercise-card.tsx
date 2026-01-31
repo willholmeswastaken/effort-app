@@ -260,7 +260,7 @@ export function ExerciseCard({ exercise, exerciseNumber, sets, onSetsChange, las
                 pattern="[0-9]*"
                 placeholder={targetRepsPlaceholder}
                 style={inputStyle}
-                className="h-10 w-full bg-[#2C2C2E] border-0 rounded-lg text-[15px] font-medium text-white placeholder:text-[#48484A] focus:outline-none focus:ring-1 focus:ring-[#0078FF] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-70 disabled:cursor-not-allowed"
+                className="h-10 w-full bg-[#2C2C2E] border-0 rounded-lg text-[16px] font-medium text-white placeholder:text-[#48484A] focus:outline-none focus:ring-1 focus:ring-[#0078FF] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-70 disabled:cursor-not-allowed"
                 value={set.reps || ""} 
                 onChange={(e) => updateSet(index, 'reps', Number(e.target.value) || 0)}
                 disabled={readOnly}
@@ -272,7 +272,7 @@ export function ExerciseCard({ exercise, exerciseNumber, sets, onSetsChange, las
                 pattern="[0-9.]*"
                 placeholder="—" 
                 style={inputStyle}
-                className="h-10 w-full bg-[#2C2C2E] border-0 rounded-lg text-[15px] font-medium text-white placeholder:text-[#48484A] focus:outline-none focus:ring-1 focus:ring-[#0078FF] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-70 disabled:cursor-not-allowed"
+                className="h-10 w-full bg-[#2C2C2E] border-0 rounded-lg text-[16px] font-medium text-white placeholder:text-[#48484A] focus:outline-none focus:ring-1 focus:ring-[#0078FF] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-70 disabled:cursor-not-allowed"
                 value={set.weight || ""} 
                 onChange={(e) => updateSet(index, 'weight', Number(e.target.value) || 0)}
                 disabled={readOnly}
