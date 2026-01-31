@@ -59,18 +59,21 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
     redirect("/");
   }
 
-  // Prefetch the workout session data for hydration
+  // Prefetch the workout session data directly from the service layer
   const queryClient = getQueryClient();
-  const host = headersList.get("host") || "localhost:3000";
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
-  const baseUrl = `${protocol}://${host}`;
+  
+  const sessionData = await runEffect(
+    Effect.gen(function* () {
+      const workoutsService = yield* WorkoutsService;
+      return yield* workoutsService.getWorkoutSession(workoutId);
+    })
+  );
 
-  await queryClient.prefetchQuery(getWorkoutSessionQueryOptions(workoutId, {
-    baseUrl,
-    headers: {
-      cookie: headersList.get("cookie") || "",
-    },
-  }));
+  if (sessionData) {
+    queryClient.setQueryData(workoutQueryKeys.session(workoutId), sessionData, {
+      updatedAt: Date.now(),
+    });
+  }
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
