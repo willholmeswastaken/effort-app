@@ -29,12 +29,13 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
   if (!session?.user) redirect("/login");
   const userId = session.user.id;
 
-  // === PARALLEL BLOCK 1: start workout + fetch prefs in one go ===
+  // === PARALLEL BLOCK 1: start workout (write) ===
   console.time("startWorkout");
   const workoutId = await runEffect(
     pipe(
       Effect.gen(function* () {
-        const [workoutsService, userService] = yield* [WorkoutsService, UserService];
+        const workoutsService = yield* WorkoutsService;
+        const userService     = yield* UserService;
         const prefs = yield* userService.getPreferences(userId);
         return yield* workoutsService.startWorkout({
           userId,
@@ -54,34 +55,35 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
 
   // === PARALLEL BLOCK 2: hydrate session + lastLifts together ===
   console.time("hydrate");
-  const [sessionData, lastLiftsData] = await Promise.all([
-    runEffect(
-      pipe(
-        Effect.gen(function* () {
-          const workoutsService = yield* WorkoutsService;
-          return yield* workoutsService.getWorkoutSession(workoutId);
-        }),
-        Effect.catchAll((e) => {
-          console.error("getWorkoutSession failed", e);
-          return Effect.succeed(null);
-        })
+  const sessionData = await runEffect(
+    pipe(
+      Effect.gen(function* () {
+        const workoutsService = yield* WorkoutsService;
+        return yield* workoutsService.getWorkoutSession(workoutId);
+      }),
+      Effect.catchAll((e) => {
+        console.error("getWorkoutSession failed", e);
+        return Effect.succeed(null);
+      })
+    )
+  );
+
+  // lastLifts only after we have exercises
+  const lastLiftsData = sessionData?.exercises?.length
+    ? await runEffect(
+        pipe(
+          Effect.gen(function* () {
+            const workoutsService = yield* WorkoutsService;
+            const exerciseIds = sessionData.exercises.map(e => e.id);
+            return yield* workoutsService.getLastLifts(userId, exerciseIds);
+          }),
+          Effect.catchAll((e) => {
+            console.error("getLastLifts failed", e);
+            return Effect.succeed([]);
+          })
+        )
       )
-    ),
-    runEffect(
-      pipe(
-        Effect.gen(function* () {
-          const workoutsService = yield* WorkoutsService;
-          const exerciseIds = (yield* workoutsService.getWorkoutSession(workoutId))?.exercises.map(e => e.id) ?? [];
-          if (!exerciseIds.length) return [];
-          return yield* workoutsService.getLastLifts(userId, exerciseIds);
-        }),
-        Effect.catchAll((e) => {
-          console.error("getLastLifts failed", e);
-          return Effect.succeed([]);
-        })
-      )
-    ),
-  ]);
+    : [];
   console.timeEnd("hydrate");
 
   // === Seed React Query cache ===
