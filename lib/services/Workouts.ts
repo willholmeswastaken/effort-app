@@ -400,7 +400,7 @@ export const WorkoutsServiceLive = Layer.effect(
             .delete(schema.exerciseLogs)
             .where(eq(schema.exerciseLogs.workoutLogId, workoutLogId));
 
-          // Reset workout log
+          // Reset workout log - keep denormalized data (day config hasn't changed)
           await db
             .update(schema.workoutLogs)
             .set({
@@ -411,7 +411,8 @@ export const WorkoutsServiceLive = Layer.effect(
               status: "active",
               lastPausedAt: null,
               accumulatedPauseSeconds: 0,
-              dayExercisesSnapshot: null, // Clear denormalized snapshot
+              // Note: dayExercisesSnapshot, programName, dayTitle are preserved
+              // They contain the day configuration which doesn't change on reset
             })
             .where(eq(schema.workoutLogs.id, workoutLogId));
 
