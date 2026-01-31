@@ -289,6 +289,11 @@ import { cn } from "@/lib/utils";
 - Prefer `interface` for object shapes, `type` for unions/aliases
 - Path alias: `@/*` maps to project root
 
+### Code Quality
+
+- **Minimal Comments**: Avoid explaining "what" the code does. Code should be self-documenting. Use comments only for "why" (complex business logic or non-obvious decisions).
+- **Clean Code**: Favor readable variable names and small, focused functions over inline comments.
+
 ### Components
 
 - Client components: Add `"use client"` directive
