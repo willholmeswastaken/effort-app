@@ -24,6 +24,8 @@ export function ExerciseCard({ exercise, exerciseNumber, sets, onSetsChange, las
   const touchStartY = useRef(0);
   const isHorizontalSwipe = useRef(false);
   const isDragging = useRef(false);
+  
+  const weightInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const SWIPE_THRESHOLD = 80; // px to reveal swap button
   const SWAP_BUTTON_WIDTH = 80;
@@ -262,11 +264,18 @@ export function ExerciseCard({ exercise, exerciseNumber, sets, onSetsChange, las
                 style={inputStyle}
                 className="h-10 w-full bg-[#2C2C2E] border-0 rounded-lg text-[16px] font-medium text-white placeholder:text-[#48484A] focus:outline-none focus:ring-1 focus:ring-[#0078FF] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-70 disabled:cursor-not-allowed"
                 value={set.reps || ""} 
-                onChange={(e) => updateSet(index, 'reps', Number(e.target.value) || 0)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  updateSet(index, 'reps', Number(val) || 0);
+                  if (val.length >= 2) {
+                    weightInputRefs.current[index]?.focus();
+                  }
+                }}
                 disabled={readOnly}
               />
               
               <input 
+                ref={(el) => { weightInputRefs.current[index] = el; }}
                 type="text" 
                 inputMode="decimal"
                 pattern="[0-9.]*"
