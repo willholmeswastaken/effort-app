@@ -63,10 +63,16 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
   }
 
   const sessionData = await runEffect(
-    Effect.gen(function* () {
-      const workoutsService = yield* WorkoutsService;
-      return yield* workoutsService.getWorkoutSession(workoutId);
-    })
+    pipe(
+      Effect.gen(function* () {
+        const workoutsService = yield* WorkoutsService;
+        return yield* workoutsService.getWorkoutSession(workoutId);
+      }),
+      Effect.catchAll((error) => {
+        console.error("Failed to hydrate workout session:", error);
+        return Effect.succeed(null);
+      })
+    )
   );
 
   if (sessionData) {
