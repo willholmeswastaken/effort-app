@@ -274,6 +274,9 @@ export function useWorkoutSession(workoutId: string) {
     queryKey: workoutKeys.session(workoutId),
     queryFn: () => fetchWorkoutSession(workoutId),
     enabled: !!workoutId,
-    staleTime: 30 * 1000,
+    staleTime: 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 }

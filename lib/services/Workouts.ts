@@ -205,10 +205,7 @@ export interface WorkoutsServiceInterface {
     programId: string,
     dayId: string
   ) => Effect.Effect<CompletedWorkout | null, Error>;
-  readonly getWorkoutSession: (
-    workoutId: string,
-    programsService: { getDayWithExercises: (programId: string, dayId: string) => Effect.Effect<{ id: string; title: string; programName: string; exercises: WorkoutSessionExercise[] } | null, Error> }
-  ) => Effect.Effect<WorkoutSessionData | null, Error>;
+  readonly getWorkoutSession: (workoutId: string) => Effect.Effect<WorkoutSessionData | null, Error>;
 }
 
 
@@ -825,38 +822,62 @@ export const WorkoutsServiceLive = Layer.effect(
         catch: (e) => new Error(`Failed to fetch completed workout: ${e}`),
       });
 
-    const getWorkoutSession = (
-      workoutId: string,
-      programsService: { getDayWithExercises: (programId: string, dayId: string) => Effect.Effect<{ id: string; title: string; programName: string; exercises: WorkoutSessionExercise[] } | null, Error> }
-    ): Effect.Effect<WorkoutSessionData | null, Error> =>
+    const getWorkoutSession = (workoutId: string): Effect.Effect<WorkoutSessionData | null, Error> =>
       Effect.tryPromise({
         try: async () => {
           const workout = await db.query.workoutLogs.findFirst({
             where: eq(schema.workoutLogs.id, workoutId),
             with: {
-              day: true,
-              exerciseLogs: {
+              day: {
                 with: {
-                  exercise: true,
-                  setLogs: {
-                    orderBy: (setLogs, { asc }) => [asc(setLogs.setNumber)],
+                  week: {
+                    with: {
+                      program: true,
+                    },
                   },
                 },
               },
             },
           });
 
-          if (!workout) return null;
+          if (!workout || !workout.day) return null;
 
-          const day = await Effect.runPromise(programsService.getDayWithExercises(workout.programId, workout.dayId));
-          if (!day) return null;
+          const day = workout.day;
+          const programName = day.week.program.name;
 
-          let exercises = day.exercises;
+          const [dayExercises, exerciseLogs] = await Promise.all([
+            db.query.dayExercises.findMany({
+              where: eq(schema.dayExercises.dayId, day.id),
+              orderBy: (de, { asc }) => [asc(de.exerciseOrder)],
+              with: {
+                exercise: true,
+              },
+            }),
+            db.query.exerciseLogs.findMany({
+              where: eq(schema.exerciseLogs.workoutLogId, workoutId),
+              with: {
+                exercise: true,
+                setLogs: {
+                  orderBy: (setLogs, { asc }) => [asc(setLogs.setNumber)],
+                },
+              },
+            }),
+          ]);
 
-          if (workout.exerciseLogs && workout.exerciseLogs.length > 0) {
+          let exercises: WorkoutSessionExercise[] = dayExercises.map((de) => ({
+            id: de.exercise.id,
+            name: de.exercise.name,
+            targetSets: de.exercise.targetSets ?? 3,
+            targetReps: de.exercise.targetReps ?? "8-12",
+            restSeconds: de.exercise.restSeconds ?? 90,
+            videoUrl: de.exercise.videoUrl,
+            thumbnailUrl: de.exercise.thumbnailUrl,
+          }));
+
+          if (exerciseLogs.length > 0) {
             const orderToExerciseMap = new Map<number, WorkoutSessionExercise>();
 
-            for (const exLog of workout.exerciseLogs) {
+            for (const exLog of exerciseLogs) {
               const exerciseOrder = exLog.exerciseOrder;
               if (exerciseOrder >= 0) {
                 orderToExerciseMap.set(exerciseOrder, {
@@ -871,7 +892,7 @@ export const WorkoutsServiceLive = Layer.effect(
               }
             }
 
-            exercises = day.exercises.map((originalExercise, index) => {
+            exercises = exercises.map((originalExercise, index) => {
               const swappedExercise = orderToExerciseMap.get(index);
               if (swappedExercise && swappedExercise.id !== originalExercise.id) {
                 return swappedExercise;
@@ -880,14 +901,14 @@ export const WorkoutsServiceLive = Layer.effect(
             });
           }
 
-          const sets = workout.exerciseLogs?.flatMap((exLog) =>
+          const sets = exerciseLogs.flatMap((exLog) =>
             exLog.setLogs.map((sLog) => ({
               exerciseId: exLog.exerciseId,
               setNumber: sLog.setNumber,
               reps: sLog.reps,
               weight: sLog.weight.toString(),
             }))
-          ) ?? [];
+          );
 
           return {
             workout: {
@@ -895,7 +916,7 @@ export const WorkoutsServiceLive = Layer.effect(
               programId: workout.programId,
               dayId: workout.dayId,
               dayTitle: day.title,
-              programName: day.programName,
+              programName,
               startedAt: workout.startedAt.toISOString(),
               completedAt: workout.completedAt?.toISOString() ?? null,
               status: workout.status,

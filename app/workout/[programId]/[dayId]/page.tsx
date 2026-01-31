@@ -2,12 +2,12 @@ import { redirect } from "next/navigation";
 import { Effect, pipe } from "effect";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { auth } from "@/lib/auth";
-import { runEffect, WorkoutsService, UserService, ProgramsService } from "@/lib/services";
+import { runEffect, WorkoutsService, UserService } from "@/lib/services";
 import { getQueryClient } from "@/lib/get-query-client";
 import { workoutQueryKeys } from "@/lib/queries/workout-session";
+import { workoutKeys } from "@/lib/queries";
 import { headers } from "next/headers";
 import WorkoutSessionClient from "./client";
-
 
 export const dynamic = "force-dynamic";
 
@@ -22,25 +22,28 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
   const { programId, dayId } = await params;
 
   const headersList = await headers();
-  const session = await auth.api.getSession({ headers: headersList });
+  
+  const [session, queryClient] = await Promise.all([
+    auth.api.getSession({ headers: headersList }),
+    Promise.resolve(getQueryClient())
+  ]);
 
   if (!session?.user) {
     redirect("/login");
   }
 
-  // Start or get existing workout
+  const userId = session.user.id;
+
   const workoutId = await runEffect(
     pipe(
       Effect.gen(function* () {
         const workoutsService = yield* WorkoutsService;
         const userService = yield* UserService;
 
-        // Get user preferences to get activeProgramInstanceId
-        const prefs = yield* userService.getPreferences(session.user.id);
+        const prefs = yield* userService.getPreferences(userId);
 
-        // Start or get in-progress/completed workout
         const id = yield* workoutsService.startWorkout({
-          userId: session.user.id,
+          userId,
           programId,
           dayId,
           programInstanceId: prefs.activeProgramInstanceId,
@@ -59,14 +62,10 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
     redirect("/");
   }
 
-  // Fetch workout session data directly from service layer and populate cache
-  const queryClient = getQueryClient();
-  
   const sessionData = await runEffect(
     Effect.gen(function* () {
       const workoutsService = yield* WorkoutsService;
-      const programsService = yield* ProgramsService;
-      return yield* workoutsService.getWorkoutSession(workoutId, programsService);
+      return yield* workoutsService.getWorkoutSession(workoutId);
     })
   );
 
@@ -74,6 +73,22 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
     queryClient.setQueryData(workoutQueryKeys.session(workoutId), sessionData, {
       updatedAt: Date.now(),
     });
+
+    const exerciseIds = sessionData.exercises.map(e => e.id);
+    
+    if (exerciseIds.length > 0) {
+      const lastLiftsData = await runEffect(
+        Effect.gen(function* () {
+          const workoutsService = yield* WorkoutsService;
+          return yield* workoutsService.getLastLifts(userId, exerciseIds);
+        })
+      );
+      
+      const lastLiftsObject = Object.fromEntries(lastLiftsData);
+      queryClient.setQueryData(workoutKeys.lastLifts(exerciseIds), lastLiftsObject, {
+        updatedAt: Date.now(),
+      });
+    }
   }
 
   return (
