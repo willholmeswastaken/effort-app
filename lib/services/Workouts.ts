@@ -154,6 +154,7 @@ export interface WorkoutsServiceInterface {
   readonly resetWorkout: (workoutLogId: string, userId: string) => Effect.Effect<{ programId: string; dayId: string }, Error>;
   readonly deleteWorkout: (workoutLogId: string, userId: string) => Effect.Effect<void, Error>;
   readonly completeWorkout: (input: CompleteWorkoutInput & { userId: string }) => Effect.Effect<void, Error>;
+  readonly rateWorkout: (workoutLogId: string, userId: string, rating: number) => Effect.Effect<void, Error>;
   readonly swapExercise: (input: SwapExerciseInput) => Effect.Effect<void, Error>;
   readonly getHistory: (userId: string, limit?: number) => Effect.Effect<WorkoutHistoryEntry[], Error>;
   readonly getWorkoutById: (id: string) => Effect.Effect<WorkoutDetail | null, Error>;
@@ -461,6 +462,28 @@ export const WorkoutsServiceLive = Layer.effect(
           }
         },
         catch: (e) => new Error(`Failed to complete workout: ${e}`),
+      });
+
+    const rateWorkout = (workoutLogId: string, userId: string, rating: number): Effect.Effect<void, Error> =>
+      Effect.tryPromise({
+        try: async () => {
+          const result = await db
+            .update(schema.workoutLogs)
+            .set({
+              rating,
+            })
+            .where(and(
+              eq(schema.workoutLogs.id, workoutLogId),
+              eq(schema.workoutLogs.userId, userId),
+              eq(schema.workoutLogs.status, "completed")
+            ))
+            .returning({ id: schema.workoutLogs.id });
+
+          if (result.length === 0) {
+            throw new Error("Workout not found, unauthorized, or not completed");
+          }
+        },
+        catch: (e) => new Error(`Failed to rate workout: ${e}`),
       });
 
     const swapExercise = (input: SwapExerciseInput): Effect.Effect<void, Error> =>
@@ -1098,6 +1121,7 @@ export const WorkoutsServiceLive = Layer.effect(
       resetWorkout,
       deleteWorkout,
       completeWorkout,
+      rateWorkout,
       swapExercise,
       getHistory,
       getWorkoutById,

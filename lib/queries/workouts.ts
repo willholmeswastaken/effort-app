@@ -69,16 +69,39 @@ export function useCompleteWorkout() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { workoutLogId: string } & Omit<CompleteWorkoutInput, "workoutLogId">) => {
+    mutationFn: async (data: { workoutLogId: string; durationSeconds: number }) => {
       const res = await fetch(`/api/workouts/${data.workoutLogId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           durationSeconds: data.durationSeconds,
-          rating: data.rating,
+          // Rating is optional - user can rate later
         }),
       });
       if (!res.ok) throw new Error("Failed to complete workout");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: workoutKeys.history() });
+      queryClient.invalidateQueries({ queryKey: ["home"] });
+    },
+  });
+}
+
+
+export function useRateWorkout() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: { workoutLogId: string; rating: number }) => {
+      const res = await fetch(`/api/workouts/${data.workoutLogId}/rate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          rating: data.rating,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to rate workout");
       return res.json();
     },
     onSuccess: () => {
@@ -184,7 +207,11 @@ export function useExerciseHistory(exerciseId: string, limit?: number) {
 
 type LastLiftsData = Record<string, Array<{ date: string; sets: Array<{ setNumber: number; reps: number; weight: number }> }>>;
 
-export function useLastLifts(exerciseIds: string[]) {
+interface UseLastLiftsOptions {
+  enabled?: boolean;
+}
+
+export function useLastLifts(exerciseIds: string[], options?: UseLastLiftsOptions) {
   return useQuery<LastLiftsData>({
     queryKey: workoutKeys.lastLifts(exerciseIds),
     queryFn: async () => {
@@ -196,7 +223,7 @@ export function useLastLifts(exerciseIds: string[]) {
       if (!res.ok) throw new Error("Failed to fetch last lifts");
       return res.json();
     },
-    enabled: exerciseIds.length > 0,
+    enabled: options?.enabled !== false && exerciseIds.length > 0,
     staleTime: 5 * 60 * 1000,
   });
 }

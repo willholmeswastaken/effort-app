@@ -26,7 +26,11 @@ export const exerciseKeys = {
 };
 
 
-export function useMuscleGroups() {
+interface UseMuscleGroupsOptions {
+  enabled?: boolean;
+}
+
+export function useMuscleGroups(options?: UseMuscleGroupsOptions) {
   return useQuery<MuscleGroup[]>({
     queryKey: exerciseKeys.muscleGroups(),
     queryFn: async () => {
@@ -34,6 +38,7 @@ export function useMuscleGroups() {
       if (!res.ok) throw new Error("Failed to fetch muscle groups");
       return res.json();
     },
+    enabled: options?.enabled !== false, // Fetch by default unless explicitly disabled
     staleTime: 1000 * 60 * 60, // Cache for 1 hour - muscle groups rarely change
   });
 }
