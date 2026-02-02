@@ -2,7 +2,13 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Exercise, SetLog } from "@/lib/types";
-import { Plus, History, ChevronRight, X, ArrowRightLeft, Check, Loader2 } from "lucide-react";
+import { Plus, History, ChevronRight, X, ArrowRightLeft, Check, Loader2, Play } from "lucide-react";
+import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useLastLifts } from "@/lib/queries";
 
 interface ExerciseCardProps {
@@ -34,6 +40,7 @@ export function ExerciseCard({
   const [showRestTimer, setShowRestTimer] = useState<number | null>(null);
   const [restTimeRemaining, setRestTimeRemaining] = useState(0);
   const [newlyAddedSetIndex, setNewlyAddedSetIndex] = useState<number | null>(null);
+  const [showVideo, setShowVideo] = useState(false);
   
   // Lazy fetch: only fetch when history is shown
   const { data: lastLiftsData, isLoading: isLoadingHistory } = useLastLifts([exercise.id], {
@@ -469,6 +476,31 @@ export function ExerciseCard({
                 <span className="text-[13px] font-bold text-[#0078FF]">{exerciseNumber}</span>
               </div>
             )}
+            
+            {/* Exercise Image / Video Thumbnail */}
+            {exercise.thumbnailUrl && (
+              <button
+                onClick={() => exercise.videoUrl && setShowVideo(true)}
+                disabled={!exercise.videoUrl}
+                className={`w-12 h-12 rounded-xl overflow-hidden shrink-0 relative bg-[#2C2C2E] ${exercise.videoUrl ? 'cursor-pointer active:scale-95' : ''} transition-transform`}
+              >
+                <Image
+                  src={exercise.thumbnailUrl}
+                  alt={exercise.name}
+                  fill
+                  className="object-cover"
+                  sizes="48px"
+                />
+                {exercise.videoUrl && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-full bg-white/90 flex items-center justify-center">
+                      <Play className="w-3 h-3 text-black fill-black ml-0.5" />
+                    </div>
+                  </div>
+                )}
+              </button>
+            )}
+            
             <div className="flex-1 min-w-0">
               <h3 className="text-[17px] font-semibold leading-tight">{exercise.name}</h3>
               <p className="text-[13px] text-[#636366] mt-1">
@@ -630,6 +662,26 @@ export function ExerciseCard({
           )}
         </div>
       </div>
+
+      {/* Video Modal */}
+      <Dialog open={showVideo} onOpenChange={setShowVideo}>
+        <DialogContent className="max-w-lg bg-black border-white/10 p-0 overflow-hidden">
+          <DialogTitle className="sr-only">{exercise.name} - Exercise Video</DialogTitle>
+          <div className="aspect-video bg-[#0A0A0A] flex items-center justify-center">
+            {exercise.videoUrl ? (
+              <video
+                src={exercise.videoUrl}
+                controls
+                autoPlay
+                className="w-full h-full object-contain"
+                playsInline
+              />
+            ) : (
+              <p className="text-[#8E8E93]">No video available</p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

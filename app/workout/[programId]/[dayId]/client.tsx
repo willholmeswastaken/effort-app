@@ -6,7 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { SetLog } from "@/lib/types";
 import { ExerciseCard } from "@/components/exercise-card";
 import { ExerciseSwapDrawer } from "@/components/exercise-swap-drawer";
-import { X, Check, Star, Pause, Play, RotateCw, Loader2 } from "lucide-react";
+import { X, Check, Star, Pause, Play, RotateCw, Loader2, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { 
   useUpsertSet, 
@@ -127,6 +127,7 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
   const [finishedAt, setFinishedAt] = useState<number | null>(null);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [resetStep, setResetStep] = useState<1 | 2>(1);
   const [rating, setRating] = useState(0);
   const [showSwapDrawer, setShowSwapDrawer] = useState(false);
   const [swapExerciseIndex, setSwapExerciseIndex] = useState<number | null>(null);
@@ -196,6 +197,7 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
     if (isCompleted) {
       router.push("/");
     } else {
+      setResetStep(1);
       setShowResetModal(true);
     }
   };
@@ -341,16 +343,27 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
   };
 
   const handleSubmitRating = () => {
-    // Only submit rating (workout already completed)
-    rateWorkout.mutate({
-      workoutLogId: workoutId,
-      rating,
-    }, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: homeKeys.all });
-        router.push("/");
-      },
-    });
+    // Only submit rating if user selected one
+    if (rating > 0) {
+      rateWorkout.mutate({
+        workoutLogId: workoutId,
+        rating,
+      }, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: homeKeys.all });
+          router.push("/");
+        },
+        onError: () => {
+          // Rating failed but don't block user - go home anyway
+          toast.error("Couldn't save rating, but workout is complete");
+          router.push("/");
+        },
+      });
+    } else {
+      // No rating selected, just go home
+      queryClient.invalidateQueries({ queryKey: homeKeys.all });
+      router.push("/");
+    }
   };
 
   const handleConfirmReset = () => {
@@ -362,14 +375,19 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
         setFinishedAt(null);
         setRating(0);
         setShowResetModal(false);
+        setResetStep(1);
       },
     });
   };
 
-  const handleCancelAndExit = () => {
+
+
+  const handleDiscardWorkout = () => {
     deleteWorkout.mutate(workoutId, {
       onSuccess: () => {
         queryClient.removeQueries({ queryKey: workoutKeys.session(workoutId) });
+        setShowResetModal(false);
+        setResetStep(1);
         router.push("/");
       },
     });
@@ -536,9 +554,10 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
         <div className="fixed bottom-0 left-0 right-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] bg-linear-to-t from-black via-black/95 to-transparent pt-10">
           <button
             onClick={handleFinish}
-            className="w-full py-4 bg-linear-to-br from-[#0078FF] to-[#0066DD] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_32px_rgba(0,120,255,0.4),0_4px_12px_-2px_rgba(0,120,255,0.3)] hover:shadow-[0_0_40px_rgba(0,120,255,0.5)]"
+            disabled={completeWorkout.isPending}
+            className="w-full py-4 bg-linear-to-br from-[#0078FF] to-[#0066DD] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_32px_rgba(0,120,255,0.4),0_4px_12px_-2px_rgba(0,120,255,0.3)] hover:shadow-[0_0_40px_rgba(0,120,255,0.5)] disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            Finish Workout
+            {completeWorkout.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Finish Workout"}
           </button>
         </div>
       )}
@@ -593,42 +612,81 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
         </DrawerContent>
       </Drawer>
 
-      <Drawer open={showResetModal} onOpenChange={setShowResetModal}>
+      <Drawer 
+        open={showResetModal} 
+        onOpenChange={(open) => {
+          if (!open) setResetStep(1);
+          setShowResetModal(open);
+        }}
+      >
         <DrawerContent className="max-w-lg mx-auto">
-          <DrawerHeader className="text-center">
-            <div className="w-16 h-16 rounded-full border-2 border-[#FF3B30] bg-[#FF3B30]/5 flex items-center justify-center mx-auto mb-2 shadow-[0_0_16px_rgba(255,59,48,0.2)]">
-              <RotateCw className="w-8 h-8 text-[#FF3B30]" />
-            </div>
-            <DrawerTitle className="text-[22px] font-semibold text-white">Reset Workout?</DrawerTitle>
-            <DrawerDescription className="text-[15px] text-[#8E8E93]">
-              This will clear all your progress and restart the timer for this session.
-            </DrawerDescription>
-          </DrawerHeader>
-          
-          <DrawerFooter className="px-6 pb-8 gap-3">
-            <button 
-              onClick={handleConfirmReset}
-              disabled={resetWorkout.isPending || deleteWorkout.isPending}
-              className="w-full py-4 bg-linear-to-br from-[#FF9F0A] to-[#E88C00] rounded-xl text-[17px] font-semibold active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] disabled:opacity-50 text-black flex items-center justify-center gap-2 shadow-[0_4px_12px_-2px_rgba(255,159,10,0.3)]"
-            >
-              {resetWorkout.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Reset & Continue"}
-            </button>
-            
-            <button 
-              onClick={handleCancelAndExit}
-              disabled={resetWorkout.isPending || deleteWorkout.isPending}
-              className="w-full py-4 bg-linear-to-br from-[#FF3B30] to-[#D93025] rounded-xl text-[17px] font-semibold active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] disabled:opacity-50 text-white flex items-center justify-center gap-2 shadow-[0_4px_12px_-2px_rgba(255,59,48,0.3)]"
-            >
-              {deleteWorkout.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Cancel & Exit"}
-            </button>
-            
-            <button 
-              onClick={() => setShowResetModal(false)}
-              className="w-full py-4 bg-[#2C2C2E] rounded-xl text-[17px] font-semibold active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] text-white border border-white/6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]"
-            >
-              Keep Going
-            </button>
-          </DrawerFooter>
+          {resetStep === 1 ? (
+            /* Step 1: Initial choice */
+            <>
+              <DrawerHeader className="text-center">
+                <div className="w-16 h-16 rounded-full bg-[#1C1C1E] flex items-center justify-center mx-auto mb-3">
+                  <RotateCw className="w-7 h-7 text-[#8E8E93]" />
+                </div>
+                <DrawerTitle className="text-[22px] font-semibold text-white">Restart workout?</DrawerTitle>
+                <DrawerDescription className="text-[15px] text-[#8E8E93]">
+                  You're {formatTime(elapsed)} into your session
+                </DrawerDescription>
+              </DrawerHeader>
+              
+              <DrawerFooter className="px-6 pb-8 gap-3">
+                <button 
+                  onClick={() => setShowResetModal(false)}
+                  className="w-full py-4 bg-linear-to-br from-[#0078FF] to-[#0066DD] rounded-xl text-[17px] font-semibold active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] text-white flex items-center justify-center gap-2 shadow-[0_4px_16px_-2px_rgba(0,120,255,0.4)]"
+                >
+                  Keep Working
+                </button>
+                
+                <button 
+                  onClick={() => setResetStep(2)}
+                  className="w-full py-4 bg-[#2C2C2E] rounded-xl text-[17px] font-semibold active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] text-[#FF3B30] border border-[#FF3B30]/20"
+                >
+                  End Session
+                </button>
+              </DrawerFooter>
+            </>
+          ) : (
+            /* Step 2: How to end */
+            <>
+              <DrawerHeader className="text-center">
+                <button
+                  onClick={() => setResetStep(1)}
+                  className="absolute left-4 top-4 p-2 rounded-full active:scale-95 transition-all hover:bg-white/5"
+                >
+                  <ChevronRight className="w-5 h-5 text-[#8E8E93] rotate-180" />
+                </button>
+                <div className="w-16 h-16 rounded-full bg-[#FF3B30]/10 flex items-center justify-center mx-auto mb-3">
+                  <RotateCw className="w-7 h-7 text-[#FF3B30]" />
+                </div>
+                <DrawerTitle className="text-[22px] font-semibold text-white">End Session</DrawerTitle>
+                <DrawerDescription className="text-[15px] text-[#8E8E93]">
+                  Choose what to do with your progress
+                </DrawerDescription>
+              </DrawerHeader>
+              
+              <DrawerFooter className="px-6 pb-8 gap-3">
+                <button 
+                  onClick={handleConfirmReset}
+                  disabled={resetWorkout.isPending}
+                  className="w-full py-4 bg-[#2C2C2E] rounded-xl text-[17px] font-semibold active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] text-white border border-white/6 flex items-center justify-center gap-2"
+                >
+                  {resetWorkout.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Clear Progress & Restart"}
+                </button>
+                
+                <button 
+                  onClick={handleDiscardWorkout}
+                  disabled={deleteWorkout.isPending}
+                  className="w-full py-4 bg-[#FF3B30]/10 rounded-xl text-[17px] font-semibold active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] text-[#FF3B30] border border-[#FF3B30]/30 flex items-center justify-center gap-2"
+                >
+                  {deleteWorkout.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Discard Workout"}
+                </button>
+              </DrawerFooter>
+            </>
+          )}
         </DrawerContent>
       </Drawer>
 
