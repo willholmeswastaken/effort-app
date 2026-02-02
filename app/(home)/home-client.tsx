@@ -1,15 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { History, TrendingUp, MoreHorizontal, Play, Check, Loader2, Pause, ChevronRight } from "lucide-react";
+import { History, Play, Check, Loader2, ChevronRight, Dumbbell, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu";
 import {
   Drawer,
   DrawerContent,
@@ -18,20 +12,126 @@ import {
   DrawerDescription,
   DrawerFooter,
 } from "@/components/ui/drawer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import { UserMenu } from "@/components/user-menu";
 import { useUpdatePreferences, useRestartProgram, useHomeData, usePrograms } from "@/lib/queries";
 
 interface HomeClientProps {}
 
+// Skeleton loader component for loading state
+function HomeSkeleton() {
+  return (
+    <main className="min-h-screen bg-black text-white">
+      {/* Header Skeleton */}
+      <div className="px-6 pt-14 pb-12">
+        <div className="flex items-center justify-between mb-14">
+          <div className="w-10 h-10 rounded-full bg-[#1C1C1E] animate-pulse" />
+          <div className="w-10 h-10 rounded-full bg-[#1C1C1E] animate-pulse" />
+        </div>
+        
+        <div className="text-center mb-8">
+          <div className="w-32 h-4 bg-[#1C1C1E] rounded mx-auto mb-3 animate-pulse" />
+          <div className="w-20 h-8 bg-[#1C1C1E] rounded mx-auto mb-2 animate-pulse" />
+          <div className="w-24 h-3 bg-[#1C1C1E] rounded mx-auto animate-pulse" />
+        </div>
+        
+        <div className="flex justify-center">
+          <div className="w-32 h-8 bg-[#1C1C1E] rounded-full animate-pulse" />
+        </div>
+      </div>
+      
+      {/* Action Buttons Skeleton */}
+      <div className="px-6 py-8">
+        <div className="flex justify-between items-start">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex flex-col items-center gap-2.5">
+              <div className="w-16 h-16 rounded-full bg-[#1C1C1E] animate-pulse" />
+              <div className="w-12 h-3 bg-[#1C1C1E] rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Tabs Skeleton */}
+      <div className="px-6 pb-6">
+        <div className="w-full h-12 bg-[#1C1C1E] rounded-2xl mb-6 animate-pulse" />
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="w-full h-16 bg-[#1C1C1E] rounded-2xl animate-pulse" />
+          ))}
+        </div>
+      </div>
+    </main>
+  );
+}
+
+// Empty state when no program selected
+function EmptyState({ onBrowsePrograms }: { onBrowsePrograms: () => void }) {
+  return (
+    <main className="min-h-screen bg-black text-white flex flex-col">
+      {/* Header */}
+      <div className="px-6 pt-14 pb-8">
+        <div className="flex items-center justify-between mb-8">
+          <UserMenu />
+          <div className="flex items-center gap-3">
+            <Link href="/history">
+              <button className="w-10 h-10 rounded-full bg-[#1C1C1E] flex items-center justify-center active:bg-[#2C2C2E] transition-colors">
+                <History className="w-5 h-5 text-[#8E8E93]" />
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
+      
+      {/* Empty State Content */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 pb-20">
+        <div className="w-20 h-20 rounded-full bg-[#1C1C1E] flex items-center justify-center mb-6">
+          <Dumbbell className="w-10 h-10 text-[#8E8E93]" />
+        </div>
+        
+        <h1 className="text-[28px] font-bold text-white mb-3 text-center">
+          Start Your Fitness Journey
+        </h1>
+        
+        <p className="text-[17px] text-[#8E8E93] text-center mb-8 max-w-xs">
+          Choose a workout program to get started and track your progress
+        </p>
+        
+        <button 
+          onClick={onBrowsePrograms}
+          className="w-full max-w-xs py-4 bg-linear-to-br from-[#0078FF] to-[#0066DD] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 shadow-[0_0_32px_rgba(0,120,255,0.4)] flex items-center justify-center gap-2"
+        >
+          Browse Programs
+          <ArrowRight className="w-5 h-5" />
+        </button>
+        
+        <Link 
+          href="/history"
+          className="mt-4 text-[15px] text-[#8E8E93] hover:text-white transition-colors"
+        >
+          View Workout History
+        </Link>
+      </div>
+    </main>
+  );
+}
+
 export function HomeClient({}: HomeClientProps) {
-  const { data: homeData } = useHomeData();
+  const { data: homeData, isLoading } = useHomeData();
   const router = useRouter();
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
   const [isRestartOpen, setIsRestartOpen] = useState(false);
+  const [isProgramMenuOpen, setIsProgramMenuOpen] = useState(false);
   const updatePreferences = useUpdatePreferences();
   const restartProgram = useRestartProgram();
   const [activeWeekIndex, setActiveWeekIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const isSwipingHorizontally = useRef<boolean>(false);
+  const swipeContainerRef = useRef<HTMLDivElement>(null);
+  const SWIPE_THRESHOLD = 50;
+  const SWIPE_LOCK_ANGLE = 15; // Degrees - if angle is less than this, lock vertical scroll
 
   // Fetch programs only when drawer is opened (lazy loading with React Query)
   const { data: programs = [], isLoading: programsLoading } = usePrograms({
@@ -51,12 +151,25 @@ export function HomeClient({}: HomeClientProps) {
     }
   }, [homeData, activeWeekIndex]);
 
+  // Loading state with skeleton
+  if (isLoading) {
+    return <HomeSkeleton />;
+  }
+
+  // Empty state when no program selected
   if (!homeData || !homeData.activeProgram || !homeData.userPreferences) {
-    return null;
+    return <EmptyState onBrowsePrograms={() => setIsSwitcherOpen(true)} />;
   }
 
   const { activeProgram, userPreferences, isProgramComplete, nextWorkout } = homeData;
   const weeks = activeProgram.weeks;
+
+  // Calculate completed sessions across all weeks
+  const totalSessions = weeks.reduce((acc: number, week: any) => acc + week.days.length, 0);
+  const completedSessions = weeks.reduce(
+    (acc: number, week: any) => acc + week.days.filter((d: any) => d.isCompleted).length,
+    0
+  );
 
   const handleProgramChange = async (id: string) => {
     await updatePreferences.mutateAsync({ activeProgramId: id });
@@ -86,244 +199,309 @@ export function HomeClient({}: HomeClientProps) {
     });
   };
 
+  // Haptic feedback helper
+  const triggerHaptic = () => {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate(10);
+    }
+  };
+
+  // Native touch handlers for week navigation with axis locking
+  useEffect(() => {
+    const container = swipeContainerRef.current;
+    if (!container) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX.current = e.touches[0].clientX;
+      touchStartY.current = e.touches[0].clientY;
+      isSwipingHorizontally.current = false;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!touchStartX.current || !touchStartY.current) return;
+      
+      const currentX = e.touches[0].clientX;
+      const currentY = e.touches[0].clientY;
+      const deltaX = Math.abs(currentX - touchStartX.current);
+      const deltaY = Math.abs(currentY - touchStartY.current);
+      
+      // Determine if this is a horizontal swipe (lock vertical scroll)
+      if (deltaX > 10 || deltaY > 10) {
+        const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+        if (angle < SWIPE_LOCK_ANGLE && deltaX > deltaY) {
+          isSwipingHorizontally.current = true;
+          e.preventDefault(); // Lock vertical scroll during horizontal swipe
+        }
+      }
+      
+      touchEndX.current = currentX;
+    };
+
+    const handleTouchEnd = () => {
+      if (!touchStartX.current || !touchEndX.current) return;
+      
+      const distance = touchStartX.current - touchEndX.current;
+      const isLeftSwipe = distance > SWIPE_THRESHOLD;
+      const isRightSwipe = distance < -SWIPE_THRESHOLD;
+
+      if (isLeftSwipe && activeWeekIndex < weeks.length - 1) {
+        triggerHaptic();
+        setActiveWeekIndex(prev => prev + 1);
+      }
+      if (isRightSwipe && activeWeekIndex > 0) {
+        triggerHaptic();
+        setActiveWeekIndex(prev => prev - 1);
+      }
+
+      touchStartX.current = null;
+      touchStartY.current = null;
+      touchEndX.current = null;
+      isSwipingHorizontally.current = false;
+    };
+
+    // Add listeners with { passive: false } to allow preventDefault
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [activeWeekIndex, weeks.length]);
 
   return (
     <main className="min-h-screen bg-black text-white">
-
-      <div className="relative overflow-hidden">
-
-        {/* Animated Gradient Background */}
-        <div 
-          className="absolute inset-0 opacity-90 animate-gradient-slow"
-          style={{
-            background: 'linear-gradient(135deg, #8B5CF6 0%, #6366F1 25%, #4F46E5 50%, #6366F1 75%, #8B5CF6 100%)',
-            backgroundSize: '200% 200%',
-          }}
-        />
-        <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black" />
+      {/* Pure black header */}
+      <div>
         
-        <div className="relative z-10 px-6 pt-14 pb-12">
+        <div className="relative z-10 px-6 pt-14 pb-4">
           {/* Top Bar */}
-          <div className="flex items-center justify-between mb-14">
+          <div className="flex items-center justify-between mb-10">
             <UserMenu />
             <div className="flex items-center gap-3">
               <Link href="/history">
-                <button className="w-10 h-10 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center active:bg-white/25 transition-colors">
-                  <History className="w-5 h-5" />
+                <button 
+                  className="w-10 h-10 rounded-full bg-[#1C1C1E] flex items-center justify-center active:bg-[#2C2C2E] transition-colors"
+                  onClick={triggerHaptic}
+                >
+                  <History className="w-5 h-5 text-[#8E8E93]" />
                 </button>
               </Link>
             </div>
           </div>
           
-
+          {/* Program Title - Tappable */}
           <div className="text-center mb-8">
-            <p className="text-sm font-medium text-white/70 mb-3 tracking-wide">{activeProgram.name}</p>
-            <h1 className="text-5xl font-bold tracking-tight mb-2">
-              Week {weeks[activeWeekIndex]?.weekNumber ?? 1}
-            </h1>
-            <p className="text-sm text-white/50">
-              {activeWeekIndex + 1} of {weeks.length} weeks
-            </p>
+            <button 
+              onClick={() => setIsProgramMenuOpen(true)}
+              className="group inline-flex items-center gap-1"
+            >
+              <h1 className="text-[28px] font-bold text-white group-active:opacity-70 transition-opacity">
+                {activeProgram.name}
+              </h1>
+              <ChevronRight className="w-5 h-5 text-[#8E8E93] group-hover:translate-x-0.5 transition-transform" />
+            </button>
           </div>
           
-
-          <div className="flex justify-center">
-            <div className="px-5 py-2.5 rounded-full bg-black/30 backdrop-blur-md border border-white/10">
-              <span className="text-sm font-medium text-white/90">
-                {activeProgram.daysPerWeek} sessions per week
-              </span>
+          {/* Status Info - Pill */}
+          <div className="flex justify-center mb-10">
+            <div className="bg-[#1C1C1E] border border-white/5 px-4 py-2 rounded-full inline-flex items-center gap-2.5 backdrop-blur-md">
+              <span className="text-[14px] font-medium text-white">Week {weeks[activeWeekIndex]?.weekNumber ?? 1}</span>
+              <div className="w-1 h-1 rounded-full bg-[#3A3A3C]" />
+              <span className="text-[14px] text-[#8E8E93]">{completedSessions}/{totalSessions} sessions</span>
             </div>
+          </div>
+          
+          {/* Start CTA - Single Primary Action */}
+          <div className="flex justify-center">
+            <button 
+              onClick={() => {
+                triggerHaptic();
+                handleActionButtonClick();
+              }}
+              className="w-full max-w-xs py-4 bg-[#0078FF] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 flex items-center justify-center gap-2"
+            >
+              {isProgramComplete ? (
+                <><Check className="w-5 h-5" /> Complete</>
+              ) : nextWorkout?.isInProgress ? (
+                <><Play className="w-5 h-5 fill-current" /> Resume Workout</>
+              ) : (
+                <><Play className="w-5 h-5 fill-current" /> Start Workout</>
+              )}
+            </button>
           </div>
         </div>
       </div>
       
-
-      <div className="px-6 py-8">
-        <div className="flex justify-between items-start">
-          <button 
-            onClick={handleActionButtonClick}
-            className="flex flex-col items-center gap-2.5 group"
-          >
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-200 ${
-              isProgramComplete 
-                ? 'bg-[#34C759] shadow-[0_0_20px_rgba(52,199,89,0.4)]' 
-                : 'bg-[#0078FF] shadow-[0_0_20px_rgba(0,120,255,0.4)] group-active:scale-95'
-            }`}>
-              {isProgramComplete ? (
-                <Check className="w-6 h-6 text-black" />
-              ) : (
-                <Play className="w-6 h-6 fill-current ml-0.5 text-white" />
-              )}
-            </div>
-            <span className="text-[13px] font-medium text-white">
-              {isProgramComplete ? 'Complete' : 'Start'}
-            </span>
-          </button>
-
-          <Link href="/history" className="flex flex-col items-center gap-2.5 group">
-            <div className="w-16 h-16 rounded-full bg-[#1C1C1E] flex items-center justify-center group-active:bg-[#2C2C2E] transition-colors">
-              <History className="w-6 h-6 text-[#8E8E93]" />
-            </div>
-            <span className="text-[13px] font-medium text-[#8E8E93]">History</span>
-          </Link>
-
-          <Link href="/progress" className="flex flex-col items-center gap-2.5 group">
-            <div className="w-16 h-16 rounded-full bg-[#1C1C1E] flex items-center justify-center group-active:bg-[#2C2C2E] transition-colors">
-              <TrendingUp className="w-6 h-6 text-[#8E8E93]" />
-            </div>
-            <span className="text-[13px] font-medium text-[#8E8E93]">Progress</span>
-          </Link>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex flex-col items-center gap-2.5 outline-none group">
-                <div className="w-16 h-16 rounded-full bg-[#1C1C1E] flex items-center justify-center group-active:bg-[#2C2C2E] transition-colors">
-                  <MoreHorizontal className="w-6 h-6 text-[#8E8E93]" />
-                </div>
-                <span className="text-[13px] font-medium text-[#8E8E93]">More</span>
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent 
-              side="top" 
-              align="end" 
-              sideOffset={12}
-              className="bg-[#1C1C1E] border-white/5 text-white rounded-xl min-w-[180px] animate-in fade-in zoom-in-95 slide-in-from-bottom-4 duration-300 ease-out data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=closed]:zoom-out-95 data-[state=closed]:slide-out-to-bottom-4"
-            >
-              <DropdownMenuItem 
-                onClick={() => setIsSwitcherOpen(true)}
-                className="focus:bg-white/5 focus:text-white py-3 cursor-pointer text-[15px]"
-              >
-                Change Programme
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={() => setIsRestartOpen(true)}
-                className="focus:bg-white/5 focus:text-white py-3 cursor-pointer text-[15px]"
-              >
-                Restart Program
-              </DropdownMenuItem>
-              <DropdownMenuItem className="focus:bg-white/5 focus:text-white py-3 cursor-pointer text-[15px]">
-                Settings
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-      
-
-      <div className="px-6 pb-6">
-        <Tabs value={String(activeWeekIndex)} onValueChange={(v) => setActiveWeekIndex(Number(v))} className="w-full">
-          <TabsList className="w-full bg-[#1C1C1E] p-1.5 rounded-2xl mb-6 overflow-x-auto flex justify-start no-scrollbar gap-1">
+      {/* Week Tabs & Day List - Swipeable */}
+      <div 
+        ref={swipeContainerRef}
+        className="px-6 pb-20 touch-pan-y"
+      >
+        {/* Week Tabs - Pill style like muscle group filters */}
+        <div className="sticky top-0 z-20 bg-black pt-3 pb-4 -mx-6 px-6">
+          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
             {weeks.map((week: any, index: number) => {
               const isWeekCompleted = week.days.every((d: any) => d.isCompleted);
-              const completedCount = week.days.filter((d: any) => d.isCompleted).length;
-              const progress = (completedCount / week.days.length) * 100;
+              const isActive = activeWeekIndex === index;
               
               return (
-                <TabsTrigger 
-                  key={week.id} 
-                  value={String(index)}
-                  className="flex-1 min-w-[85px] rounded-xl py-2.5 text-[13px] font-semibold data-[state=active]:bg-[#2C2C2E] data-[state=active]:text-white data-[state=inactive]:text-[#8E8E93] transition-all relative overflow-hidden"
+                <button
+                  key={week.id}
+                  onClick={() => {
+                    triggerHaptic();
+                    setActiveWeekIndex(index);
+                  }}
+                  className={`shrink-0 px-4 py-2 rounded-full text-[14px] font-medium transition-all active:scale-95 flex items-center gap-1.5 ${
+                    isActive
+                      ? 'bg-[#0078FF] text-white'
+                      : 'bg-[#1C1C1E] text-[#8E8E93]'
+                  }`}
                 >
-                  {/* Progress bar background */}
-                  {progress > 0 && progress < 100 && (
-                    <div 
-                      className="absolute bottom-0 left-0 h-0.5 bg-[#0078FF] transition-all"
-                      style={{ width: `${progress}%` }}
-                    />
-                  )}
                   Week {week.weekNumber}
                   {isWeekCompleted && (
-                    <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#34C759]" />
+                    <Check className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-[#34C759]'}`} />
                   )}
-                </TabsTrigger>
+                </button>
               );
             })}
-          </TabsList>
+          </div>
+          
+          {/* Page indicator dots */}
+          <div className="flex justify-center items-center gap-2 mt-3">
+            {weeks.map((_: any, index: number) => (
+              <button
+                key={index}
+                onClick={() => {
+                  triggerHaptic();
+                  setActiveWeekIndex(index);
+                }}
+                className={`rounded-full transition-all duration-200 ${
+                  activeWeekIndex === index
+                    ? 'w-2 h-2 bg-white'
+                    : 'w-1.5 h-1.5 bg-[#48484A]'
+                }`}
+                aria-label={`Go to week ${index + 1}`}
+              />
+            ))}
+          </div>
+        </div>
 
-          {weeks.map((week: any, index: number) => (
-            <TabsContent key={week.id} value={String(index)} className="mt-0 outline-none animate-in fade-in slide-in-from-right-4 duration-300">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-[13px] font-semibold text-[#8E8E93] uppercase tracking-wider">
-                  Week {week.weekNumber} Sessions
-                </h2>
-                <span className="text-[13px] font-medium text-[#8E8E93] bg-[#1C1C1E] px-2.5 py-1 rounded-full">
-                  {week.days.filter((d: any) => d.isCompleted).length}/{week.days.length}
-                </span>
-              </div>
-              
+        {/* Week Content - Card container like Revolut */}
+        {weeks.map((week: any, index: number) => (
+          activeWeekIndex === index && (
+            <div key={week.id} className="animate-in fade-in duration-200">
               <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden">
                 {week.days.map((day: any, dayIndex: number) => (
                   <Link key={day.id} href={`/workout/${activeProgram.id}/${day.id}`}>
-                    <div className={`flex items-center px-4 py-4 active:bg-white/5 transition-colors ${dayIndex > 0 ? 'border-t border-white/5' : ''}`}>
-                      {day.isCompleted ? (
-                        <div className="w-11 h-11 rounded-full bg-[#34C759] flex items-center justify-center mr-4 shrink-0">
-                          <Check className="w-5 h-5 text-black" />
-                        </div>
-                      ) : day.isInProgress ? (
-                        <div className="w-11 h-11 rounded-full bg-[#FF9F0A] flex items-center justify-center mr-4 shrink-0">
-                          <Pause className="w-4 h-4 fill-current text-black" />
-                        </div>
-                      ) : (
-                        <div className="w-11 h-11 rounded-full bg-[#0078FF] flex items-center justify-center mr-4 shrink-0">
-                          <Play className="w-4 h-4 fill-current ml-0.5 text-white" />
-                        </div>
-                      )}
-                      
+                    <div 
+                      className={`flex items-center px-4 py-4 active:bg-white/5 transition-colors ${dayIndex > 0 ? 'border-t border-white/6' : ''}`}
+                    >
                       <div className="flex-1 min-w-0">
-                        <p className={`text-[15px] font-semibold truncate ${day.isCompleted ? 'text-[#8E8E93]' : 'text-white'}`}>
-                          {day.title}
+                        <p className={`text-[17px] font-medium truncate ${day.isCompleted ? 'text-[#8E8E93]' : 'text-white'}`}>
+                          {day.isCompleted ? <span className="line-through opacity-70">{day.title}</span> : day.title}
                         </p>
                         <p className="text-[13px] text-[#636366] mt-0.5">
                           {day.isCompleted ? 'Completed' : day.isInProgress ? 'In progress' : `${day.exerciseCount} exercises`}
                         </p>
                       </div>
-
-                      <ChevronRight className="w-5 h-5 text-[#48484A] ml-2 shrink-0" />
+                      
+                      {day.isCompleted ? (
+                        <Check className="w-5 h-5 text-[#34C759] ml-4 shrink-0" />
+                      ) : day.isInProgress ? (
+                        <div className="w-2 h-2 rounded-full bg-[#FF9F0A] ml-4 shrink-0" />
+                      ) : (
+                        <ChevronRight className="w-5 h-5 text-[#48484A] ml-4 shrink-0" />
+                      )}
                     </div>
                   </Link>
                 ))}
               </div>
-            </TabsContent>
-          ))}
-        </Tabs>
+            </div>
+          )
+        ))}
       </div>
 
-
-      <Drawer open={isSwitcherOpen} onOpenChange={setIsSwitcherOpen}>
-        <DrawerContent className="max-w-lg mx-auto">
-          <DrawerHeader className="text-center">
-            <DrawerTitle className="text-[22px] font-semibold text-white">Change Programme</DrawerTitle>
+      {/* Program Menu Drawer (replaces dropdown) */}
+      <Drawer open={isProgramMenuOpen} onOpenChange={setIsProgramMenuOpen}>
+        <DrawerContent className="max-w-lg mx-auto bg-[#0A0A0A]">
+          <DrawerHeader className="text-center pb-2">
+            <DrawerTitle className="text-[22px] font-semibold text-white">Program Options</DrawerTitle>
             <DrawerDescription className="text-[15px] text-[#8E8E93]">
-              Switch to a different workout program. Your current progress will be saved.
+              {activeProgram.name}
             </DrawerDescription>
           </DrawerHeader>
           
-          <div className="px-6 pb-8 space-y-2">
+          <DrawerFooter className="px-6 pb-8 gap-3">
+            <button 
+              onClick={() => {
+                setIsProgramMenuOpen(false);
+                setIsSwitcherOpen(true);
+              }}
+              className="w-full py-4 bg-[#2C2C2E] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 border border-white/6"
+            >
+              Change Programme
+            </button>
+            
+            <button 
+              onClick={() => {
+                setIsProgramMenuOpen(false);
+                setIsRestartOpen(true);
+              }}
+              className="w-full py-4 bg-[#2C2C2E] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 border border-white/6"
+            >
+              Restart Program
+            </button>
+            
+            <button 
+              onClick={() => setIsProgramMenuOpen(false)}
+              className="w-full py-4 bg-transparent rounded-2xl text-[17px] font-medium text-[#8E8E93] active:scale-95 transition-all duration-200"
+            >
+              Cancel
+            </button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Program Switcher Drawer */}
+      <Drawer open={isSwitcherOpen} onOpenChange={setIsSwitcherOpen}>
+        <DrawerContent className="max-w-lg mx-auto bg-[#0A0A0A]">
+          <DrawerHeader className="text-center pb-2">
+            <DrawerTitle className="text-[22px] font-semibold text-white">Change Programme</DrawerTitle>
+            <DrawerDescription className="text-[15px] text-[#8E8E93]">
+              Switch to a different workout program
+            </DrawerDescription>
+          </DrawerHeader>
+          
+          <div className="px-6 pb-8 space-y-2 max-h-[60vh] overflow-y-auto">
             {programsLoading ? (
               <div className="flex justify-center py-8">
                 <Loader2 className="w-6 h-6 animate-spin text-[#8E8E93]" />
               </div>
             ) : (
-              programs.map((p) => (
+              programs.map((p, index) => (
                 <button
                   key={p.id}
                   onClick={() => handleProgramChange(p.id)}
                   disabled={updatePreferences.isPending}
-                  className={`w-full text-left p-4 rounded-2xl flex items-center justify-between transition-colors ${
+                  className={`w-full text-left p-4 rounded-2xl flex items-center justify-between transition-all active:scale-[0.98] ${
                     userPreferences.activeProgramId === p.id 
                       ? 'bg-[#0078FF] text-white' 
-                      : 'bg-white/5 text-[#E5E5EA] active:bg-white/10'
+                      : 'bg-[#1C1C1E] text-[#E5E5EA] active:bg-[#2C2C2E]'
                   }`}
+                  style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <div>
-                    <p className="font-semibold">{p.name}</p>
-                    <p className={`text-xs ${userPreferences.activeProgramId === p.id ? 'text-white/70' : 'text-[#8E8E93]'}`}>
+                    <p className="text-[17px] font-semibold">{p.name}</p>
+                    <p className={`text-[13px] mt-0.5 ${userPreferences.activeProgramId === p.id ? 'text-white/70' : 'text-[#8E8E93]'}`}>
                       {p.daysPerWeek} sessions per week
                     </p>
                   </div>
                   {userPreferences.activeProgramId === p.id && (
-                    <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center">
-                      <div className="w-2 h-2 rounded-full bg-[#0078FF]" />
+                    <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center">
+                      <Check className="w-4 h-4 text-[#0078FF]" />
                     </div>
                   )}
                 </button>
@@ -333,30 +511,31 @@ export function HomeClient({}: HomeClientProps) {
         </DrawerContent>
       </Drawer>
 
+      {/* Restart Program Drawer */}
       <Drawer open={isRestartOpen} onOpenChange={setIsRestartOpen}>
-        <DrawerContent className="max-w-lg mx-auto">
-          <DrawerHeader className="text-center">
-            <div className="w-16 h-16 rounded-full bg-[#34C759] flex items-center justify-center mx-auto mb-2">
+        <DrawerContent className="max-w-lg mx-auto bg-[#0A0A0A]">
+          <DrawerHeader className="text-center pb-2">
+            <div className="w-16 h-16 rounded-full bg-[#34C759] flex items-center justify-center mx-auto mb-3">
               <Check className="w-8 h-8 text-black" />
             </div>
             <DrawerTitle className="text-[22px] font-semibold text-white">Program Complete!</DrawerTitle>
             <DrawerDescription className="text-[15px] text-[#8E8E93]">
-              Congratulations! Would you like to start a new round of this program?
+              Would you like to start a new round?
             </DrawerDescription>
           </DrawerHeader>
           
-          <DrawerFooter className="px-6 pb-8">
+          <DrawerFooter className="px-6 pb-8 gap-3">
             <button 
               onClick={handleRestartProgram}
               disabled={restartProgram.isPending}
-              className="w-full py-4 bg-[#0078FF] rounded-xl text-[17px] font-semibold active:opacity-80 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2 text-white"
+              className="w-full py-4 bg-linear-to-br from-[#0078FF] to-[#0066DD] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_0_24px_rgba(0,120,255,0.3)]"
             >
               {restartProgram.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Start New Round"}
             </button>
             
             <button 
               onClick={() => setIsRestartOpen(false)}
-              className="w-full py-4 bg-[#2C2C2E] rounded-xl text-[17px] font-semibold active:opacity-80 transition-opacity text-white"
+              className="w-full py-4 bg-[#2C2C2E] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 border border-white/6"
             >
               Not Now
             </button>

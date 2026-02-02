@@ -15,7 +15,7 @@ export interface HomeData {
     hasOnboarded: boolean;
   };
   isProgramComplete?: boolean;
-  nextWorkout?: { programId: string; dayId: string } | null;
+  nextWorkout?: { programId: string; dayId: string; isInProgress: boolean } | null;
 }
 
 export async function fetchHomeData(options?: { baseUrl?: string; headers?: HeadersInit }): Promise<HomeData> {

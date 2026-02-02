@@ -7,6 +7,8 @@ export function useHomeData() {
   return useQuery<HomeData>({
     queryKey: homeKeys.data(),
     queryFn: () => fetchHomeData(),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 0, // Always consider data stale to ensure fresh state on navigation
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   });
 }

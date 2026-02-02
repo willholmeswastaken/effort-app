@@ -34,8 +34,8 @@ export async function getHomeDataDirect(userId: string): Promise<HomeData> {
         const isProgramComplete =
           allDays.length > 0 && allDays.every((d) => d.isCompleted);
         const nextWorkout =
-          allDays.find((d) => !d.isCompleted) ??
           allDays.find((d) => d.isInProgress) ??
+          allDays.find((d) => !d.isCompleted) ??
           null;
 
         return {
@@ -48,7 +48,7 @@ export async function getHomeDataDirect(userId: string): Promise<HomeData> {
           },
           isProgramComplete,
           nextWorkout: nextWorkout
-            ? { programId: activeProgramId, dayId: nextWorkout.id }
+            ? { programId: activeProgramId, dayId: nextWorkout.id, isInProgress: nextWorkout.isInProgress }
             : null,
         };
       }),
