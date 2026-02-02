@@ -1,12 +1,15 @@
-# GEMINI.md
+# AGENTS.md
 
-This file provides guidance for Gemini when working with this codebase.
+This file provides guidance for AI agents when working with this codebase.
+
+## AI Agent Expertise
+The AI agent is an **expert in Next.js, TypeScript, Effect-TS, Tailwind CSS, shadcn/ui, and building scalable Next.js solutions**. It specializes in functional programming patterns using Effect, highly performant React Query integration, and premium UI development following minimalist design systems.
 
 ## Project Overview
 
 A fitness tracking application built with Next.js 16, TypeScript, Effect-TS, React, and Drizzle ORM. Users can follow workout programs, log sets/reps/weight, track progress, and view analytics.
 
-**Design Philosophy**: We follow [Revolut's design principles](https://www.revolut.com/)—dark-first, radically minimal, premium fintech aesthetics. When building UI, always ask: "How would Revolut design this?"
+**Design Philosophy**: We follow [Revolut's design principles](https://www.revolut.com/)—dark-first, radically minimal, premium fintech aesthetics. When building UI, always ask: "How would Revolut design this?" Every UI change must embody their strong UI/UX standards.
 
 ## Tech Stack
 
@@ -191,19 +194,41 @@ This project follows **Revolut's design principles** as our primary design inspi
 
 ### Revolut Design Philosophy
 
-We emulate Revolut's design language because it exemplifies modern fintech aesthetics: premium, trustworthy, and effortlessly usable. Key principles we follow:
+We emulate Revolut's design language because it exemplifies modern fintech aesthetics: premium, trustworthy, and effortlessly usable. Every UI change should feel like it belongs in a high-end app.
 
-1. **Radical Simplicity**: Every element must earn its place. Remove anything that doesn't directly serve the user's goal. When in doubt, leave it out.
+1. **Radical Simplicity (The "Revolut Way")**: 
+   - Every screen should have **one clear primary action**. 
+   - Remove visual noise: no unnecessary borders, shadows, or background colors. 
+   - If a feature isn't essential for the current task, hide it behind a "More" menu or progressive disclosure.
 
-2. **Dark-First, Premium Feel**: Pure black backgrounds create depth and make content pop. This isn't just aesthetic—it reduces eye strain and feels native on OLED screens.
+2. **Dark-First, Premium Depth**: 
+   - Use **True Black (#000000)** for the main background to achieve infinite contrast on OLED screens. 
+   - Create depth using subtle gray surfaces (`#0A0A0A`, `#171717`) and **1px borders (#262626)** rather than heavy shadows.
+   - Use vibrant accents (Revolut Blue `#0078FF`) sparingly to draw attention to high-value actions.
 
-3. **Information Density Done Right**: Show users what they need without overwhelming them. Use progressive disclosure—surface key info immediately, details on demand.
+3. **Information Density & Progressive Disclosure**:
+   - Surfaces should feel clean at a glance but powerful on interaction.
+   - Use **Bottom Sheets (Drawers)** for secondary actions and detailed inputs to keep the main context visible.
+   - Summarize data first (e.g., total volume, weekly progress) and allow drilling down into specifics.
 
-4. **Motion with Purpose**: Animations should feel natural and guide attention. No gratuitous effects—every transition communicates something.
+4. **Motion as a Signal**:
+   - Animations must be **physics-based and snappy** (lean towards `duration-200` or `duration-300` with ease-out).
+   - Use shared element transitions where possible to maintain user context.
+   - Feedback is non-negotiable: every tap should have a subtle visual response.
 
-5. **Typography as UI**: Strong typographic hierarchy reduces the need for visual clutter. Let font weight, size, and color do the heavy lifting.
+5. **Typography as the Primary UI**:
+   - Rely on **font weight and scale** to create hierarchy, not color.
+   - Use `font-mono` for all numerical data (sets, reps, weights, timers) to prevent layout shift during updates and give a precision-tool feel.
+   - Headlines should be bold and impactful; body text should be highly legible with generous line height.
 
-6. **Touch-Optimized**: Generous tap targets, swipe gestures, and thumb-friendly layouts. Design for one-handed mobile use first.
+6. **Touch-Optimized Interactions**:
+   - Design for **one-handed use**. Place primary actions (e.g. Start Workout, Log Set) within the "thumb zone" (bottom half of the screen).
+   - Leverage native-feeling gestures: swipe-to-delete, pull-to-refresh, and edge-swipes for navigation.
+   - Use haptic-feedback-inspired visual cues for successful actions.
+
+7. **The "Precision-Tool" Aesthetic**:
+   - Every input should feel deliberate. Use custom numeric keypads or specialized pickers instead of generic browser inputs where possible.
+   - Accuracy is key: use high-precision charts (Recharts) with clean, minimal axes.
 
 ### Core Principles (Implementation)
 
