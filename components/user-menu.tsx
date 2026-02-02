@@ -18,8 +18,12 @@ export function UserMenu() {
     setMounted(true);
   }, []);
 
-  // Prevent hydration mismatch by not rendering until mounted
-  if (!mounted || !session?.user) return null;
+  // Prevent hydration mismatch - show skeleton while loading
+  if (!mounted || !session?.user) {
+    return (
+      <div className="w-9 h-9 rounded-full bg-[#1C1C1E] animate-pulse" />
+    );
+  }
 
   const handleSignOut = async () => {
     await signOut();

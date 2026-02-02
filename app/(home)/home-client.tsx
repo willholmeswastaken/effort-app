@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { History, Play, Check, Loader2, ChevronRight, Dumbbell, ArrowRight, TrendingUp } from "lucide-react";
+import { History, Play, Check, Loader2, ChevronRight, Dumbbell, ArrowRight, TrendingUp, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import {
   Drawer,
@@ -400,16 +400,6 @@ export function HomeClient({}: HomeClientProps) {
         {weeks.map((week: any, index: number) => (
           activeWeekIndex === index && (
             <div key={week.id} className="animate-in fade-in duration-200">
-              {/* Empty state when no workouts completed this week */}
-              {week.days.every((d: any) => !d.isCompleted && !d.isInProgress) && (
-                <div className="bg-[#1C1C1E] rounded-2xl p-8 text-center mb-4 shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
-                  <div className="w-12 h-12 rounded-full bg-[#2C2C2E] flex items-center justify-center mx-auto mb-3">
-                    <Play className="w-5 h-5 text-[#8E8E93]" />
-                  </div>
-                  <p className="text-[15px] text-white font-medium mb-1">Ready to start?</p>
-                  <p className="text-[13px] text-[#8E8E93]">Complete your first workout this week</p>
-                </div>
-              )}
               <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
                 {week.days.map((day: any, dayIndex: number) => (
                   <Link key={day.id} href={`/workout/${activeProgram.id}/${day.id}`}>
@@ -588,6 +578,20 @@ export function HomeClient({}: HomeClientProps) {
               <History className="w-5 h-5 text-[#8E8E93]" />
               Workout History
             </Link>
+            
+            {/* Divider */}
+            <div className="h-px bg-white/6 my-1" />
+            
+            <button 
+              onClick={() => {
+                setIsInsightsMenuOpen(false);
+                setIsRestartOpen(true);
+              }}
+              className="w-full py-4 bg-transparent rounded-2xl text-[17px] font-semibold text-[#FF3B30] active:scale-95 transition-all duration-200 flex items-center justify-center gap-3"
+            >
+              <RotateCcw className="w-5 h-5" />
+              Restart Program
+            </button>
             
             <button 
               onClick={() => setIsInsightsMenuOpen(false)}
