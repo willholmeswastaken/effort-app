@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { History, Play, Check, Loader2, ChevronRight, Dumbbell, ArrowRight } from "lucide-react";
+import { History, Play, Check, Loader2, ChevronRight, Dumbbell, ArrowRight, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import {
   Drawer,
@@ -23,36 +23,30 @@ function HomeSkeleton() {
   return (
     <main className="min-h-screen bg-black text-white">
       {/* Header Skeleton */}
-      <div className="px-6 pt-14 pb-12">
-        <div className="flex items-center justify-between mb-14">
+      <div className="px-6 pt-14 pb-8">
+        <div className="flex items-center justify-between mb-10">
           <div className="w-10 h-10 rounded-full bg-[#1C1C1E] animate-pulse" />
-          <div className="w-10 h-10 rounded-full bg-[#1C1C1E] animate-pulse" />
+          <div className="w-24 h-4 bg-[#1C1C1E] rounded animate-pulse" />
+          <div className="flex gap-2">
+            <div className="w-10 h-10 rounded-full bg-[#1C1C1E] animate-pulse" />
+            <div className="w-10 h-10 rounded-full bg-[#1C1C1E] animate-pulse" />
+          </div>
         </div>
         
-        <div className="text-center mb-8">
-          <div className="w-32 h-4 bg-[#1C1C1E] rounded mx-auto mb-3 animate-pulse" />
-          <div className="w-20 h-8 bg-[#1C1C1E] rounded mx-auto mb-2 animate-pulse" />
-          <div className="w-24 h-3 bg-[#1C1C1E] rounded mx-auto animate-pulse" />
+        {/* Big Week Number Skeleton */}
+        <div className="text-center mb-10">
+          <div className="w-32 h-12 bg-[#1C1C1E] rounded mx-auto mb-3 animate-pulse" />
+          <div className="w-24 h-5 bg-[#1C1C1E] rounded mx-auto mb-4 animate-pulse" />
+          <div className="w-36 h-4 bg-[#1C1C1E] rounded mx-auto animate-pulse" />
         </div>
         
-        <div className="flex justify-center">
-          <div className="w-32 h-8 bg-[#1C1C1E] rounded-full animate-pulse" />
+        {/* CTA Button Skeleton */}
+        <div className="flex justify-center mb-8">
+          <div className="w-full max-w-xs h-14 bg-[#1C1C1E] rounded-2xl animate-pulse" />
         </div>
       </div>
       
-      {/* Action Buttons Skeleton */}
-      <div className="px-6 py-8">
-        <div className="flex justify-between items-start">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="flex flex-col items-center gap-2.5">
-              <div className="w-16 h-16 rounded-full bg-[#1C1C1E] animate-pulse" />
-              <div className="w-12 h-3 bg-[#1C1C1E] rounded animate-pulse" />
-            </div>
-          ))}
-        </div>
-      </div>
-      
-      {/* Tabs Skeleton */}
+      {/* Week Tabs Skeleton */}
       <div className="px-6 pb-6">
         <div className="w-full h-12 bg-[#1C1C1E] rounded-2xl mb-6 animate-pulse" />
         <div className="space-y-3">
@@ -122,6 +116,7 @@ export function HomeClient({}: HomeClientProps) {
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
   const [isRestartOpen, setIsRestartOpen] = useState(false);
   const [isProgramMenuOpen, setIsProgramMenuOpen] = useState(false);
+  const [isInsightsMenuOpen, setIsInsightsMenuOpen] = useState(false);
   const updatePreferences = useUpdatePreferences();
   const restartProgram = useRestartProgram();
   const [activeWeekIndex, setActiveWeekIndex] = useState(0);
@@ -277,41 +272,53 @@ export function HomeClient({}: HomeClientProps) {
       <div>
         
         <div className="relative z-10 px-6 pt-14 pb-4">
-          {/* Top Bar */}
+          {/* Top Bar - Program name in center */}
           <div className="flex items-center justify-between mb-10">
             <UserMenu />
-            <div className="flex items-center gap-3">
-              <Link href="/history">
-                <button 
-                  className="w-10 h-10 rounded-full bg-[#1C1C1E] flex items-center justify-center active:bg-[#2C2C2E] transition-colors"
-                  onClick={triggerHaptic}
-                >
-                  <History className="w-5 h-5 text-[#8E8E93]" />
-                </button>
-              </Link>
-            </div>
-          </div>
-          
-          {/* Program Title - Tappable */}
-          <div className="text-center mb-8">
+            
+            {/* Program Name - Centered, tappable */}
             <button 
               onClick={() => setIsProgramMenuOpen(true)}
-              className="group inline-flex items-center gap-1"
+              className="group flex items-center gap-1"
             >
-              <h1 className="text-[28px] font-bold text-white group-active:opacity-70 transition-opacity">
+              <span className="text-[15px] font-medium text-white group-active:opacity-70 transition-opacity">
                 {activeProgram.name}
-              </h1>
-              <ChevronRight className="w-5 h-5 text-[#8E8E93] group-hover:translate-x-0.5 transition-transform" />
+              </span>
+              <ChevronRight className="w-4 h-4 text-[#8E8E93] group-hover:translate-x-0.5 transition-transform" />
+            </button>
+            
+            <button 
+              onClick={() => {
+                triggerHaptic();
+                setIsInsightsMenuOpen(true);
+              }}
+              className="w-10 h-10 rounded-full bg-[#1C1C1E] flex items-center justify-center active:bg-[#2C2C2E] transition-colors"
+            >
+              <History className="w-5 h-5 text-[#8E8E93]" />
             </button>
           </div>
           
-          {/* Status Info - Pill */}
-          <div className="flex justify-center mb-10">
-            <div className="bg-[#1C1C1E] border border-white/5 px-4 py-2 rounded-full inline-flex items-center gap-2.5 backdrop-blur-md">
-              <span className="text-[14px] font-medium text-white">Week {weeks[activeWeekIndex]?.weekNumber ?? 1}</span>
-              <div className="w-1 h-1 rounded-full bg-[#3A3A3C]" />
-              <span className="text-[14px] text-[#8E8E93]">{completedSessions}/{totalSessions} sessions</span>
+          {/* Big Week Status - Primary Info */}
+          <div className="text-center mb-2">
+            <div className="text-[48px] font-bold text-white tracking-tight leading-none">
+              Week {weeks[activeWeekIndex]?.weekNumber ?? 1}
             </div>
+          </div>
+          
+          {/* Secondary: Session count */}
+          <div className="text-center mb-4">
+            <span className="text-[17px] text-[#8E8E93]">{completedSessions}/{totalSessions} sessions</span>
+          </div>
+          
+          {/* Tertiary: Program progress with insights link */}
+          <div className="flex justify-center mb-8">
+            <Link 
+              href="/progress" 
+              className="group inline-flex items-center gap-1.5 text-[14px] text-[#8E8E93] hover:text-white transition-colors"
+            >
+              <span>{Math.round((completedSessions / totalSessions) * 100)}% Program Complete</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
           </div>
           
           {/* Start CTA - Single Primary Action */}
@@ -393,11 +400,21 @@ export function HomeClient({}: HomeClientProps) {
         {weeks.map((week: any, index: number) => (
           activeWeekIndex === index && (
             <div key={week.id} className="animate-in fade-in duration-200">
-              <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden">
+              {/* Empty state when no workouts completed this week */}
+              {week.days.every((d: any) => !d.isCompleted && !d.isInProgress) && (
+                <div className="bg-[#1C1C1E] rounded-2xl p-8 text-center mb-4 shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
+                  <div className="w-12 h-12 rounded-full bg-[#2C2C2E] flex items-center justify-center mx-auto mb-3">
+                    <Play className="w-5 h-5 text-[#8E8E93]" />
+                  </div>
+                  <p className="text-[15px] text-white font-medium mb-1">Ready to start?</p>
+                  <p className="text-[13px] text-[#8E8E93]">Complete your first workout this week</p>
+                </div>
+              )}
+              <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.4)]">
                 {week.days.map((day: any, dayIndex: number) => (
                   <Link key={day.id} href={`/workout/${activeProgram.id}/${day.id}`}>
                     <div 
-                      className={`flex items-center px-4 py-4 active:bg-white/5 transition-colors ${dayIndex > 0 ? 'border-t border-white/6' : ''}`}
+                      className={`flex items-center px-4 py-4 active:bg-white/[0.03] transition-colors ${dayIndex > 0 ? 'border-t border-white/6' : ''}`}
                     >
                       <div className="flex-1 min-w-0">
                         <p className={`text-[17px] font-medium truncate ${day.isCompleted ? 'text-[#8E8E93]' : 'text-white'}`}>
@@ -538,6 +555,45 @@ export function HomeClient({}: HomeClientProps) {
               className="w-full py-4 bg-[#2C2C2E] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 border border-white/6"
             >
               Not Now
+            </button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
+      {/* Insights & History Menu Drawer */}
+      <Drawer open={isInsightsMenuOpen} onOpenChange={setIsInsightsMenuOpen}>
+        <DrawerContent className="max-w-lg mx-auto bg-[#0A0A0A]">
+          <DrawerHeader className="text-center pb-2">
+            <DrawerTitle className="text-[22px] font-semibold text-white">Your Data</DrawerTitle>
+            <DrawerDescription className="text-[15px] text-[#8E8E93]">
+              View your progress and workout history
+            </DrawerDescription>
+          </DrawerHeader>
+          
+          <DrawerFooter className="px-6 pb-8 gap-3">
+            <Link 
+              href="/progress"
+              onClick={() => setIsInsightsMenuOpen(false)}
+              className="w-full py-4 bg-[#2C2C2E] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 border border-white/6 flex items-center justify-center gap-3"
+            >
+              <TrendingUp className="w-5 h-5 text-[#8E8E93]" />
+              Progress & Insights
+            </Link>
+            
+            <Link 
+              href="/history"
+              onClick={() => setIsInsightsMenuOpen(false)}
+              className="w-full py-4 bg-[#2C2C2E] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 border border-white/6 flex items-center justify-center gap-3"
+            >
+              <History className="w-5 h-5 text-[#8E8E93]" />
+              Workout History
+            </Link>
+            
+            <button 
+              onClick={() => setIsInsightsMenuOpen(false)}
+              className="w-full py-4 bg-transparent rounded-2xl text-[17px] font-medium text-[#8E8E93] active:scale-95 transition-all duration-200"
+            >
+              Cancel
             </button>
           </DrawerFooter>
         </DrawerContent>
