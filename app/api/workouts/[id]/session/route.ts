@@ -48,6 +48,7 @@ export async function GET(
               restSeconds: number;
               videoUrl: string | null;
               thumbnailUrl: string | null;
+              muscleGroupId: string | null;
             }>();
             
             for (const exercise of workout.exercises) {
@@ -61,6 +62,7 @@ export async function GET(
                   restSeconds: exercise.restSeconds,
                   videoUrl: exercise.videoUrl,
                   thumbnailUrl: exercise.thumbnailUrl,
+                  muscleGroupId: null, // Will be filled from day.exercises
                 });
               }
             }
@@ -69,7 +71,11 @@ export async function GET(
             exercises = day.exercises.map((originalExercise, index) => {
               const swappedExercise = orderToExerciseMap.get(index);
               if (swappedExercise && swappedExercise.id !== originalExercise.id) {
-                return swappedExercise;
+                // Preserve muscleGroupId from the original exercise position (it may have been swapped)
+                return {
+                  ...swappedExercise,
+                  muscleGroupId: originalExercise.muscleGroupId,
+                };
               }
               return originalExercise;
             });

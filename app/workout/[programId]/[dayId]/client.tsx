@@ -20,8 +20,9 @@ import {
   useWorkoutSession,
   workoutKeys,
   homeKeys,
-  type MuscleGroupExercise 
+  type MuscleGroupExerciseWithGroup 
 } from "@/lib/queries";
+import { type WorkoutSessionData } from "@/lib/services";
 import {
   Drawer,
   DrawerContent,
@@ -35,14 +36,17 @@ import Link from "next/link";
 
 interface WorkoutSessionClientProps {
   workoutId: string;
+  initialSessionData?: WorkoutSessionData;
 }
 
 
-export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClientProps) {
+export default function WorkoutSessionClient({ workoutId, initialSessionData }: WorkoutSessionClientProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { data: sessionData, isLoading } = useWorkoutSession(workoutId);
+  const { data: sessionData, isLoading } = useWorkoutSession(workoutId, {
+    initialData: initialSessionData,
+  });
 
   const workout = sessionData?.workout;
   const exercises = sessionData?.exercises ?? [];
@@ -229,13 +233,8 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
     } else {
       // User wants to RESUME
       resumeWorkout.mutate(workoutId, {
-        onSuccess: () => {
-          // Calculate optimistic accumulated pause to keep timer smooth
-          const now = new Date();
-          const pauseDuration = workout?.lastPausedAt 
-            ? Math.round((now.getTime() - new Date(workout.lastPausedAt).getTime()) / 1000)
-            : 0;
-
+        onSuccess: (data) => {
+          // Use server-returned accumulatedPauseSeconds to avoid timer flicker
           queryClient.setQueryData(workoutKeys.session(workoutId), (oldData: any) => {
             if (!oldData) return oldData;
             return {
@@ -244,11 +243,12 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
                 ...oldData.workout,
                 status: "active",
                 lastPausedAt: null,
-                accumulatedPauseSeconds: (oldData.workout.accumulatedPauseSeconds || 0) + pauseDuration,
+                accumulatedPauseSeconds: data.accumulatedPauseSeconds,
               }
             };
           });
-          queryClient.invalidateQueries({ queryKey: workoutKeys.session(workoutId) });
+          // Don't invalidate immediately - let the optimistic update persist
+          // The next natural refetch will sync any other changes
           setOptimisticPaused(null); // Clear optimistic state
         },
         onError: () => {
@@ -389,7 +389,7 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
     setShowSwapDrawer(true);
   };
 
-  const handleSwapExercise = (newExercise: MuscleGroupExercise) => {
+  const handleSwapExercise = (newExercise: MuscleGroupExerciseWithGroup) => {
     if (swapExerciseIndex === null) return;
     
     swapExercise.mutate({
@@ -397,6 +397,7 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
       exerciseOrder: swapExerciseIndex,
       newExerciseId: newExercise.id,
       newExerciseName: newExercise.name,
+      newExerciseMuscleGroupId: newExercise.groupId,
     }, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: workoutKeys.session(workoutId) });
@@ -460,20 +461,24 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
         )}
       </header>
 
-      <div className={`text-center border-b border-white/6 relative overflow-hidden pt-14 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isTimerCompact ? 'py-8' : 'py-14'}`}>
+      <div className={`text-center border-b border-white/6 relative overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isTimerCompact ? 'py-14' : 'pt-20 pb-10'}`}>
         {/* Subtle gradient overlay for depth */}
         <div className="absolute inset-0 bg-linear-to-b from-white/2 to-transparent pointer-events-none z-0" />
         
         {/* Large Timer - fades out as you scroll (z-10) */}
-        <div className={`relative z-10 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isTimerCompact ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
-          <p className="text-[13px] font-medium text-[#8E8E93] uppercase tracking-wider mb-3 pt-4">
+        <div className={`relative z-10 flex flex-col items-center justify-center px-16 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isTimerCompact ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
+          <p className="text-[13px] font-medium text-[#8E8E93] uppercase tracking-wider mb-2">
             {isCompleted ? "Completed" : isPaused ? "Paused" : "Duration"}
           </p>
-          <p className={`text-7xl font-extralight tabular-nums tracking-tight transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-            isPaused && !isCompleted ? 'opacity-40 scale-95' : 'opacity-100 scale-100'
-          } ${!isPaused && !isCompleted ? 'animate-pulse' : ''}`}>
-            {formatTime(displayTime)}
-          </p>
+          <div className="w-full flex items-center justify-center">
+            <p className={`font-extralight tabular-nums tracking-tight transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+              displayTime >= 3600 ? 'text-5xl sm:text-6xl' : 'text-7xl sm:text-8xl'
+            } ${
+              isPaused && !isCompleted ? 'opacity-40 scale-95' : 'opacity-100 scale-100'
+            } ${!isPaused && !isCompleted ? 'animate-pulse' : ''}`}>
+              {formatTime(displayTime)}
+            </p>
+          </div>
         </div>
         
         {/* Mini stats - fades in as you scroll (z-20, higher than big timer) */}
@@ -494,7 +499,9 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
         {!isCompleted && (
           <button 
             onClick={togglePause}
-            className={`absolute top-1/2 -translate-y-1/2 right-6 w-14 h-14 rounded-full flex items-center justify-center z-50 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-90 ${
+            className={`absolute top-1/2 right-6 w-14 h-14 rounded-full flex items-center justify-center z-50 transition-all duration-300 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-90 -translate-y-1/2 ${
+              isTimerCompact ? '' : 'mt-8'
+            } ${
               isPaused 
                 ? 'bg-linear-to-br from-[#0078FF] to-[#0066DD] shadow-[0_0_24px_rgba(0,120,255,0.5)] scale-100' 
                 : 'bg-[#1C1C1E] active:bg-[#2C2C2E] border border-white/8 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.4)]'
@@ -630,6 +637,7 @@ export default function WorkoutSessionClient({ workoutId }: WorkoutSessionClient
         onOpenChange={setShowSwapDrawer}
         onExerciseSelect={handleSwapExercise}
         currentExerciseName={swapExerciseIndex !== null ? exercises[swapExerciseIndex]?.name : ""}
+        currentMuscleGroupId={swapExerciseIndex !== null ? exercises[swapExerciseIndex]?.muscleGroupId : null}
         isSwapping={swapExercise.isPending}
       />
     </div>

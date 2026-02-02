@@ -10,6 +10,12 @@ export interface MuscleGroupExercise {
   targetReps: string | null;
   restSeconds: number | null;
   videoUrl: string | null;
+  muscleGroupId?: string | null;
+}
+
+export interface MuscleGroupExerciseWithGroup extends MuscleGroupExercise {
+  groupName: string;
+  groupId: string;
 }
 
 export interface MuscleGroup {

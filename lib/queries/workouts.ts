@@ -5,6 +5,7 @@ import type {
   WorkoutHistoryEntry,
   UpsertSetInput,
   CompleteWorkoutInput,
+  WorkoutSessionData,
 } from "@/lib/services";
 import { workoutQueryKeys, fetchWorkoutSession } from "./workout-session";
 
@@ -126,7 +127,7 @@ export function usePauseWorkout() {
 
 
 export function useResumeWorkout() {
-  return useMutation({
+  return useMutation<{ accumulatedPauseSeconds: number }, Error, string>({
     mutationFn: async (workoutLogId: string) => {
       const res = await fetch(`/api/workouts/${workoutLogId}/resume`, {
         method: "POST",
@@ -234,6 +235,7 @@ interface SwapExerciseData {
   exerciseOrder: number;
   newExerciseId: string;
   newExerciseName: string;
+  newExerciseMuscleGroupId?: string | null;
 }
 
 export function useSwapExercise() {
@@ -248,6 +250,7 @@ export function useSwapExercise() {
           exerciseOrder: data.exerciseOrder,
           newExerciseId: data.newExerciseId,
           newExerciseName: data.newExerciseName,
+          newExerciseMuscleGroupId: data.newExerciseMuscleGroupId,
         }),
       });
       if (!res.ok) throw new Error("Failed to swap exercise");
@@ -268,6 +271,7 @@ export interface WorkoutSessionExercise {
   restSeconds: number;
   videoUrl: string | null;
   thumbnailUrl: string | null;
+  muscleGroupId: string | null;
 }
 
 export interface WorkoutSessionSet {
@@ -277,29 +281,14 @@ export interface WorkoutSessionSet {
   weight: string;
 }
 
-export interface WorkoutSessionData {
-  workout: {
-    id: string;
-    programId: string;
-    dayId: string;
-    dayTitle: string;
-    programName: string;
-    startedAt: string;
-    completedAt: string | null;
-    status: "active" | "paused" | "completed";
-    lastPausedAt: string | null;
-    accumulatedPauseSeconds: number;
-    durationSeconds: number | null;
-    rating: number | null;
-  };
-  exercises: WorkoutSessionExercise[];
-  sets: WorkoutSessionSet[];
-}
-
-export function useWorkoutSession(workoutId: string) {
+export function useWorkoutSession(
+  workoutId: string,
+  options?: { initialData?: WorkoutSessionData }
+) {
   return useQuery<WorkoutSessionData>({
     queryKey: workoutKeys.session(workoutId),
     queryFn: () => fetchWorkoutSession(workoutId),
+    initialData: options?.initialData,
     enabled: !!workoutId,
     staleTime: 60 * 1000,
     gcTime: 5 * 60 * 1000,

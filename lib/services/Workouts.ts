@@ -32,6 +32,7 @@ export interface SwapExerciseInput {
   exerciseOrder: number;
   newExerciseId: string;
   newExerciseName: string;
+  newExerciseMuscleGroupId?: string | null;
 }
 
 export interface WorkoutHistoryEntry {
@@ -122,6 +123,7 @@ export interface WorkoutSessionExercise {
   restSeconds: number;
   videoUrl: string | null;
   thumbnailUrl: string | null;
+  muscleGroupId: string | null;
 }
 
 export interface WorkoutSessionWorkout {
@@ -150,7 +152,7 @@ export interface WorkoutsServiceInterface {
   readonly startWorkoutAndGetSession: (input: StartWorkoutInput) => Effect.Effect<{ workoutId: string; session: WorkoutSessionData }, Error>;
   readonly upsertSet: (input: UpsertSetInput & { userId: string }) => Effect.Effect<void, Error>;
   readonly pauseWorkout: (workoutLogId: string, userId: string) => Effect.Effect<void, Error>;
-  readonly resumeWorkout: (workoutLogId: string, userId: string) => Effect.Effect<void, Error>;
+  readonly resumeWorkout: (workoutLogId: string, userId: string) => Effect.Effect<{ accumulatedPauseSeconds: number }, Error>;
   readonly resetWorkout: (workoutLogId: string, userId: string) => Effect.Effect<{ programId: string; dayId: string }, Error>;
   readonly deleteWorkout: (workoutLogId: string, userId: string) => Effect.Effect<void, Error>;
   readonly completeWorkout: (input: CompleteWorkoutInput & { userId: string }) => Effect.Effect<void, Error>;
@@ -347,7 +349,7 @@ export const WorkoutsServiceLive = Layer.effect(
         catch: (e) => new Error(`Failed to pause workout: ${e}`),
       });
 
-    const resumeWorkout = (workoutLogId: string, userId: string): Effect.Effect<void, Error> =>
+    const resumeWorkout = (workoutLogId: string, userId: string): Effect.Effect<{ accumulatedPauseSeconds: number }, Error> =>
       Effect.tryPromise({
         try: async () => {
           const workout = await db.query.workoutLogs.findFirst({
@@ -362,21 +364,25 @@ export const WorkoutsServiceLive = Layer.effect(
           }
 
           if (workout.status !== "paused" || !workout.lastPausedAt) {
-            return;
+            return { accumulatedPauseSeconds: workout.accumulatedPauseSeconds || 0 };
           }
 
           const pauseDuration = Math.round(
             (new Date().getTime() - workout.lastPausedAt.getTime()) / 1000
           );
 
+          const newAccumulatedPause = (workout.accumulatedPauseSeconds || 0) + pauseDuration;
+
           await db
             .update(schema.workoutLogs)
             .set({
               status: "active",
               lastPausedAt: null,
-              accumulatedPauseSeconds: (workout.accumulatedPauseSeconds || 0) + pauseDuration,
+              accumulatedPauseSeconds: newAccumulatedPause,
             })
             .where(eq(schema.workoutLogs.id, workoutLogId));
+
+          return { accumulatedPauseSeconds: newAccumulatedPause };
         },
         catch: (e) => new Error(`Failed to resume workout: ${e}`),
       });
@@ -502,6 +508,8 @@ export const WorkoutsServiceLive = Layer.effect(
             where: eq(schema.exercises.id, input.newExerciseId),
           });
 
+          const muscleGroupId = input.newExerciseMuscleGroupId ?? newExercise?.muscleGroupId ?? null;
+
           if (existingLog) {
             // Update existing exercise log with new exercise
             await db
@@ -531,6 +539,39 @@ export const WorkoutsServiceLive = Layer.effect(
               videoUrl: newExercise?.videoUrl ?? null,
               thumbnailUrl: newExercise?.thumbnailUrl ?? null,
             });
+          }
+          
+          // Update the workout log's dayExercisesSnapshot with the new muscleGroupId
+          const workoutLog = await db.query.workoutLogs.findFirst({
+            where: eq(schema.workoutLogs.id, input.workoutLogId),
+            columns: { dayExercisesSnapshot: true },
+          });
+          
+          if (workoutLog?.dayExercisesSnapshot) {
+            try {
+              const exercises = JSON.parse(workoutLog.dayExercisesSnapshot) as Array<{
+                id: string;
+                name: string;
+                targetSets?: number;
+                targetReps?: string;
+                restSeconds?: number;
+                videoUrl?: string | null;
+                thumbnailUrl?: string | null;
+                muscleGroupId?: string | null;
+              }>;
+              
+              // Update the exercise at the specified order with the new muscleGroupId
+              if (exercises[input.exerciseOrder]) {
+                exercises[input.exerciseOrder].muscleGroupId = muscleGroupId;
+                
+                await db
+                  .update(schema.workoutLogs)
+                  .set({ dayExercisesSnapshot: JSON.stringify(exercises) })
+                  .where(eq(schema.workoutLogs.id, input.workoutLogId));
+              }
+            } catch {
+              // If parsing fails, don't break the swap - just skip the snapshot update
+            }
           }
         },
         catch: (e) => new Error(`Failed to swap exercise: ${e}`),
@@ -917,6 +958,7 @@ export const WorkoutsServiceLive = Layer.effect(
             restSeconds?: number;
             videoUrl?: string | null;
             thumbnailUrl?: string | null;
+            muscleGroupId?: string | null;
           }>;
           
           let exercises: WorkoutSessionExercise[] = parsedExercises.map(e => ({
@@ -927,6 +969,7 @@ export const WorkoutsServiceLive = Layer.effect(
             restSeconds: e.restSeconds ?? 90,
             videoUrl: e.videoUrl ?? null,
             thumbnailUrl: e.thumbnailUrl ?? null,
+            muscleGroupId: e.muscleGroupId ?? null,
           }));
 
           // Fetch exercise logs with denormalized data (single table query)
@@ -952,6 +995,8 @@ export const WorkoutsServiceLive = Layer.effect(
             for (const exLog of exerciseLogs) {
               const exerciseOrder = exLog.exerciseOrder;
               if (exerciseOrder >= 0) {
+                // Get muscleGroupId from the snapshot if available
+                const snapshotExercise = parsedExercises[exerciseOrder];
                 orderToExerciseMap.set(exerciseOrder, {
                   id: exLog.exerciseId,
                   name: exLog.exerciseName,
@@ -960,6 +1005,7 @@ export const WorkoutsServiceLive = Layer.effect(
                   restSeconds: exLog.restSeconds ?? 90,
                   videoUrl: exLog.videoUrl ?? null,
                   thumbnailUrl: exLog.thumbnailUrl ?? null,
+                  muscleGroupId: snapshotExercise?.muscleGroupId ?? null,
                 });
               }
             }
@@ -1077,6 +1123,7 @@ export const WorkoutsServiceLive = Layer.effect(
               restSeconds: de.exercise.restSeconds ?? 90,
               videoUrl: de.exercise.videoUrl ?? null,
               thumbnailUrl: de.exercise.thumbnailUrl ?? null,
+              muscleGroupId: de.exercise.muscleGroupId ?? null,
             }));
 
             // Create workout log WITH denormalized data

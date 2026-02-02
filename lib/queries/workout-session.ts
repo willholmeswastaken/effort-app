@@ -1,4 +1,4 @@
-import type { WorkoutSessionData } from "./workouts";
+import type { WorkoutSessionData } from "@/lib/services";
 
 export const workoutQueryKeys = {
   all: ["workouts"] as const,

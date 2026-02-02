@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { Effect, pipe } from "effect";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { auth } from "@/lib/auth";
-import { runEffect, WorkoutsService, UserService } from "@/lib/services";
+import { runEffect, WorkoutsService, UserService, type WorkoutSessionData } from "@/lib/services";
 import { getQueryClient } from "@/lib/get-query-client";
 import { workoutQueryKeys } from "@/lib/queries/workout-session";
 import { headers } from "next/headers";
@@ -117,7 +117,7 @@ export default async function WorkoutPage({ params }: WorkoutPageProps) {
   const dehydratedState = dehydrate(queryClient);
   return (
     <HydrationBoundary state={dehydratedState}>
-      <WorkoutSessionClient workoutId={workoutId} />
+      <WorkoutSessionClient workoutId={workoutId} initialSessionData={sessionData} />
     </HydrationBoundary>
   );
 }

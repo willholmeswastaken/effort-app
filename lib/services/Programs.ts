@@ -51,6 +51,7 @@ export interface DayWithExercises {
     restSeconds: number;
     videoUrl: string | null;
     thumbnailUrl: string | null;
+    muscleGroupId: string | null;
   }>;
 }
 
@@ -216,6 +217,7 @@ export const ProgramsServiceLive = Layer.effect(
               restSeconds: de.exercise.restSeconds ?? 90,
               videoUrl: de.exercise.videoUrl,
               thumbnailUrl: de.exercise.thumbnailUrl,
+              muscleGroupId: de.exercise.muscleGroupId ?? null,
             })),
           };
         },

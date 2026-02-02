@@ -18,7 +18,7 @@ export async function POST(
 
     const { id: workoutLogId } = await context.params;
     const body = await request.json();
-    const { exerciseOrder, newExerciseId, newExerciseName } = body;
+    const { exerciseOrder, newExerciseId, newExerciseName, newExerciseMuscleGroupId } = body;
 
     if (exerciseOrder === undefined || !newExerciseId || !newExerciseName) {
       return NextResponse.json(
@@ -36,6 +36,7 @@ export async function POST(
             exerciseOrder,
             newExerciseId,
             newExerciseName,
+            newExerciseMuscleGroupId,
           });
         }),
         Effect.catchAll((error) => {

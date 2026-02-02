@@ -15,14 +15,14 @@ export async function POST(
 
     const { id } = await params;
 
-    await runEffect(
+    const result = await runEffect(
       Effect.gen(function* () {
         const service = yield* WorkoutsService;
         return yield* service.resumeWorkout(id, session.user.id);
       })
     );
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, accumulatedPauseSeconds: result.accumulatedPauseSeconds });
   } catch (error) {
     console.error("Error resuming workout:", error);
     return NextResponse.json(
