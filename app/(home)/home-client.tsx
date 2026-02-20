@@ -124,6 +124,7 @@ export function HomeClient({}: HomeClientProps) {
   const touchStartY = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
   const isSwipingHorizontally = useRef<boolean>(false);
+  const isTouchingWeekTabs = useRef<boolean>(false);
   const swipeContainerRef = useRef<HTMLDivElement>(null);
   const SWIPE_THRESHOLD = 50;
   const SWIPE_LOCK_ANGLE = 15; // Degrees - if angle is less than this, lock vertical scroll
@@ -207,12 +208,15 @@ export function HomeClient({}: HomeClientProps) {
     if (!container) return;
 
     const handleTouchStart = (e: TouchEvent) => {
+      isTouchingWeekTabs.current = (e.target as Element)?.closest?.("[data-week-tabs-scroll]") != null;
+      if (isTouchingWeekTabs.current) return;
       touchStartX.current = e.touches[0].clientX;
       touchStartY.current = e.touches[0].clientY;
       isSwipingHorizontally.current = false;
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      if (isTouchingWeekTabs.current) return;
       if (!touchStartX.current || !touchStartY.current) return;
       
       const currentX = e.touches[0].clientX;
@@ -233,6 +237,10 @@ export function HomeClient({}: HomeClientProps) {
     };
 
     const handleTouchEnd = () => {
+      if (isTouchingWeekTabs.current) {
+        isTouchingWeekTabs.current = false;
+        return;
+      }
       if (!touchStartX.current || !touchEndX.current) return;
       
       const distance = touchStartX.current - touchEndX.current;
@@ -349,7 +357,7 @@ export function HomeClient({}: HomeClientProps) {
       >
         {/* Week Tabs - Pill style like muscle group filters */}
         <div className="sticky top-0 z-20 bg-black pt-3 pb-4 -mx-6 px-6">
-          <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+          <div data-week-tabs-scroll className="flex gap-2 overflow-x-auto scrollbar-hide">
             {weeks.map((week: any, index: number) => {
               const isWeekCompleted = week.days.every((d: any) => d.isCompleted);
               const isActive = activeWeekIndex === index;
