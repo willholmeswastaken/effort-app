@@ -357,7 +357,7 @@ export function HomeClient({}: HomeClientProps) {
       >
         {/* Week Tabs - Pill style like muscle group filters */}
         <div className="sticky top-0 z-20 bg-black pt-3 pb-4 -mx-6 px-6">
-          <div data-week-tabs-scroll className="flex gap-2 overflow-x-auto scrollbar-hide">
+          <div data-week-tabs-scroll className="flex gap-2 overflow-x-auto">
             {weeks.map((week: any, index: number) => {
               const isWeekCompleted = week.days.every((d: any) => d.isCompleted);
               const isActive = activeWeekIndex === index;
