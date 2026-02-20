@@ -41,6 +41,7 @@ export function ExerciseCard({
   const [restTimeRemaining, setRestTimeRemaining] = useState(0);
   const [newlyAddedSetIndex, setNewlyAddedSetIndex] = useState<number | null>(null);
   const [showVideo, setShowVideo] = useState(false);
+  const [weightInputValues, setWeightInputValues] = useState<Record<number, string>>({});
   
   // Lazy fetch: only fetch when history is shown
   const { data: lastLiftsData, isLoading: isLoadingHistory } = useLastLifts([exercise.id], {
@@ -374,7 +375,13 @@ export function ExerciseCard({
   };
 
   const handleWeightChange = (index: number, value: string) => {
-    const numValue = Number(value) || 0;
+    const cleanedValue = value.replace(/[^0-9.]/g, "");
+    const [wholePart, ...decimalParts] = cleanedValue.split(".");
+    const sanitizedValue = decimalParts.length > 0 ? `${wholePart}.${decimalParts.join("")}` : wholePart;
+
+    setWeightInputValues(prev => ({ ...prev, [index]: sanitizedValue }));
+    const parsedValue = Number.parseFloat(sanitizedValue);
+    const numValue = Number.isNaN(parsedValue) ? 0 : parsedValue;
     
     // Use optimized handler if available (only POSTs this field)
     if (onSetFieldChange) {
@@ -421,6 +428,15 @@ export function ExerciseCard({
         }
       }, 600);
     }
+  };
+
+  const handleWeightBlur = (index: number) => {
+    setWeightInputValues(prev => {
+      if (!(index in prev)) return prev;
+      const next = { ...prev };
+      delete next[index];
+      return next;
+    });
   };
   
   const startRestTimer = (seconds: number) => {
@@ -607,8 +623,9 @@ export function ExerciseCard({
                   pattern="[0-9.]*"
                   placeholder="—" 
                   className={`h-12 w-full bg-[#2C2C2E] border-0 rounded-xl text-[18px] font-semibold text-white placeholder:text-[#48484A] focus:outline-none focus:ring-2 focus:ring-[#0078FF]/50 text-right pr-4 transition-all duration-200 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-70 disabled:cursor-not-allowed ${completedSets.has(index) ? 'bg-[#34C759]/10 text-[#34C759]' : ''}`}
-                  value={set.weight || ""} 
+                  value={weightInputValues[index] ?? (set.weight || "")} 
                   onChange={(e) => handleWeightChange(index, e.target.value)}
+                  onBlur={() => handleWeightBlur(index)}
                   disabled={readOnly}
                 />
               </div>
