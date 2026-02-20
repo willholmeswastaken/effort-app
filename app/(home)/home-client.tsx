@@ -345,7 +345,7 @@ export function HomeClient({}: HomeClientProps) {
       {/* Week Tabs & Day List - Swipeable */}
       <div 
         ref={swipeContainerRef}
-        className="px-6 pb-20 touch-pan-y"
+        className="px-6 pb-20"
       >
         {/* Week Tabs - Pill style like muscle group filters */}
         <div className="sticky top-0 z-20 bg-black pt-3 pb-4 -mx-6 px-6">
