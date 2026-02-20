@@ -535,7 +535,7 @@
     },
     {
       "id": "seated-one-arm-iso-row-neutral-grip",
-      "name": "Seated One Arm Iso Row (Neutral Grip)",
+      "name": "Seated\u00a0One Arm Iso Row (Neutral Grip)",
       "videoUrl": "https://api-files.sproutvideo.com/file/799ddeb11e19e5c7f0/be1be7bed8d2f667/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/d486432a54cb116b05b4d2568b2fe812/poster_frames/frame_0000.jpg"
     },
@@ -664,6 +664,62 @@
       "name": "Leg Press Calf Raise",
       "videoUrl": "https://api-files.sproutvideo.com/file/069ddeb61c1defcf8f/2723e65958e73bd4/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/f199b9c903d047b3b8eccd515c3db749/poster_frames/frame_0000.jpg"
+    },
+    {
+      "id": "weighted-45s",
+      "name": "Weighted 45s",
+      "muscleGroupId": "hamstrings",
+      "videoUrl": "",
+      "thumbnailUrl": ""
+    },
+    {
+      "id": "leg-press-single-leg",
+      "name": "Leg Press (Single Leg)",
+      "muscleGroupId": "quads",
+      "videoUrl": "",
+      "thumbnailUrl": ""
+    },
+    {
+      "id": "seated-plate-row",
+      "name": "Seated Plate Row",
+      "muscleGroupId": "back",
+      "videoUrl": "",
+      "thumbnailUrl": ""
+    },
+    {
+      "id": "cable-bicep-rope-curl",
+      "name": "Cable Bicep Rope Curl",
+      "muscleGroupId": "arms",
+      "videoUrl": "",
+      "thumbnailUrl": ""
+    },
+    {
+      "id": "cable-bicep-curl",
+      "name": "Cable Bicep Curl",
+      "muscleGroupId": "arms",
+      "videoUrl": "",
+      "thumbnailUrl": ""
+    },
+    {
+      "id": "hammer-curls",
+      "name": "Hammer Curls",
+      "muscleGroupId": "arms",
+      "videoUrl": "",
+      "thumbnailUrl": ""
+    },
+    {
+      "id": "bb-shoulder-press-in-cage",
+      "name": "BB Shoulder Press (In Cage)",
+      "muscleGroupId": "shoulders",
+      "videoUrl": "",
+      "thumbnailUrl": ""
+    },
+    {
+      "id": "standing-cable-press-down-straight-bar",
+      "name": "Standing Cable Press Down (Straight Bar)",
+      "muscleGroupId": "arms",
+      "videoUrl": "",
+      "thumbnailUrl": ""
     }
   ],
   "programs": [
