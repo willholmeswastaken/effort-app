@@ -37,8 +37,8 @@ export interface SwapExerciseInput {
 
 export interface WorkoutHistoryEntry {
   id: string;
-  programId: string;
-  dayId: string;
+  programId: string | null;
+  dayId: string | null;
   dayTitle: string;
   startedAt: Date;
   completedAt: Date | null;
@@ -54,8 +54,8 @@ export interface ExerciseHistoryEntry {
 
 export interface WorkoutDetail {
   id: string;
-  programId: string;
-  dayId: string;
+  programId: string | null;
+  dayId: string | null;
   dayTitle: string;
   startedAt: Date;
   completedAt: Date | null;
@@ -84,8 +84,8 @@ export interface LastLiftEntry {
 
 export interface InProgressWorkout {
   workoutLogId: string;
-  programId: string;
-  dayId: string;
+  programId: string | null;
+  dayId: string | null;
   startedAt: Date;
   lastSetAt: Date | null;
 }
@@ -128,8 +128,8 @@ export interface WorkoutSessionExercise {
 
 export interface WorkoutSessionWorkout {
   id: string;
-  programId: string;
-  dayId: string;
+  programId: string | null;
+  dayId: string | null;
   dayTitle: string;
   programName: string;
   startedAt: string;
@@ -162,7 +162,7 @@ export interface WorkoutsServiceInterface {
   readonly importExerciseData: (input: ImportExerciseInput) => Effect.Effect<void, Error>;
   readonly pauseWorkout: (workoutLogId: string, userId: string) => Effect.Effect<void, Error>;
   readonly resumeWorkout: (workoutLogId: string, userId: string) => Effect.Effect<{ accumulatedPauseSeconds: number }, Error>;
-  readonly resetWorkout: (workoutLogId: string, userId: string) => Effect.Effect<{ programId: string; dayId: string }, Error>;
+  readonly resetWorkout: (workoutLogId: string, userId: string) => Effect.Effect<{ programId: string | null; dayId: string | null }, Error>;
   readonly deleteWorkout: (workoutLogId: string, userId: string) => Effect.Effect<void, Error>;
   readonly completeWorkout: (input: CompleteWorkoutInput & { userId: string }) => Effect.Effect<void, Error>;
   readonly rateWorkout: (workoutLogId: string, userId: string, rating: number) => Effect.Effect<void, Error>;
@@ -464,7 +464,7 @@ export const WorkoutsServiceLive = Layer.effect(
         catch: (e) => new Error(`Failed to resume workout: ${e}`),
       });
 
-    const resetWorkout = (workoutLogId: string, userId: string): Effect.Effect<{ programId: string; dayId: string }, Error> =>
+    const resetWorkout = (workoutLogId: string, userId: string): Effect.Effect<{ programId: string | null; dayId: string | null }, Error> =>
       Effect.tryPromise({
         try: async () => {
           const workout = await db.query.workoutLogs.findFirst({
@@ -809,7 +809,7 @@ export const WorkoutsServiceLive = Layer.effect(
               )
             );
 
-          return new Set(completedLogs.map((log) => log.dayId));
+          return new Set(completedLogs.map((log) => log.dayId).filter((id): id is string => id !== null));
         },
         catch: (e) => new Error(`Failed to fetch completed day IDs: ${e}`),
       });
@@ -1097,7 +1097,7 @@ export const WorkoutsServiceLive = Layer.effect(
           }
 
           // Build sets from denormalized snapshots
-          let sets: WorkoutSessionSet[] = [];
+          const sets: WorkoutSessionSet[] = [];
           for (const exLog of exerciseLogs) {
             if (exLog.setsSnapshot) {
               try {
@@ -1162,12 +1162,10 @@ export const WorkoutsServiceLive = Layer.effect(
           });
 
           let workoutId: string;
-          let isNewWorkout = false;
           
           if (existing) {
             workoutId = existing.id;
           } else {
-            isNewWorkout = true;
             
             // Fetch day data for denormalization BEFORE creating the log
             const dayData = await db.query.workoutDays.findFirst({
