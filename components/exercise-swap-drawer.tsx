@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useLayoutEffect, useRef } from "react";
-import { Check, Search, X } from "lucide-react";
+import { Check, Search, X, Loader2 } from "lucide-react";
 import { useMuscleGroups, type MuscleGroup, type MuscleGroupExerciseWithGroup } from "@/lib/queries";
 import {
   Drawer,
@@ -291,8 +291,12 @@ export function ExerciseSwapDrawer({
                       </div>
 
                       {selectedExerciseId === exercise.id && (
-                        <div className="w-8 h-8 rounded-full bg-[#34C759] flex items-center justify-center shrink-0">
-                          <Check className="w-4 h-4 text-black" />
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isSwapping ? 'bg-[#1C1C1E]' : 'bg-[#34C759]'}`}>
+                          {isSwapping ? (
+                            <Loader2 className="w-4 h-4 text-[#0078FF] animate-spin" />
+                          ) : (
+                            <Check className="w-4 h-4 text-black" />
+                          )}
                         </div>
                       )}
                     </button>

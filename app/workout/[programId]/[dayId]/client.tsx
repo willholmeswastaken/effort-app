@@ -410,23 +410,16 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
   const handleSwapExercise = (newExercise: MuscleGroupExerciseWithGroup) => {
     if (swapExerciseIndex === null) return;
     
-    // Close drawer immediately for optimistic update
-    setShowSwapDrawer(false);
-
     swapExercise.mutate({
       workoutLogId: workoutId,
       exerciseOrder: swapExerciseIndex,
       newExerciseId: newExercise.id,
       newExerciseName: newExercise.name,
       newExerciseMuscleGroupId: newExercise.groupId,
-      targetSets: newExercise.targetSets ?? undefined,
-      targetReps: newExercise.targetReps ?? undefined,
-      restSeconds: newExercise.restSeconds ?? undefined,
-      videoUrl: newExercise.videoUrl,
-      thumbnailUrl: newExercise.thumbnailUrl,
     }, {
       onSuccess: () => {
-        // Queries invalidated in onSettled
+        queryClient.invalidateQueries({ queryKey: workoutKeys.session(workoutId) });
+        setShowSwapDrawer(false);
       },
     });
     
