@@ -1,22 +1,28 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   X,
   Plus,
   Calendar as CalendarIcon,
-  Search,
   ChevronRight,
   Dumbbell,
   Check,
   Loader2,
   Trash2
 } from "lucide-react";
-import { useMuscleGroups, useImportExercise } from "@/lib/queries";
+import { useImportExercise, type MuscleGroupExerciseWithGroup } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import Link from "next/link";
+import { ExercisePicker } from "@/components/exercise-picker";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 
 interface ImportSet {
   reps: number;
@@ -25,32 +31,12 @@ interface ImportSet {
 
 export default function ImportPage() {
   const router = useRouter();
-  const { data: muscleGroups, isLoading: isLoadingExercises } = useMuscleGroups();
   const importExercise = useImportExercise();
 
   const [selectedExercise, setSelectedExercise] = useState<{ id: string; name: string } | null>(null);
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [sets, setSets] = useState<ImportSet[]>([{ reps: 0, weight: 0 }]);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isExercisePickerOpen, setIsExercisePickerOpen] = useState(false);
-
-  const filteredExercises = useMemo(() => {
-    if (!muscleGroups) return [];
-
-    const allExercises = muscleGroups.flatMap(mg =>
-      mg.exercises.map(ex => ({
-        ...ex,
-        groupName: mg.name
-      }))
-    );
-
-    if (!searchQuery) return allExercises;
-
-    return allExercises.filter(ex =>
-      ex.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      ex.groupName.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [muscleGroups, searchQuery]);
 
   const handleAddSet = () => {
     setSets([...sets, { reps: 0, weight: 0 }]);
@@ -102,62 +88,10 @@ export default function ImportPage() {
     }
   };
 
-  if (isExercisePickerOpen) {
-    return (
-      <div className="min-h-screen bg-black text-white p-6">
-        <header className="flex items-center justify-between mb-8">
-          <button
-            onClick={() => setIsExercisePickerOpen(false)}
-            className="p-2 -ml-2 rounded-full active:bg-white/10 transition-colors"
-          >
-            <X className="w-6 h-6 text-[#8E8E93]" />
-          </button>
-          <h1 className="text-[17px] font-semibold">Select Exercise</h1>
-          <div className="w-10" />
-        </header>
-
-        <div className="relative mb-6">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8E8E93]" />
-          <input
-            type="text"
-            placeholder="Search exercises..."
-            className="w-full h-12 bg-[#1C1C1E] rounded-2xl pl-12 pr-4 text-[17px] focus:outline-none focus:ring-2 focus:ring-[#0078FF]/50 transition-all"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            autoFocus
-          />
-        </div>
-
-        <div className="space-y-2">
-          {isLoadingExercises ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-[#0078FF]" />
-            </div>
-          ) : (
-            filteredExercises.map((ex) => (
-              <button
-                key={ex.id}
-                onClick={() => {
-                  setSelectedExercise({ id: ex.id, name: ex.name });
-                  setIsExercisePickerOpen(false);
-                }}
-                className="w-full flex items-center justify-between p-4 bg-[#1C1C1E] rounded-2xl active:bg-[#2C2C2E] transition-all"
-              >
-                <div className="text-left">
-                  <p className="text-[17px] font-medium">{ex.name}</p>
-                  <p className="text-[13px] text-[#8E8E93]">{ex.groupName}</p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-[#48484A]" />
-              </button>
-            ))
-          )}
-          {!isLoadingExercises && filteredExercises.length === 0 && (
-            <p className="text-center text-[#8E8E93] py-12">No exercises found</p>
-          )}
-        </div>
-      </div>
-    );
-  }
+  const handleExerciseSelect = (exercise: MuscleGroupExerciseWithGroup) => {
+    setSelectedExercise({ id: exercise.id, name: exercise.name });
+    setIsExercisePickerOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-black text-white flex flex-col">
@@ -299,6 +233,31 @@ export default function ImportPage() {
           )}
         </button>
       </footer>
+
+      <Drawer open={isExercisePickerOpen} onOpenChange={setIsExercisePickerOpen}>
+        <DrawerContent className="max-w-lg mx-auto h-[85vh] bg-[#0A0A0A]">
+          <div className="flex flex-col h-full">
+            <DrawerHeader className="text-center border-b border-white/6 pb-4 shrink-0">
+              <div className="flex items-center justify-between">
+                <div className="w-10" />
+                <DrawerTitle className="text-[17px] font-semibold text-white flex-1 text-center">
+                  Select Exercise
+                </DrawerTitle>
+                <button
+                  onClick={() => setIsExercisePickerOpen(false)}
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1C1C1E] active:scale-95"
+                >
+                  <X className="w-5 h-5 text-[#8E8E93]" />
+                </button>
+              </div>
+            </DrawerHeader>
+
+            <div className="flex-1 overflow-hidden">
+              <ExercisePicker onExerciseSelect={handleExerciseSelect} />
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }
