@@ -230,11 +230,9 @@ export const workoutLogs = pgTable(
     id: uuid("id").primaryKey().defaultRandom(),
     userId: text("user_id").notNull(),
     programId: text("program_id")
-      .notNull()
       .references(() => programs.id),
     programInstanceId: uuid("program_instance_id"),
     dayId: uuid("day_id")
-      .notNull()
       .references(() => workoutDays.id),
     startedAt: timestamp("started_at").notNull(),
     completedAt: timestamp("completed_at"),

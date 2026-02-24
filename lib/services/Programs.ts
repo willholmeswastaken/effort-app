@@ -282,10 +282,12 @@ export const ProgramsServiceLive = Layer.effect(
           const completedDayIds = new Set<string>();
           const inProgressDayIds = new Set<string>();
           for (const log of workoutLogs) {
-            if (log.completedAt !== null) {
-              completedDayIds.add(log.dayId);
-            } else {
-              inProgressDayIds.add(log.dayId);
+            if (log.dayId) {
+              if (log.completedAt !== null) {
+                completedDayIds.add(log.dayId);
+              } else {
+                inProgressDayIds.add(log.dayId);
+              }
             }
           }
 

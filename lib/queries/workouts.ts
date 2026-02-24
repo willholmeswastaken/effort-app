@@ -25,6 +25,33 @@ export function useWorkoutHistory(limit?: number) {
 }
 
 
+export function useImportExercise() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: {
+      exerciseId: string;
+      exerciseName: string;
+      date: string;
+      sets: { reps: number; weight: number }[];
+    }) => {
+      const res = await fetch("/api/workouts/import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Failed to import exercise");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: workoutKeys.history() });
+      queryClient.invalidateQueries({ queryKey: ["home"] });
+      queryClient.invalidateQueries({ queryKey: ["insights"] });
+    },
+  });
+}
+
+
 export function useStartWorkout() {
   const queryClient = useQueryClient();
 
