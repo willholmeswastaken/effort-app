@@ -236,6 +236,12 @@ interface SwapExerciseData {
   newExerciseId: string;
   newExerciseName: string;
   newExerciseMuscleGroupId?: string | null;
+  // Optional fields for optimistic updates
+  targetSets?: number;
+  targetReps?: string;
+  restSeconds?: number;
+  videoUrl?: string | null;
+  thumbnailUrl?: string | null;
 }
 
 export function useSwapExercise() {
@@ -256,7 +262,59 @@ export function useSwapExercise() {
       if (!res.ok) throw new Error("Failed to swap exercise");
       return res.json();
     },
-    onSuccess: () => {
+    onMutate: async (newData) => {
+      await queryClient.cancelQueries({ queryKey: workoutKeys.session(newData.workoutLogId) });
+
+      const previousSession = queryClient.getQueryData<WorkoutSessionData>(workoutKeys.session(newData.workoutLogId));
+
+      if (previousSession) {
+        queryClient.setQueryData<WorkoutSessionData>(workoutKeys.session(newData.workoutLogId), (old) => {
+          if (!old) return old;
+
+          const newExercises = [...old.exercises];
+
+          if (newData.exerciseOrder >= 0 && newData.exerciseOrder < newExercises.length) {
+            const oldExercise = newExercises[newData.exerciseOrder];
+
+            const newExercise: WorkoutSessionExercise = {
+              id: newData.newExerciseId,
+              name: newData.newExerciseName,
+              targetSets: newData.targetSets ?? oldExercise.targetSets ?? 3,
+              targetReps: newData.targetReps ?? oldExercise.targetReps ?? "8-12",
+              restSeconds: newData.restSeconds ?? oldExercise.restSeconds ?? 90,
+              videoUrl: newData.videoUrl ?? null,
+              thumbnailUrl: newData.thumbnailUrl ?? null,
+              muscleGroupId: newData.newExerciseMuscleGroupId ?? oldExercise.muscleGroupId ?? null,
+            };
+
+            newExercises[newData.exerciseOrder] = newExercise;
+
+            const newSets = old.sets.map(set => {
+              if (set.exerciseId === oldExercise.id) {
+                return { ...set, exerciseId: newData.newExerciseId };
+              }
+              return set;
+            });
+
+            return {
+              ...old,
+              exercises: newExercises,
+              sets: newSets,
+            };
+          }
+          return old;
+        });
+      }
+
+      return { previousSession };
+    },
+    onError: (err, newData, context) => {
+      if (context?.previousSession) {
+        queryClient.setQueryData(workoutKeys.session(newData.workoutLogId), context.previousSession);
+      }
+    },
+    onSettled: (data, error, variables) => {
+      queryClient.invalidateQueries({ queryKey: workoutKeys.session(variables.workoutLogId) });
       queryClient.invalidateQueries({ queryKey: ["home"] });
     },
   });
