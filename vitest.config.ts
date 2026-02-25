@@ -24,6 +24,7 @@ export default defineConfig({
         '**/*.test.tsx',
         'lib/db/schema.ts', // Usually excluded as it's just definitions
       ],
+      // @ts-ignore - 'all' exists in vitest but types might be outdated or strict
       all: true,
     },
   },
