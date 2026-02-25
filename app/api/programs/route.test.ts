@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { GET } from './route';
 import { NextRequest } from 'next/server';
 import { auth } from '@/lib/auth';
-import * as services from '@/lib/services';
+import { runEffect, ProgramsService } from '@/lib/services';
+import { Effect, Layer } from 'effect';
 
 vi.mock('@/lib/auth', () => ({
   auth: {
@@ -16,9 +17,15 @@ vi.mock('@/lib/services', async (importOriginal) => {
   const actual = await importOriginal<any>();
   return {
     ...actual,
-    runEffect: vi.fn(),
+    runEffect: vi.fn((effect) => Effect.runPromise(Effect.provide(effect, TestLayer))),
   };
 });
+
+const mockPrograms = {
+  getAll: vi.fn(),
+};
+
+const TestLayer = Layer.succeed(ProgramsService, mockPrograms as any);
 
 describe('Programs API', () => {
   beforeEach(() => {
@@ -34,7 +41,7 @@ describe('Programs API', () => {
 
   it('should return programs if authorized', async () => {
     (auth.api.getSession as any).mockResolvedValue({ user: { id: 'u1' } });
-    (services.runEffect as any).mockResolvedValue([{ id: 'p1', name: 'Prog 1', daysPerWeek: 3 }]);
+    mockPrograms.getAll.mockReturnValue(Effect.succeed([{ id: 'p1', name: 'Prog 1', daysPerWeek: 3 }]));
 
     const req = new NextRequest('http://localhost/api/programs');
     const res = await GET(req);
@@ -43,5 +50,14 @@ describe('Programs API', () => {
     expect(res.status).toBe(200);
     expect(data).toHaveLength(1);
     expect(data[0].name).toBe('Prog 1');
+  });
+
+  it('GET returns 500 on error', async () => {
+    (auth.api.getSession as any).mockResolvedValue({ user: { id: 'u1' } });
+    (runEffect as any).mockRejectedValue(new Error('Internal'));
+
+    const req = new NextRequest('http://localhost/api/programs');
+    const res = await GET(req);
+    expect(res.status).toBe(500);
   });
 });

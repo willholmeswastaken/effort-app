@@ -16,4 +16,19 @@ describe('Dialog', () => {
     );
     expect(screen.getByText('Open')).toBeInTheDocument();
   });
+
+  it('renders title and description', () => {
+    render(
+      <Dialog open>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Title</DialogTitle>
+            <div data-slot="dialog-description">Desc</div>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+    );
+    expect(screen.getByText('Title')).toBeInTheDocument();
+    expect(screen.getByText('Desc')).toBeInTheDocument();
+  });
 });
