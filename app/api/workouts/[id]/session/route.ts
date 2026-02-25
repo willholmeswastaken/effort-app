@@ -49,6 +49,9 @@ export async function GET(
               videoUrl: string | null;
               thumbnailUrl: string | null;
               muscleGroupId: string | null;
+              targetSetsOverride: number | null;
+              targetRepsOverride: string | null;
+              restSecondsOverride: number | null;
             }>();
             
             for (const exercise of workout.exercises) {
@@ -63,6 +66,9 @@ export async function GET(
                   videoUrl: exercise.videoUrl,
                   thumbnailUrl: exercise.thumbnailUrl,
                   muscleGroupId: null, // Will be filled from day.exercises
+                  targetSetsOverride: null,
+                  targetRepsOverride: null,
+                  restSecondsOverride: null,
                 });
               }
             }

@@ -32,6 +32,9 @@ export function ExerciseSwapDrawer({
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [lockedDrawerHeight, setLockedDrawerHeight] = useState<number | null>(null);
+  const [keyboardInset, setKeyboardInset] = useState(0);
   
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const exerciseListRef = useRef<HTMLDivElement>(null);
@@ -51,7 +54,53 @@ export function ExerciseSwapDrawer({
       setSelectedGroupId(currentMuscleGroupId ?? null);
     }
   }, [open, currentMuscleGroupId]);
-  
+
+  useEffect(() => {
+    if (!open) {
+      setLockedDrawerHeight(null);
+      setKeyboardInset(0);
+      return;
+    }
+
+    const lockHeight = () => {
+      const layoutHeight = document.documentElement.clientHeight;
+      setLockedDrawerHeight(Math.round(layoutHeight * 0.85));
+    };
+
+    lockHeight();
+    window.addEventListener("orientationchange", lockHeight);
+    return () => window.removeEventListener("orientationchange", lockHeight);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !isSearchFocused) {
+      setKeyboardInset(0);
+      return;
+    }
+
+    if (!window.visualViewport) return;
+
+    let rafId = 0;
+    const updateInset = () => {
+      if (!window.visualViewport) return;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const vv = window.visualViewport;
+        const inset = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
+        setKeyboardInset(Math.round(inset));
+      });
+    };
+
+    updateInset();
+    window.visualViewport.addEventListener("resize", updateInset);
+    window.visualViewport.addEventListener("scroll", updateInset);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.visualViewport?.removeEventListener("resize", updateInset);
+      window.visualViewport?.removeEventListener("scroll", updateInset);
+    };
+  }, [open, isSearchFocused]);
+
   // Scroll the selected muscle group pill into view
   // This runs after DOM updates to ensure buttons are rendered
   useEffect(() => {
@@ -141,8 +190,15 @@ export function ExerciseSwapDrawer({
 
   return (
     <Drawer open={open} onOpenChange={handleOpenChange} dismissible={!isSwapping}>
-      <DrawerContent className="max-w-lg mx-auto h-[85vh] bg-[#0A0A0A]">
-        <div className="flex flex-col h-full">
+      <DrawerContent
+        className="max-w-lg mx-auto data-[vaul-drawer-direction=bottom]:mt-0 data-[vaul-drawer-direction=bottom]:max-h-none overflow-hidden bg-[#0A0A0A]"
+        style={
+          lockedDrawerHeight
+            ? { height: `${lockedDrawerHeight}px`, maxHeight: `${lockedDrawerHeight}px` }
+            : { height: "85lvh", maxHeight: "85lvh" }
+        }
+      >
+        <div className="flex flex-col h-full" style={{ paddingBottom: keyboardInset }}>
           {/* Header */}
           <DrawerHeader className="text-center border-b border-white/6 pb-4 shrink-0">
             <div className="flex items-center justify-between">
@@ -155,12 +211,13 @@ export function ExerciseSwapDrawer({
               <button
                 onClick={() => onOpenChange(false)}
                 disabled={isSwapping}
+                aria-label="Close drawer"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1C1C1E] active:scale-95 disabled:opacity-50"
               >
                 <X className="w-5 h-5 text-[#8E8E93]" />
               </button>
             </div>
-            <p className="text-[13px] text-[#8E8E93] mt-1">
+            <p className="text-[13px] text-[#8E8E93] mt-1" aria-live="polite">
               Replacing: <span className="text-white">{currentExerciseName}</span>
             </p>
           </DrawerHeader>
@@ -176,11 +233,17 @@ export function ExerciseSwapDrawer({
                   placeholder="Search exercises..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-11 bg-[#1C1C1E] rounded-xl pl-10 pr-10 text-[15px] text-white placeholder:text-[#8E8E93] focus:outline-none focus:ring-2 focus:ring-[#0078FF]/50"
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
+                  inputMode="search"
+                  enterKeyHint="search"
+                  autoCapitalize="none"
+                  className="w-full h-11 bg-[#1C1C1E] rounded-xl pl-10 pr-10 text-[16px] text-white placeholder:text-[#8E8E93] focus:outline-none focus:ring-2 focus:ring-[#0078FF]/50"
                 />
                 {searchQuery && (
                   <button
                     onClick={() => setSearchQuery("")}
+                    aria-label="Clear search"
                     className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#3A3A3C] flex items-center justify-center"
                   >
                     <X className="w-3 h-3 text-[#8E8E93]" />
@@ -191,10 +254,11 @@ export function ExerciseSwapDrawer({
 
             {/* Muscle Groups */}
             {!isLoading && !error && muscleGroups && (
-              <div className="px-4 pb-3">
+              <div className="px-4 pb-3" aria-label="Muscle group filters">
                 <div ref={scrollContainerRef} className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
                   <button
                     onClick={() => setSelectedGroupId(null)}
+                    aria-pressed={!selectedGroupId}
                     className={`shrink-0 px-4 py-2 rounded-full text-[14px] font-medium transition-all active:scale-95 ${
                       !selectedGroupId 
                         ? 'bg-[#0078FF] text-white' 
@@ -215,6 +279,7 @@ export function ExerciseSwapDrawer({
                         }
                       }}
                       onClick={() => setSelectedGroupId(group.id)}
+                      aria-pressed={selectedGroupId === group.id}
                       className={`shrink-0 px-4 py-2 rounded-full text-[14px] font-medium transition-all active:scale-95 ${
                         selectedGroupId === group.id
                           ? 'bg-[#0078FF] text-white'
@@ -303,15 +368,17 @@ export function ExerciseSwapDrawer({
           </div>
 
           {/* Revolut-style bottom cancel button - thumb friendly */}
-          <DrawerFooter className="border-t border-white/6 bg-[#0A0A0A] p-4 shrink-0">
-            <button
-              onClick={() => onOpenChange(false)}
-              disabled={isSwapping}
-              className="w-full h-12 bg-[#1C1C1E] rounded-xl text-[15px] font-medium text-white active:scale-[0.98] active:bg-[#2C2C2E] transition-all disabled:opacity-50"
-            >
-              Cancel
-            </button>
-          </DrawerFooter>
+          {!isSearchFocused && (
+            <DrawerFooter className="border-t border-white/6 bg-[#0A0A0A] p-4 shrink-0">
+              <button
+                onClick={() => onOpenChange(false)}
+                disabled={isSwapping}
+                className="w-full h-12 bg-[#1C1C1E] rounded-xl text-[15px] font-medium text-white active:scale-[0.98] active:bg-[#2C2C2E] transition-all disabled:opacity-50"
+              >
+                Cancel
+              </button>
+            </DrawerFooter>
+          )}
         </div>
 
         {isSwapping && (

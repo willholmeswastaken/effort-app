@@ -71,12 +71,13 @@ async function seed() {
   }
 
   // 6. Seed Day Exercises (junction table)
+  // First clear existing to avoid duplicates from multiple seed runs
   if (seedData.dayExercises?.length) {
     console.log("🔗 Seeding day-exercise mappings...");
+    await db.delete(schema.dayExercises);
     await db
       .insert(schema.dayExercises)
-      .values(seedData.dayExercises)
-      .onConflictDoNothing();
+      .values(seedData.dayExercises);
     console.log(`✅ Seeded ${seedData.dayExercises.length} day-exercise mappings\n`);
   }
 

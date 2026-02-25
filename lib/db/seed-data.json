@@ -47,6 +47,12 @@
       "name": "Hamstrings",
       "coverImage": "https://img.genflow.com/thrst/libraryimages/new-exercises-covers/Hamstrings.png",
       "orderIndex": 7
+    },
+    {
+      "id": "calves",
+      "name": "Calves",
+      "coverImage": "https://img.genflow.com/thrst/libraryimages/new-exercises-covers/Calves.png",
+      "orderIndex": 8
     }
   ],
   "exercises": [
@@ -494,174 +500,203 @@
     {
       "id": "hammer-plate-press-flat",
       "name": "Hammer Plate Press (Flat)",
+      "muscleGroupId": "chest",
       "videoUrl": "https://api-files.sproutvideo.com/file/449fdab31b1fe3cfcd/973e24cbb3b8e1e7/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/8984c4bdd16465691209de954b76323f/poster_frames/frame_0000.jpg"
     },
     {
       "id": "smith-machine-shoulder-press",
       "name": "Smith Machine Shoulder Press",
+      "muscleGroupId": "shoulders",
       "videoUrl": "https://api-files.sproutvideo.com/file/0690d3b11913ebc78f/86becdbfaa694d08/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/45cdad730403a2aa555c928d7815dbc2/poster_frames/frame_0000.jpg"
     },
     {
       "id": "flat-or-incline-db-fly",
       "name": "Flat or Incline DB Fly",
+      "muscleGroupId": "chest",
       "videoUrl": "https://api-files.sproutvideo.com/file/ac9ddeb61c19e3c525/2821cf70b19173a4/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/6208874b11dedda5b4f087fe9d93e39b/poster_frames/frame_0000.jpg"
     },
     {
       "id": "machine-lateral-raise",
       "name": "Machine Lateral Raise",
+      "muscleGroupId": "shoulders",
       "videoUrl": "https://api-files.sproutvideo.com/file/d39dd7b91b18e6c35a/289e8aea482ce777/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2529706782335d4496142ebc974ef96f/poster_frames/frame_0000.jpg"
     },
     {
       "id": "tricep-dip-machine",
       "name": "Tricep Dip Machine",
+      "muscleGroupId": "arms",
       "videoUrl": "https://api-files.sproutvideo.com/file/449fdab31b1fe2cecd/db4053ca3d4ca157/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/aa9cc62813ddb8ff11fc98a68f8986f0/poster_frames/frame_0000.jpg"
     },
     {
       "id": "single-arm-cable-tricep-extension",
       "name": "Single Arm Cable Tricep Extension",
+      "muscleGroupId": "arms",
       "videoUrl": "https://api-files.sproutvideo.com/file/ea90d5bb151de5c363/3d1af45d11be5f47/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/4ee7fa2ee301f9e21d3587710dd92e13/poster_frames/frame_0000.jpg"
     },
     {
       "id": "overhead-tricep-extension-machine",
       "name": "Overhead Tricep Extension Machine",
+      "muscleGroupId": "arms",
       "videoUrl": "https://api-files.sproutvideo.com/file/4491d2bd1418e9c5cd/9cb057db063ac760/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/cdcfc513efb528ef07a50a2943eadfb1/poster_frames/frame_0000.jpg"
     },
     {
-      "id": "seated-one-arm-iso-row-neutral-grip",
-      "name": "Seated One Arm Iso Row (Neutral Grip)",
+"id": "seated-one-arm-iso-row-neutral-grip",
+      "name": "Seated One Arm Iso Row (Neutral Grip)",
+      "muscleGroupId": "back",
       "videoUrl": "https://api-files.sproutvideo.com/file/799ddeb11e19e5c7f0/be1be7bed8d2f667/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/d486432a54cb116b05b4d2568b2fe812/poster_frames/frame_0000.jpg"
     },
     {
       "id": "lat-pulldown-underhand-grip",
       "name": "Lat Pulldown (Underhand Grip)",
+      "muscleGroupId": "back",
       "videoUrl": "https://api-files.sproutvideo.com/file/1191d0b51b1ee3cd98/cb53b46929d33340/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/476acf4a67ed32587b345155500692c4/poster_frames/frame_0000.jpg"
     },
     {
       "id": "low-row",
       "name": "Low Row",
+      "muscleGroupId": "back",
       "videoUrl": "https://api-files.sproutvideo.com/file/ac90d5bb151de5c525/814fbb2625fa4b2c/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/f720d04bbb8bb46fe085e4dfae069237/poster_frames/frame_0000.jpg"
     },
     {
       "id": "incline-bench-db-rear-delt-fly-slow",
       "name": "Incline Bench DB Rear Delt Fly (Slow)",
+      "muscleGroupId": "shoulders",
       "videoUrl": "https://api-files.sproutvideo.com/file/d39ddcb41c10e2ce5a/298f9ecd40923f49/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/81d6ef894a7235ef5693c104372a7057/poster_frames/frame_0000.jpg"
     },
     {
       "id": "single-arm-db-hammer-curl",
       "name": "Single Arm DB Hammer Curl",
+      "muscleGroupId": "arms",
       "videoUrl": "https://api-files.sproutvideo.com/file/4d9fdab31b1fe5c4c4/3f382d23121a07dd/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/5920ee8671eb4005f8133516281f230c/poster_frames/frame_0000.jpg"
     },
     {
       "id": "bb-ez-bar-bicep-curl",
       "name": "BB/EZ Bar Bicep Curl",
+      "muscleGroupId": "arms",
       "videoUrl": "https://api-files.sproutvideo.com/file/069ddeb61c1ae4c38f/d70af0718380deba/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2c8e5171f4f14e88c46518077535eefe/poster_frames/frame_0000.jpg"
     },
     {
       "id": "bicep-focus-chin-up",
       "name": "Bicep Focus Chin Up",
+      "muscleGroupId": "arms",
       "videoUrl": "https://api-files.sproutvideo.com/file/d39fdab31b1fe3c45a/f0c805456b1a6fe7/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/98fbe4141e30bdc4d47a833e0087a6c2/poster_frames/frame_0000.jpg"
     },
     {
       "id": "romanian-deadlift-glute-focus",
       "name": "Romanian Deadlift (Glute Focus)",
+      "muscleGroupId": "glutes",
       "videoUrl": "https://api-files.sproutvideo.com/file/4d91d0b51b1ee3c1c4/569d228759292420/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2e5ea86c65ff4f49e35fae0763e37f7a/poster_frames/frame_0000.jpg"
     },
     {
       "id": "lying-leg-curl-single-leg",
       "name": "Lying Leg Curl (Single Leg)",
+      "muscleGroupId": "hamstrings",
       "videoUrl": "https://api-files.sproutvideo.com/file/1190d5bb151cedc598/dbef554386bbfbbc/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/62729853d19ec5ce374be4370de7e9a4/poster_frames/frame_0000.jpg"
     },
     {
       "id": "standing-calf-raise",
       "name": "Standing Calf Raise",
+      "muscleGroupId": "calves",
       "videoUrl": "https://api-files.sproutvideo.com/file/4d9ddeb61c1de0c7c4/bf401df4a709b0ed/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/c0f553454f3e4ac1486a22a80ac06471/poster_frames/frame_0000.jpg"
     },
     {
       "id": "t-bar-row",
       "name": "T-Bar Row",
+      "muscleGroupId": "back",
       "videoUrl": "https://api-files.sproutvideo.com/file/449dd7b91b18e1cfcd/b32c61ad812522c3/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/7adec48486d3627af10e50eb32d76634/poster_frames/frame_0000.jpg"
     },
     {
       "id": "incline-bb-bench-press",
       "name": "Incline BB Bench Press",
+      "muscleGroupId": "chest",
       "videoUrl": "https://api-files.sproutvideo.com/file/799fdab31b1ee0c4f0/7909d7a592948de6/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/4530b0eee7df5304aad06ef02903eed2/poster_frames/frame_0000.jpg"
     },
     {
       "id": "iso-lateral-high-row",
       "name": "Iso Lateral High Row",
+      "muscleGroupId": "back",
       "videoUrl": "https://api-files.sproutvideo.com/file/d39ddeb11e19e5c55a/24ebfe58997a67f9/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/cd57962e0c160c20dc63dff4d30e77e6/poster_frames/frame_0000.jpg"
     },
     {
       "id": "chest-supported-db-lateral-raise",
       "name": "Chest Supported DB Lateral Raise",
+      "muscleGroupId": "shoulders",
       "videoUrl": "https://api-files.sproutvideo.com/file/a79ddeb61c1ae1c32e/9ceb369806f6cf5c/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/300b290a579911da0a60acf78ffae2d6/poster_frames/frame_0000.jpg"
     },
     {
       "id": "dy-db-shrugs",
       "name": "DY DB Shrugs",
+      "muscleGroupId": "shoulders",
       "videoUrl": "https://api-files.sproutvideo.com/file/1190d3b11912e3c598/f65f698d345999c4/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/d48329dffca32afb80a7642c05a7abbc/poster_frames/frame_0000.jpg"
     },
     {
       "id": "cable-rear-delt-fly-single-arm",
       "name": "Cable Rear Delt Fly (Single Arm)",
+      "muscleGroupId": "shoulders",
       "videoUrl": "https://api-files.sproutvideo.com/file/a790d5bb151cecca2e/e74ded03ba83eed8/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/0dbcd91c159e3e8426fe208539fda72e/poster_frames/frame_0000.jpg"
     },
     {
       "id": "machine-preacher-curl",
       "name": "Machine Preacher Curl",
+      "muscleGroupId": "arms",
       "videoUrl": "https://api-files.sproutvideo.com/file/449dd7b91b18e6c8cd/3af613c0cb16bf03/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/ff80d0f60c2ebe115339bd8837bfe131/poster_frames/frame_0000.jpg"
     },
     {
       "id": "close-grip-bb-press-smith-machine",
       "name": "Close Grip BB Press (Smith Machine)",
+      "muscleGroupId": "arms",
       "videoUrl": "https://api-files.sproutvideo.com/file/069ddeb61c1ce7c68f/078e9c6be9ef8501/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/93246f041e414b4c290afc5c6c0f81d6/poster_frames/frame_0000.jpg"
     },
     {
       "id": "smith-machine-hip-thrust",
       "name": "Smith Machine Hip Thrust",
+      "muscleGroupId": "glutes",
       "videoUrl": "https://api-files.sproutvideo.com/file/a79fdab31b1fe5c62e/909efd64dd40a9f5/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/a98d0906a1e2cbd5eda0e22021647eef/poster_frames/frame_0000.jpg"
     },
     {
       "id": "weighted-45-s",
       "name": "Weighted 45's",
+      "muscleGroupId": "glutes",
       "videoUrl": "https://api-files.sproutvideo.com/file/a49bd8bf111ae3c52e/d86e3f2e4ac921cf/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/2f01c94020a1235a2043f894ea32c2f8/poster_frames/frame_0000.jpg"
     },
     {
       "id": "leg-press-quad-focus",
       "name": "Leg Press (Quad Focus)",
+      "muscleGroupId": "quads",
       "videoUrl": "https://api-files.sproutvideo.com/file/ea9ddeb61c1ceecb63/8b1bfd16f064e927/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/143ca3617ae39d5f449a9356e5af3393/poster_frames/frame_0000.jpg"
     },
     {
       "id": "leg-press-calf-raise",
       "name": "Leg Press Calf Raise",
+      "muscleGroupId": "calves",
       "videoUrl": "https://api-files.sproutvideo.com/file/069ddeb61c1defcf8f/2723e65958e73bd4/360.mp4",
       "thumbnailUrl": "https://images.sproutvideo.com/d5d2a4b57e6ee9857983f5beeae0e292/f199b9c903d047b3b8eccd515c3db749/poster_frames/frame_0000.jpg"
     }
