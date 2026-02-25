@@ -278,7 +278,7 @@ export interface WorkoutSessionSet {
   exerciseId: string;
   setNumber: number;
   reps: number;
-  weight: string;
+  weight: number;
 }
 
 export function useWorkoutSession(

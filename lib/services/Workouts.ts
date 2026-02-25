@@ -49,7 +49,7 @@ export interface WorkoutHistoryEntry {
 
 export interface ExerciseHistoryEntry {
   workoutDate: Date;
-  sets: { setNumber: number; reps: number; weight: string }[];
+  sets: { setNumber: number; reps: number; weight: number }[];
 }
 
 export interface WorkoutDetail {
@@ -73,7 +73,7 @@ export interface WorkoutDetail {
     restSeconds: number;
     videoUrl: string | null;
     thumbnailUrl: string | null;
-    sets: { setNumber: number; reps: number; weight: string }[];
+      sets: { setNumber: number; reps: number; weight: number }[];
   }[];
 }
 
@@ -104,7 +104,7 @@ export interface CompletedWorkout {
     restSeconds: number;
     videoUrl: string | null;
     thumbnailUrl: string | null;
-    setLogs: { setNumber: number; reps: number; weight: string }[];
+    setLogs: { setNumber: number; reps: number; weight: number }[];
   }[];
 }
 
@@ -112,7 +112,7 @@ export interface WorkoutSessionSet {
   exerciseId: string;
   setNumber: number;
   reps: number;
-  weight: string;
+  weight: number;
 }
 
 export interface WorkoutSessionExercise {
@@ -651,7 +651,7 @@ export const WorkoutsServiceLive = Layer.effect(
               sets: el.setLogs.map((sl) => ({
                 setNumber: sl.setNumber,
                 reps: sl.reps,
-                weight: sl.weight.toString(),
+                weight: Number(sl.weight),
               })),
             })),
           };
@@ -708,7 +708,7 @@ export const WorkoutsServiceLive = Layer.effect(
               sets: sets.map((s) => ({
                 setNumber: s.setNumber,
                 reps: s.reps,
-                weight: s.weight.toString(),
+                weight: Number(s.weight),
               })),
             }));
         },
@@ -902,7 +902,7 @@ export const WorkoutsServiceLive = Layer.effect(
               setLogs: exLog.setLogs.map((setLog) => ({
                 setNumber: setLog.setNumber,
                 reps: setLog.reps,
-                weight: setLog.weight.toString(),
+                weight: Number(setLog.weight),
               })),
             }));
 
@@ -1020,7 +1020,7 @@ export const WorkoutsServiceLive = Layer.effect(
           }
 
           // Build sets from denormalized snapshots
-          let sets: WorkoutSessionSet[] = [];
+          const sets: WorkoutSessionSet[] = [];
           for (const exLog of exerciseLogs) {
             if (exLog.setsSnapshot) {
               try {
@@ -1033,7 +1033,7 @@ export const WorkoutsServiceLive = Layer.effect(
                   exerciseId: exLog.exerciseId,
                   setNumber: s.setNumber,
                   reps: s.reps,
-                  weight: s.weight,
+                  weight: Number(s.weight),
                 })));
               } catch {
                 // If parsing fails, skip this exercise's sets
