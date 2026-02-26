@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:push": "drizzle-kit push",
-    "db:seed": "npx tsx lib/db/seed.ts",
-    "cli": "bun run cli/index.ts"
+    "db:seed": "npx tsx lib/db/seed.ts"
   },
   "dependencies": {
     "@effect/schema": "^0.75.5",
@@ -29,7 +28,6 @@
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.1",
     "effect": "^3.19.14",
-    "inquirer": "^13.2.4",
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
     "next-themes": "^0.4.6",
