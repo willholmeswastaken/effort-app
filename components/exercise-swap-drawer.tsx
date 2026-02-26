@@ -86,6 +86,7 @@ export function ExerciseSwapDrawer({
       if (rafId) cancelAnimationFrame(rafId);
       rafId = requestAnimationFrame(() => {
         const vv = window.visualViewport;
+        if (!vv) return;
         const inset = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
         setKeyboardInset(Math.round(inset));
       });
