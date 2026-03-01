@@ -70,16 +70,6 @@ export function ExerciseSwapDrawer({
           </DrawerFooter>
         </div>
 
-        {isSwapping && (
-          <div className="absolute inset-0 z-50 bg-black/80 flex items-center justify-center">
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-[#0078FF] flex items-center justify-center animate-pulse">
-                <Check className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-white font-medium">Swapping...</span>
-            </div>
-          </div>
-        )}
       </DrawerContent>
     </Drawer>
   );
