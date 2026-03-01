@@ -49,7 +49,7 @@ export interface WorkoutHistoryEntry {
 
 export interface ExerciseHistoryEntry {
   workoutDate: Date;
-  sets: { setNumber: number; reps: number; weight: number }[];
+  sets: { setNumber: number; reps: number; weight: string }[];
 }
 
 export interface WorkoutDetail {
@@ -73,7 +73,7 @@ export interface WorkoutDetail {
     restSeconds: number;
     videoUrl: string | null;
     thumbnailUrl: string | null;
-      sets: { setNumber: number; reps: number; weight: number }[];
+    sets: { setNumber: number; reps: number; weight: string }[];
   }[];
 }
 
@@ -104,7 +104,7 @@ export interface CompletedWorkout {
     restSeconds: number;
     videoUrl: string | null;
     thumbnailUrl: string | null;
-    setLogs: { setNumber: number; reps: number; weight: number }[];
+    setLogs: { setNumber: number; reps: number; weight: string }[];
   }[];
 }
 
@@ -112,7 +112,7 @@ export interface WorkoutSessionSet {
   exerciseId: string;
   setNumber: number;
   reps: number;
-  weight: number;
+  weight: string;
 }
 
 export interface WorkoutSessionExercise {
@@ -147,19 +147,23 @@ export interface WorkoutSessionData {
   sets: WorkoutSessionSet[];
 }
 
-export interface ImportExerciseInput {
-  userId: string;
+export interface ImportWorkoutExercise {
   exerciseId: string;
   exerciseName: string;
-  date: Date;
   sets: { reps: number; weight: number }[];
+}
+
+export interface ImportWorkoutInput {
+  userId: string;
+  date: Date;
+  exercises: ImportWorkoutExercise[];
 }
 
 export interface WorkoutsServiceInterface {
   readonly startWorkout: (input: StartWorkoutInput) => Effect.Effect<string, Error>;
   readonly startWorkoutAndGetSession: (input: StartWorkoutInput) => Effect.Effect<{ workoutId: string; session: WorkoutSessionData }, Error>;
   readonly upsertSet: (input: UpsertSetInput & { userId: string }) => Effect.Effect<void, Error>;
-  readonly importExerciseData: (input: ImportExerciseInput) => Effect.Effect<void, Error>;
+  readonly importExerciseData: (input: ImportWorkoutInput) => Effect.Effect<void, Error>;
   readonly pauseWorkout: (workoutLogId: string, userId: string) => Effect.Effect<void, Error>;
   readonly resumeWorkout: (workoutLogId: string, userId: string) => Effect.Effect<{ accumulatedPauseSeconds: number }, Error>;
   readonly resetWorkout: (workoutLogId: string, userId: string) => Effect.Effect<{ programId: string | null; dayId: string | null }, Error>;
@@ -247,72 +251,75 @@ export const WorkoutsServiceLive = Layer.effect(
         catch: (e) => new Error(`Failed to start workout: ${e}`),
       });
 
-    const importExerciseData = (input: ImportExerciseInput): Effect.Effect<void, Error> =>
+    const importExerciseData = (input: ImportWorkoutInput): Effect.Effect<void, Error> =>
       Effect.tryPromise({
         try: async () => {
           // 1. Create a workout log for the specified date
-          // We set programId and dayId to null for manual imports
           const [workoutLog] = await db
             .insert(schema.workoutLogs)
             .values({
               userId: input.userId,
               startedAt: input.date,
-              completedAt: input.date, // Completed immediately
+              completedAt: input.date,
               status: "completed",
               programName: "Manual Entry",
-              dayTitle: "Imported Exercise",
+              dayTitle: "Imported Workout",
               durationSeconds: 0,
             })
             .returning();
 
-          // 2. Get exercise details for denormalization
-          const exercise = await db.query.exercises.findFirst({
-            where: eq(schema.exercises.id, input.exerciseId),
-          });
+          for (let i = 0; i < input.exercises.length; i++) {
+            const exInput = input.exercises[i];
 
-          // 3. Create exercise log
-          const [exerciseLog] = await db
-            .insert(schema.exerciseLogs)
-            .values({
-              workoutLogId: workoutLog.id,
-              exerciseId: input.exerciseId,
-              exerciseName: input.exerciseName,
-              exerciseOrder: 0,
-              // Denormalized exercise fields
-              targetSets: exercise?.targetSets ?? 3,
-              targetReps: exercise?.targetReps ?? "8-12",
-              restSeconds: exercise?.restSeconds ?? 90,
-              videoUrl: exercise?.videoUrl ?? null,
-              thumbnailUrl: exercise?.thumbnailUrl ?? null,
-            })
-            .returning();
+            // 2. Get exercise details for denormalization
+            const exercise = await db.query.exercises.findFirst({
+              where: eq(schema.exercises.id, exInput.exerciseId),
+            });
 
-          // 4. Create set logs
-          const setLogsToInsert = input.sets.map((set, index) => ({
-            exerciseLogId: exerciseLog.id,
-            setNumber: index + 1,
-            reps: set.reps,
-            weight: set.weight.toString(),
-            completed: true,
-          }));
-
-          if (setLogsToInsert.length > 0) {
-            await db.insert(schema.setLogs).values(setLogsToInsert);
-
-            // 5. Update denormalized setsSnapshot
-            await db
-              .update(schema.exerciseLogs)
-              .set({
-                setsSnapshot: JSON.stringify(setLogsToInsert.map(s => ({
-                  setNumber: s.setNumber,
-                  reps: s.reps,
-                  weight: s.weight,
-                }))),
+            // 3. Create exercise log
+            const [exerciseLog] = await db
+              .insert(schema.exerciseLogs)
+              .values({
+                workoutLogId: workoutLog.id,
+                exerciseId: exInput.exerciseId,
+                exerciseName: exInput.exerciseName,
+                exerciseOrder: i,
+                // Denormalized exercise fields
+                targetSets: exercise?.targetSets ?? 3,
+                targetReps: exercise?.targetReps ?? "8-12",
+                restSeconds: exercise?.restSeconds ?? 90,
+                videoUrl: exercise?.videoUrl ?? null,
+                thumbnailUrl: exercise?.thumbnailUrl ?? null,
               })
-              .where(eq(schema.exerciseLogs.id, exerciseLog.id));
+              .returning();
+
+            // 4. Create set logs
+            const setLogsToInsert = exInput.sets.map((set, index) => ({
+              exerciseLogId: exerciseLog.id,
+              setNumber: index + 1,
+              reps: set.reps,
+              weight: set.weight.toString(),
+              completed: true,
+            }));
+
+            if (setLogsToInsert.length > 0) {
+              await db.insert(schema.setLogs).values(setLogsToInsert);
+
+              // 5. Update denormalized setsSnapshot
+              await db
+                .update(schema.exerciseLogs)
+                .set({
+                  setsSnapshot: JSON.stringify(setLogsToInsert.map(s => ({
+                    setNumber: s.setNumber,
+                    reps: s.reps,
+                    weight: s.weight,
+                  }))),
+                })
+                .where(eq(schema.exerciseLogs.id, exerciseLog.id));
+            }
           }
         },
-        catch: (e) => new Error(`Failed to import exercise data: ${e}`),
+        catch: (e) => new Error(`Failed to import workout data: ${e}`),
       });
 
     const upsertSet = (input: UpsertSetInput & { userId: string }): Effect.Effect<void, Error> =>
@@ -728,7 +735,7 @@ export const WorkoutsServiceLive = Layer.effect(
               sets: el.setLogs.map((sl) => ({
                 setNumber: sl.setNumber,
                 reps: sl.reps,
-                weight: Number(sl.weight),
+                weight: sl.weight.toString(),
               })),
             })),
           };
@@ -785,7 +792,7 @@ export const WorkoutsServiceLive = Layer.effect(
               sets: sets.map((s) => ({
                 setNumber: s.setNumber,
                 reps: s.reps,
-                weight: Number(s.weight),
+                weight: s.weight.toString(),
               })),
             }));
         },
@@ -979,7 +986,7 @@ export const WorkoutsServiceLive = Layer.effect(
               setLogs: exLog.setLogs.map((setLog) => ({
                 setNumber: setLog.setNumber,
                 reps: setLog.reps,
-                weight: Number(setLog.weight),
+                weight: setLog.weight.toString(),
               })),
             }));
 
@@ -1110,7 +1117,7 @@ export const WorkoutsServiceLive = Layer.effect(
                   exerciseId: exLog.exerciseId,
                   setNumber: s.setNumber,
                   reps: s.reps,
-                  weight: Number(s.weight),
+                  weight: s.weight,
                 })));
               } catch {
                 // If parsing fails, skip this exercise's sets
@@ -1189,14 +1196,13 @@ export const WorkoutsServiceLive = Layer.effect(
               throw new Error("Day data not found for denormalization");
             }
 
-            // Build denormalized exercises array (using per-day overrides if set)
+            // Build denormalized exercises array
             const denormalizedExercises = dayData.dayExercises.map((de) => ({
               id: de.exercise.id,
               name: de.exercise.name,
-              // Use override if set, otherwise fall back to exercise defaults
-              targetSets: de.targetSetsOverride ?? de.exercise.targetSets ?? 3,
-              targetReps: de.targetRepsOverride ?? de.exercise.targetReps ?? "8-12",
-              restSeconds: de.restSecondsOverride ?? de.exercise.restSeconds ?? 90,
+              targetSets: de.exercise.targetSets ?? 3,
+              targetReps: de.exercise.targetReps ?? "8-12",
+              restSeconds: de.exercise.restSeconds ?? 90,
               videoUrl: de.exercise.videoUrl ?? null,
               thumbnailUrl: de.exercise.thumbnailUrl ?? null,
               muscleGroupId: de.exercise.muscleGroupId ?? null,

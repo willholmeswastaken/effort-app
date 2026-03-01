@@ -30,10 +30,12 @@ export function useImportExercise() {
 
   return useMutation({
     mutationFn: async (data: {
-      exerciseId: string;
-      exerciseName: string;
       date: string;
-      sets: { reps: number; weight: number }[];
+      exercises: {
+        exerciseId: string;
+        exerciseName: string;
+        sets: { reps: number; weight: number }[];
+      }[];
     }) => {
       const res = await fetch("/api/workouts/import", {
         method: "POST",
@@ -305,7 +307,7 @@ export interface WorkoutSessionSet {
   exerciseId: string;
   setNumber: number;
   reps: number;
-  weight: number;
+  weight: string;
 }
 
 export function useWorkoutSession(

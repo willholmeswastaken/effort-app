@@ -1,11 +1,120 @@
-$ next dev
-⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+
+> galactic-interstellar@0.1.0 dev
+> next dev
+
 ▲ Next.js 16.1.1 (Turbopack)
-- Local:         http://localhost:3001
-- Network:       http://192.168.0.2:3001
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
 
 ✓ Starting...
-⨯ Unable to acquire lock at /app/.next/dev/lock, is another instance of next dev running?
-  Suggestion: If you intended to restart next dev, terminate the other process, and then try again.
-[?25h
-error: script "dev" exited with code 1
+✓ Ready in 2.6s
+○ Compiling /import ...
+ GET /import 200 in 9.3s (compile: 8.4s, render: 914ms)
+○ Compiling /login ...
+ GET /login 200 in 3.7s (compile: 3.5s, render: 201ms)
+✓ Compiled in 651ms
+ GET /import 200 in 894ms (compile: 358ms, render: 536ms)
+Error fetching muscle groups: Error: Failed query: select "muscleGroups"."id", "muscleGroups"."name", "muscleGroups"."cover_image", "muscleGroups"."order_index", "muscleGroups"."created_at", "muscleGroups_exercises"."data" as "exercises" from "muscle_groups" "muscleGroups" left join lateral (select coalesce(json_agg(json_build_array("muscleGroups_exercises"."id", "muscleGroups_exercises"."name", "muscleGroups_exercises"."thumbnail_url", "muscleGroups_exercises"."target_sets", "muscleGroups_exercises"."target_reps", "muscleGroups_exercises"."rest_seconds", "muscleGroups_exercises"."video_url")), '[]'::json) as "data" from "exercises" "muscleGroups_exercises" where "muscleGroups_exercises"."muscle_group_id" = "muscleGroups"."id") "muscleGroups_exercises" on true order by "muscleGroups"."order_index" asc
+params:
+    at async GET (app/api/exercises/route.ts:9:26)
+   7 |   try {
+   8 |     // Fetch all muscle groups with their exercises
+>  9 |     const muscleGroups = await db.query.muscleGroups.findMany({
+     |                          ^
+  10 |       orderBy: [asc(schema.muscleGroups.orderIndex)],
+  11 |       with: {
+  12 |         exercises: { {
+  query: `select "muscleGroups"."id", "muscleGroups"."name", "muscleGroups"."cover_image", "muscleGroups"."order_index", "muscleGroups"."created_at", "muscleGroups_exercises"."data" as "exercises" from "muscle_groups" "muscleGroups" left join lateral (select coalesce(json_agg(json_build_array("muscleGroups_exercises"."id", "muscleGroups_exercises"."name", "muscleGroups_exercises"."thumbnail_url", "muscleGroups_exercises"."target_sets", "muscleGroups_exercises"."target_reps", "muscleGroups_exercises"."rest_seconds", "muscleGroups_exercises"."video_url")), '[]'::json) as "data" from "exercises" "muscleGroups_exercises" where "muscleGroups_exercises"."muscle_group_id" = "muscleGroups"."id") "muscleGroups_exercises" on true order by "muscleGroups"."order_index" asc`,
+  params: [],
+  [cause]: AggregateError:
+      at async GET (app/api/exercises/route.ts:9:26)
+     7 |   try {
+     8 |     // Fetch all muscle groups with their exercises
+  >  9 |     const muscleGroups = await db.query.muscleGroups.findMany({
+       |                          ^
+    10 |       orderBy: [asc(schema.muscleGroups.orderIndex)],
+    11 |       with: {
+    12 |         exercises: { {
+    code: 'ECONNREFUSED'
+  }
+}
+ GET /api/exercises 500 in 1385ms (compile: 557ms, render: 828ms)
+Error fetching muscle groups: Error: Failed query: select "muscleGroups"."id", "muscleGroups"."name", "muscleGroups"."cover_image", "muscleGroups"."order_index", "muscleGroups"."created_at", "muscleGroups_exercises"."data" as "exercises" from "muscle_groups" "muscleGroups" left join lateral (select coalesce(json_agg(json_build_array("muscleGroups_exercises"."id", "muscleGroups_exercises"."name", "muscleGroups_exercises"."thumbnail_url", "muscleGroups_exercises"."target_sets", "muscleGroups_exercises"."target_reps", "muscleGroups_exercises"."rest_seconds", "muscleGroups_exercises"."video_url")), '[]'::json) as "data" from "exercises" "muscleGroups_exercises" where "muscleGroups_exercises"."muscle_group_id" = "muscleGroups"."id") "muscleGroups_exercises" on true order by "muscleGroups"."order_index" asc
+params:
+    at async GET (app/api/exercises/route.ts:9:26)
+   7 |   try {
+   8 |     // Fetch all muscle groups with their exercises
+>  9 |     const muscleGroups = await db.query.muscleGroups.findMany({
+     |                          ^
+  10 |       orderBy: [asc(schema.muscleGroups.orderIndex)],
+  11 |       with: {
+  12 |         exercises: { {
+  query: `select "muscleGroups"."id", "muscleGroups"."name", "muscleGroups"."cover_image", "muscleGroups"."order_index", "muscleGroups"."created_at", "muscleGroups_exercises"."data" as "exercises" from "muscle_groups" "muscleGroups" left join lateral (select coalesce(json_agg(json_build_array("muscleGroups_exercises"."id", "muscleGroups_exercises"."name", "muscleGroups_exercises"."thumbnail_url", "muscleGroups_exercises"."target_sets", "muscleGroups_exercises"."target_reps", "muscleGroups_exercises"."rest_seconds", "muscleGroups_exercises"."video_url")), '[]'::json) as "data" from "exercises" "muscleGroups_exercises" where "muscleGroups_exercises"."muscle_group_id" = "muscleGroups"."id") "muscleGroups_exercises" on true order by "muscleGroups"."order_index" asc`,
+  params: [],
+  [cause]: AggregateError:
+      at async GET (app/api/exercises/route.ts:9:26)
+     7 |   try {
+     8 |     // Fetch all muscle groups with their exercises
+  >  9 |     const muscleGroups = await db.query.muscleGroups.findMany({
+       |                          ^
+    10 |       orderBy: [asc(schema.muscleGroups.orderIndex)],
+    11 |       with: {
+    12 |         exercises: { {
+    code: 'ECONNREFUSED'
+  }
+}
+ GET /api/exercises 500 in 430ms (compile: 4ms, render: 427ms)
+Error fetching muscle groups: Error: Failed query: select "muscleGroups"."id", "muscleGroups"."name", "muscleGroups"."cover_image", "muscleGroups"."order_index", "muscleGroups"."created_at", "muscleGroups_exercises"."data" as "exercises" from "muscle_groups" "muscleGroups" left join lateral (select coalesce(json_agg(json_build_array("muscleGroups_exercises"."id", "muscleGroups_exercises"."name", "muscleGroups_exercises"."thumbnail_url", "muscleGroups_exercises"."target_sets", "muscleGroups_exercises"."target_reps", "muscleGroups_exercises"."rest_seconds", "muscleGroups_exercises"."video_url")), '[]'::json) as "data" from "exercises" "muscleGroups_exercises" where "muscleGroups_exercises"."muscle_group_id" = "muscleGroups"."id") "muscleGroups_exercises" on true order by "muscleGroups"."order_index" asc
+params:
+    at async GET (app/api/exercises/route.ts:9:26)
+   7 |   try {
+   8 |     // Fetch all muscle groups with their exercises
+>  9 |     const muscleGroups = await db.query.muscleGroups.findMany({
+     |                          ^
+  10 |       orderBy: [asc(schema.muscleGroups.orderIndex)],
+  11 |       with: {
+  12 |         exercises: { {
+  query: `select "muscleGroups"."id", "muscleGroups"."name", "muscleGroups"."cover_image", "muscleGroups"."order_index", "muscleGroups"."created_at", "muscleGroups_exercises"."data" as "exercises" from "muscle_groups" "muscleGroups" left join lateral (select coalesce(json_agg(json_build_array("muscleGroups_exercises"."id", "muscleGroups_exercises"."name", "muscleGroups_exercises"."thumbnail_url", "muscleGroups_exercises"."target_sets", "muscleGroups_exercises"."target_reps", "muscleGroups_exercises"."rest_seconds", "muscleGroups_exercises"."video_url")), '[]'::json) as "data" from "exercises" "muscleGroups_exercises" where "muscleGroups_exercises"."muscle_group_id" = "muscleGroups"."id") "muscleGroups_exercises" on true order by "muscleGroups"."order_index" asc`,
+  params: [],
+  [cause]: AggregateError:
+      at async GET (app/api/exercises/route.ts:9:26)
+     7 |   try {
+     8 |     // Fetch all muscle groups with their exercises
+  >  9 |     const muscleGroups = await db.query.muscleGroups.findMany({
+       |                          ^
+    10 |       orderBy: [asc(schema.muscleGroups.orderIndex)],
+    11 |       with: {
+    12 |         exercises: { {
+    code: 'ECONNREFUSED'
+  }
+}
+ GET /api/exercises 500 in 447ms (compile: 11ms, render: 436ms)
+Error fetching muscle groups: Error: Failed query: select "muscleGroups"."id", "muscleGroups"."name", "muscleGroups"."cover_image", "muscleGroups"."order_index", "muscleGroups"."created_at", "muscleGroups_exercises"."data" as "exercises" from "muscle_groups" "muscleGroups" left join lateral (select coalesce(json_agg(json_build_array("muscleGroups_exercises"."id", "muscleGroups_exercises"."name", "muscleGroups_exercises"."thumbnail_url", "muscleGroups_exercises"."target_sets", "muscleGroups_exercises"."target_reps", "muscleGroups_exercises"."rest_seconds", "muscleGroups_exercises"."video_url")), '[]'::json) as "data" from "exercises" "muscleGroups_exercises" where "muscleGroups_exercises"."muscle_group_id" = "muscleGroups"."id") "muscleGroups_exercises" on true order by "muscleGroups"."order_index" asc
+params:
+    at async GET (app/api/exercises/route.ts:9:26)
+   7 |   try {
+   8 |     // Fetch all muscle groups with their exercises
+>  9 |     const muscleGroups = await db.query.muscleGroups.findMany({
+     |                          ^
+  10 |       orderBy: [asc(schema.muscleGroups.orderIndex)],
+  11 |       with: {
+  12 |         exercises: { {
+  query: `select "muscleGroups"."id", "muscleGroups"."name", "muscleGroups"."cover_image", "muscleGroups"."order_index", "muscleGroups"."created_at", "muscleGroups_exercises"."data" as "exercises" from "muscle_groups" "muscleGroups" left join lateral (select coalesce(json_agg(json_build_array("muscleGroups_exercises"."id", "muscleGroups_exercises"."name", "muscleGroups_exercises"."thumbnail_url", "muscleGroups_exercises"."target_sets", "muscleGroups_exercises"."target_reps", "muscleGroups_exercises"."rest_seconds", "muscleGroups_exercises"."video_url")), '[]'::json) as "data" from "exercises" "muscleGroups_exercises" where "muscleGroups_exercises"."muscle_group_id" = "muscleGroups"."id") "muscleGroups_exercises" on true order by "muscleGroups"."order_index" asc`,
+  params: [],
+  [cause]: AggregateError:
+      at async GET (app/api/exercises/route.ts:9:26)
+     7 |   try {
+     8 |     // Fetch all muscle groups with their exercises
+  >  9 |     const muscleGroups = await db.query.muscleGroups.findMany({
+       |                          ^
+    10 |       orderBy: [asc(schema.muscleGroups.orderIndex)],
+    11 |       with: {
+    12 |         exercises: { {
+    code: 'ECONNREFUSED'
+  }
+}
+ GET /api/exercises 500 in 267ms (compile: 5ms, render: 262ms)
+ GET /import 200 in 118ms (compile: 13ms, render: 105ms)
+ GET /import 200 in 82ms (compile: 6ms, render: 76ms)
+ GET /import 200 in 78ms (compile: 4ms, render: 74ms)
+✓ Compiled in 383ms

@@ -52,10 +52,6 @@ export interface DayWithExercises {
     videoUrl: string | null;
     thumbnailUrl: string | null;
     muscleGroupId: string | null;
-    // Per-day override values (null if not set)
-    targetSetsOverride: number | null;
-    targetRepsOverride: string | null;
-    restSecondsOverride: number | null;
   }>;
 }
 
@@ -216,17 +212,12 @@ export const ProgramsServiceLive = Layer.effect(
             exercises: day.dayExercises.map((de) => ({
               id: de.exercise.id,
               name: de.exercise.name,
-              // Use override if set, otherwise fall back to exercise defaults
-              targetSets: de.targetSetsOverride ?? de.exercise.targetSets ?? 3,
-              targetReps: de.targetRepsOverride ?? de.exercise.targetReps ?? "8-12",
-              restSeconds: de.restSecondsOverride ?? de.exercise.restSeconds ?? 90,
+              targetSets: de.exercise.targetSets ?? 3,
+              targetReps: de.exercise.targetReps ?? "8-12",
+              restSeconds: de.exercise.restSeconds ?? 90,
               videoUrl: de.exercise.videoUrl,
               thumbnailUrl: de.exercise.thumbnailUrl,
               muscleGroupId: de.exercise.muscleGroupId ?? null,
-              // Include override values for reference
-              targetSetsOverride: de.targetSetsOverride,
-              targetRepsOverride: de.targetRepsOverride,
-              restSecondsOverride: de.restSecondsOverride,
             })),
           };
         },

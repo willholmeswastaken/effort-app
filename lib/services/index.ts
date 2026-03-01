@@ -11,7 +11,7 @@ export { ProgramsService, type ProgramWithDays, type ProgramForHome } from "./Pr
 export {
   WorkoutsService,
   type UpsertSetInput,
-  type ImportExerciseInput,
+  type ImportWorkoutInput,
   type StartWorkoutInput,
   type CompleteWorkoutInput,
   type WorkoutHistoryEntry,

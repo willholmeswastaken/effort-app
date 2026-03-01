@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json();
 
-    if (!body.exerciseId || !body.exerciseName || !body.date || !body.sets || !Array.isArray(body.sets)) {
+    if (!body.date || !body.exercises || !Array.isArray(body.exercises)) {
       return NextResponse.json(
-        { error: "Missing required fields: exerciseId, exerciseName, date, sets" },
+        { error: "Missing required fields: date, exercises" },
         { status: 400 }
       );
     }
@@ -24,10 +24,8 @@ export async function POST(req: NextRequest) {
         const service = yield* WorkoutsService;
         return yield* service.importExerciseData({
           userId: session.user.id,
-          exerciseId: body.exerciseId,
-          exerciseName: body.exerciseName,
           date: new Date(body.date),
-          sets: body.sets,
+          exercises: body.exercises,
         });
       })
     );
