@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { historyKeys, fetchWorkoutHistory } from "@/lib/queries/history";
 import type { WorkoutHistoryEntry } from "@/lib/services";
@@ -40,7 +40,9 @@ export function HistoryClient() {
 
       <div className="px-4 py-6">
         {isLoading ? (
-          <HistorySkeleton />
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-[#0078FF]" />
+          </div>
         ) : error ? (
           <div className="text-center py-16">
             <p className="text-[15px] text-[#FF3B30]">Failed to load history</p>
@@ -88,28 +90,6 @@ export function HistoryClient() {
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function HistorySkeleton() {
-  return (
-    <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <div
-          key={i}
-          className={`flex items-center px-4 py-3.5 ${
-            i > 0 ? "border-t border-white/5" : ""
-          }`}
-        >
-          <div className="w-10 h-10 rounded-full bg-[#3A3A3C] animate-pulse mr-4" />
-          <div className="flex-1">
-            <div className="h-4 w-32 bg-[#3A3A3C] rounded animate-pulse mb-2" />
-            <div className="h-3 w-20 bg-[#3A3A3C] rounded animate-pulse" />
-          </div>
-          <div className="h-4 w-8 bg-[#3A3A3C] rounded animate-pulse mr-2" />
-        </div>
-      ))}
     </div>
   );
 }
