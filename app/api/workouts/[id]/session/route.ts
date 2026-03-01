@@ -22,11 +22,98 @@ export async function GET(
       pipe(
         Effect.gen(function* () {
           const workoutsService = yield* WorkoutsService;
-          const session = yield* workoutsService.getWorkoutSession(workoutId);
-          if (!session) {
+          const programsService = yield* ProgramsService;
+          const workout = yield* workoutsService.getWorkoutSession(workoutId);
+          if (!workout) {
             return { error: "Workout not found" };
           }
-          return session;
+
+          // Get day exercises
+          const day = yield* programsService.getDayWithExercises(workout.programId, workout.dayId);
+          if (!day) {
+            return { error: "Day not found" };
+          }
+
+          // Build exercises list with swaps applied
+          let exercises = day.exercises;
+          
+          if (workout.exercises && workout.exercises.length > 0) {
+            // Build a map of exerciseOrder -> logged exercise info
+            const orderToExerciseMap = new Map<number, {
+              id: string;
+              name: string;
+              targetSets: number;
+              targetReps: string;
+              restSeconds: number;
+              videoUrl: string | null;
+              thumbnailUrl: string | null;
+              muscleGroupId: string | null;
+              targetSetsOverride: number | null;
+              targetRepsOverride: string | null;
+              restSecondsOverride: number | null;
+            }>();
+            
+            for (const exercise of workout.exercises) {
+              const exerciseOrder = exercise.exerciseOrder;
+              if (exerciseOrder >= 0) {
+                orderToExerciseMap.set(exerciseOrder, {
+                  id: exercise.id,
+                  name: exercise.name,
+                  targetSets: exercise.targetSets,
+                  targetReps: exercise.targetReps,
+                  restSeconds: exercise.restSeconds,
+                  videoUrl: exercise.videoUrl,
+                  thumbnailUrl: exercise.thumbnailUrl,
+                  muscleGroupId: null, // Will be filled from day.exercises
+                  targetSetsOverride: null,
+                  targetRepsOverride: null,
+                  restSecondsOverride: null,
+                });
+              }
+            }
+            
+            // Apply swaps
+            exercises = day.exercises.map((originalExercise, index) => {
+              const swappedExercise = orderToExerciseMap.get(index);
+              if (swappedExercise && swappedExercise.id !== originalExercise.id) {
+                // Preserve muscleGroupId from the original exercise position (it may have been swapped)
+                return {
+                  ...swappedExercise,
+                  muscleGroupId: originalExercise.muscleGroupId,
+                };
+              }
+              return originalExercise;
+            });
+          }
+
+          // Build sets from exercises
+          const sets = workout.exercises?.flatMap((exercise) =>
+            exercise.sets.map((s) => ({
+              exerciseId: exercise.id,
+              setNumber: s.setNumber,
+              reps: s.reps,
+              weight: s.weight,
+            }))
+          ) ?? [];
+
+          return {
+            workout: {
+              id: workout.id,
+              programId: workout.programId,
+              dayId: workout.dayId,
+              dayTitle: day.title,
+              programName: day.programName,
+              startedAt: workout.startedAt.toISOString(),
+              completedAt: workout.completedAt?.toISOString() ?? null,
+              status: workout.status,
+              lastPausedAt: workout.lastPausedAt?.toISOString() ?? null,
+              accumulatedPauseSeconds: workout.accumulatedPauseSeconds,
+              durationSeconds: workout.durationSeconds,
+              rating: workout.rating,
+            },
+            exercises,
+            sets,
+          };
         }),
         Effect.catchAll((error) => {
           console.error("Failed to fetch workout session:", error);

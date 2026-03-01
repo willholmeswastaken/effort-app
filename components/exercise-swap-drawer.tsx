@@ -1,7 +1,10 @@
 "use client";
 
-import { Check, X } from "lucide-react";
+import { useState, useEffect, useRef, useMemo, useLayoutEffect } from "react";
+import { Check, X, Search, Loader2 } from "lucide-react";
+import Image from "next/image";
 import { type MuscleGroupExerciseWithGroup } from "@/lib/queries";
+import { useMuscleGroups } from "@/lib/queries";
 import {
   Drawer,
   DrawerContent,
@@ -9,7 +12,6 @@ import {
   DrawerTitle,
   DrawerFooter,
 } from "@/components/ui/drawer";
-import { ExercisePicker } from "./exercise-picker";
 
 interface ExerciseSwapDrawerProps {
   open: boolean;
@@ -28,10 +30,177 @@ export function ExerciseSwapDrawer({
   currentMuscleGroupId,
   isSwapping = false,
 }: ExerciseSwapDrawerProps) {
+  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [lockedDrawerHeight, setLockedDrawerHeight] = useState<number | null>(null);
+  const [keyboardInset, setKeyboardInset] = useState(0);
+  
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const exerciseListRef = useRef<HTMLDivElement>(null);
+  const groupButtonRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  // Track when drawer opens to trigger scroll
+  const [drawerOpenCount, setDrawerOpenCount] = useState(0);
+  
+  const { data: muscleGroups, isLoading, error } = useMuscleGroups({ enabled: open });
+  
+  // Pre-select the muscle group of the exercise being swapped when drawer opens
+  // Using useLayoutEffect to ensure this happens before the first paint of the drawer
+  useLayoutEffect(() => {
+    if (open) {
+      setDrawerOpenCount(prev => prev + 1);
+      // When drawer opens, set the selected group to the current exercise's muscle group
+      // or null (showing "All") if no muscle group is specified
+      setSelectedGroupId(currentMuscleGroupId ?? null);
+    }
+  }, [open, currentMuscleGroupId]);
+
+  useEffect(() => {
+    if (!open) {
+      setLockedDrawerHeight(null);
+      setKeyboardInset(0);
+      return;
+    }
+
+    const lockHeight = () => {
+      const layoutHeight = document.documentElement.clientHeight;
+      setLockedDrawerHeight(Math.round(layoutHeight * 0.85));
+    };
+
+    lockHeight();
+    window.addEventListener("orientationchange", lockHeight);
+    return () => window.removeEventListener("orientationchange", lockHeight);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !isSearchFocused) {
+      setKeyboardInset(0);
+      return;
+    }
+
+    if (!window.visualViewport) return;
+
+    let rafId = 0;
+    const updateInset = () => {
+      if (!window.visualViewport) return;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const vv = window.visualViewport;
+        if (!vv) return;
+        const inset = Math.max(0, window.innerHeight - (vv.height + vv.offsetTop));
+        setKeyboardInset(Math.round(inset));
+      });
+    };
+
+    updateInset();
+    window.visualViewport.addEventListener("resize", updateInset);
+    window.visualViewport.addEventListener("scroll", updateInset);
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      window.visualViewport?.removeEventListener("resize", updateInset);
+      window.visualViewport?.removeEventListener("scroll", updateInset);
+    };
+  }, [open, isSearchFocused]);
+
+  // Scroll the selected muscle group pill into view
+  // This runs after DOM updates to ensure buttons are rendered
+  useEffect(() => {
+    if (!open) return;
+    if (!muscleGroups || muscleGroups.length === 0) return;
+    
+    // Use a small timeout to ensure the drawer's entry animation 
+    // doesn't conflict with our smooth scroll
+    const timer = setTimeout(() => {
+      const container = scrollContainerRef.current;
+      if (!container) return;
+      
+      if (!selectedGroupId) {
+        // If no group selected, scroll to start (show "All")
+        container.scrollTo({ left: 0, behavior: 'smooth' });
+        return;
+      }
+      
+      // Find the button for the selected group
+      const button = groupButtonRefs.current.get(selectedGroupId);
+      if (!button) return;
+      
+      // Calculate and apply scroll position to center the button
+      const containerRect = container.getBoundingClientRect();
+      const buttonRect = button.getBoundingClientRect();
+      
+      // If the container has no width yet (still animating), wait
+      if (containerRect.width === 0) return;
+
+      const scrollLeft = container.scrollLeft + buttonRect.left - containerRect.left - (containerRect.width / 2) + (buttonRect.width / 2);
+      
+      container.scrollTo({
+        left: Math.max(0, scrollLeft),
+        behavior: 'smooth'
+      });
+    }, 100); // 100ms is usually enough for the initial layout to stabilize
+
+    return () => clearTimeout(timer);
+  }, [open, selectedGroupId, muscleGroups?.length, drawerOpenCount]);
+
+  const allExercises = useMemo(() => {
+    if (!muscleGroups) return [];
+    return muscleGroups.flatMap(group => 
+      group.exercises.map(ex => ({ ...ex, groupName: group.name, groupId: group.id }))
+    );
+  }, [muscleGroups]);
+
+  const filteredExercises = useMemo(() => {
+    let exercises = allExercises;
+    if (selectedGroupId) {
+      exercises = exercises.filter(ex => ex.groupId === selectedGroupId);
+    }
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      exercises = exercises.filter(ex => 
+        ex.name.toLowerCase().includes(query) ||
+        ex.groupName.toLowerCase().includes(query)
+      );
+    }
+    return exercises;
+  }, [allExercises, selectedGroupId, searchQuery]);
+
+  const handleExerciseSelect = (exercise: MuscleGroupExerciseWithGroup) => {
+    setSelectedExerciseId(exercise.id);
+    setTimeout(() => {
+      onExerciseSelect(exercise);
+    }, 300);
+  };
+
+  // Scroll exercise list to top when filters change
+  useEffect(() => {
+    if (exerciseListRef.current) {
+      exerciseListRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [selectedGroupId, searchQuery]);
+
+  const handleOpenChange = (newOpen: boolean) => {
+    if (!newOpen) {
+      setSelectedGroupId(null);
+      setSearchQuery("");
+      setSelectedExerciseId(null);
+      // Don't clear refs here - let them persist until next open
+      // This prevents race conditions
+    }
+    onOpenChange(newOpen);
+  };
+
   return (
-    <Drawer open={open} onOpenChange={onOpenChange} dismissible={!isSwapping}>
-      <DrawerContent className="max-w-lg mx-auto h-[85vh] bg-[#0A0A0A]">
-        <div className="flex flex-col h-full">
+    <Drawer open={open} onOpenChange={handleOpenChange} dismissible={!isSwapping}>
+      <DrawerContent
+        className="max-w-lg mx-auto data-[vaul-drawer-direction=bottom]:mt-0 data-[vaul-drawer-direction=bottom]:max-h-none overflow-hidden bg-[#0A0A0A]"
+        style={
+          lockedDrawerHeight
+            ? { height: `${lockedDrawerHeight}px`, maxHeight: `${lockedDrawerHeight}px` }
+            : { height: "85lvh", maxHeight: "85lvh" }
+        }
+      >
+        <div className="flex flex-col h-full" style={{ paddingBottom: keyboardInset }}>
           {/* Header */}
           <DrawerHeader className="text-center border-b border-white/6 pb-4 shrink-0">
             <div className="flex items-center justify-between">
@@ -42,32 +211,178 @@ export function ExerciseSwapDrawer({
               <button
                 onClick={() => onOpenChange(false)}
                 disabled={isSwapping}
+                aria-label="Close drawer"
                 className="w-10 h-10 flex items-center justify-center rounded-full bg-[#1C1C1E] active:scale-95 disabled:opacity-50"
               >
                 <X className="w-5 h-5 text-[#8E8E93]" />
               </button>
             </div>
-            <p className="text-[13px] text-[#8E8E93] mt-1">
+            <p className="text-[13px] text-[#8E8E93] mt-1" aria-live="polite">
               Replacing: <span className="text-white">{currentExerciseName}</span>
             </p>
           </DrawerHeader>
 
-          <div className="flex-1 overflow-hidden">
-            <ExercisePicker
-              onExerciseSelect={onExerciseSelect}
-              initialMuscleGroupId={currentMuscleGroupId}
-            />
+          {/* Sticky Filters Header */}
+          <div className="shrink-0 bg-[#0A0A0A] border-b border-white/6 z-10">
+            {/* Search */}
+            <div className="px-4 pt-4 pb-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#8E8E93]" />
+                <input
+                  type="text"
+                  placeholder="Search exercises..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => setIsSearchFocused(true)}
+                  onBlur={() => setIsSearchFocused(false)}
+                  inputMode="search"
+                  enterKeyHint="search"
+                  autoCapitalize="none"
+                  className="w-full h-11 bg-[#1C1C1E] rounded-xl pl-10 pr-10 text-[16px] text-white placeholder:text-[#8E8E93] focus:outline-none focus:ring-2 focus:ring-[#0078FF]/50"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    aria-label="Clear search"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#3A3A3C] flex items-center justify-center"
+                  >
+                    <X className="w-3 h-3 text-[#8E8E93]" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Muscle Groups */}
+            {!isLoading && !error && muscleGroups && (
+              <div className="px-4 pb-3" aria-label="Muscle group filters">
+                <div ref={scrollContainerRef} className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
+                  <button
+                    onClick={() => setSelectedGroupId(null)}
+                    aria-pressed={!selectedGroupId}
+                    className={`shrink-0 px-4 py-2 rounded-full text-[14px] font-medium transition-all active:scale-95 ${
+                      !selectedGroupId 
+                        ? 'bg-[#0078FF] text-white' 
+                        : 'bg-[#1C1C1E] text-[#8E8E93]'
+                    }`}
+                  >
+                    All
+                  </button>
+                  {muscleGroups.map((group) => (
+                    <button
+                      key={group.id}
+                      ref={(el) => {
+                        if (el) {
+                          groupButtonRefs.current.set(group.id, el);
+                        } else {
+                          // Clean up ref when button unmounts
+                          groupButtonRefs.current.delete(group.id);
+                        }
+                      }}
+                      onClick={() => setSelectedGroupId(group.id)}
+                      aria-pressed={selectedGroupId === group.id}
+                      className={`shrink-0 px-4 py-2 rounded-full text-[14px] font-medium transition-all active:scale-95 ${
+                        selectedGroupId === group.id
+                          ? 'bg-[#0078FF] text-white'
+                          : 'bg-[#1C1C1E] text-[#8E8E93]'
+                      }`}
+                    >
+                      {group.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          <DrawerFooter className="border-t border-white/6 bg-[#0A0A0A] p-4 shrink-0">
-            <button
-              onClick={() => onOpenChange(false)}
-              disabled={isSwapping}
-              className="w-full h-12 bg-[#1C1C1E] rounded-xl text-[15px] font-medium text-white active:scale-[0.98] active:bg-[#2C2C2E] transition-all disabled:opacity-50"
-            >
-              Cancel
-            </button>
-          </DrawerFooter>
+          {/* Scrollable Content - swipeable to dismiss */}
+          <div ref={exerciseListRef} className="flex-1 overflow-y-auto min-h-0">
+            {/* Exercise List */}
+            <div className="px-4 py-4 pb-12">
+              {isLoading && (
+                <div className="space-y-2">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <div key={i} className="w-full h-16 bg-[#1C1C1E] rounded-xl animate-pulse" />
+                  ))}
+                </div>
+              )}
+
+              {error && (
+                <div className="py-12 text-center text-[#FF3B30]">
+                  Failed to load exercises
+                </div>
+              )}
+
+              {!isLoading && !error && filteredExercises.length === 0 && (
+                <div className="py-12 text-center text-[#8E8E93]">
+                  No exercises found
+                </div>
+              )}
+
+              {!isLoading && !error && filteredExercises.length > 0 && (
+                <div className="space-y-2">
+                  {filteredExercises.map((exercise) => (
+                    <button
+                      key={exercise.id}
+                      disabled={isSwapping}
+                      onClick={() => handleExerciseSelect(exercise)}
+                      className="w-full flex items-center gap-3 p-3 bg-[#1C1C1E] rounded-xl text-left active:scale-[0.98] transition-all hover:bg-[#2C2C2E]"
+                    >
+                      {/* Thumbnail - constrained size */}
+                      <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 relative bg-[#2C2C2E]">
+                        {exercise.thumbnailUrl ? (
+                          <Image
+                            src={exercise.thumbnailUrl}
+                            alt={exercise.name}
+                            fill
+                            className="object-cover"
+                            sizes="48px"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="text-[10px] text-[#8E8E93] font-medium">
+                              {exercise.name.charAt(0).toUpperCase()}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[15px] font-medium text-white truncate">
+                          {exercise.name}
+                        </p>
+                        <p className="text-[13px] text-[#8E8E93]">
+                          {exercise.targetSets || 3} sets × {exercise.targetReps || "8-12"} reps
+                        </p>
+                      </div>
+
+                      {selectedExerciseId === exercise.id && (
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isSwapping ? 'bg-[#1C1C1E]' : 'bg-[#34C759]'}`}>
+                          {isSwapping ? (
+                            <Loader2 className="w-4 h-4 text-[#0078FF] animate-spin" />
+                          ) : (
+                            <Check className="w-4 h-4 text-black" />
+                          )}
+                        </div>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Revolut-style bottom cancel button - thumb friendly */}
+          {!isSearchFocused && (
+            <DrawerFooter className="border-t border-white/6 bg-[#0A0A0A] p-4 shrink-0">
+              <button
+                onClick={() => onOpenChange(false)}
+                disabled={isSwapping}
+                className="w-full h-12 bg-[#1C1C1E] rounded-xl text-[15px] font-medium text-white active:scale-[0.98] active:bg-[#2C2C2E] transition-all disabled:opacity-50"
+              >
+                Cancel
+              </button>
+            </DrawerFooter>
+          )}
         </div>
 
       </DrawerContent>

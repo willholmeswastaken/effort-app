@@ -176,6 +176,10 @@ export const dayExercises = pgTable(
       .notNull()
       .references(() => exercises.id, { onDelete: "cascade" }),
     exerciseOrder: integer("exercise_order").notNull(),
+    // Per-day overrides (nullable - falls back to exercise defaults if not set)
+    targetSetsOverride: integer("target_sets_override"),
+    targetRepsOverride: text("target_reps_override"),
+    restSecondsOverride: integer("rest_seconds_override"),
   },
   (table) => [index("idx_day_exercises_day").on(table.dayId)]
 );

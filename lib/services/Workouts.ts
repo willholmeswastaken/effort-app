@@ -1189,13 +1189,14 @@ export const WorkoutsServiceLive = Layer.effect(
               throw new Error("Day data not found for denormalization");
             }
 
-            // Build denormalized exercises array
+            // Build denormalized exercises array (using per-day overrides if set)
             const denormalizedExercises = dayData.dayExercises.map((de) => ({
               id: de.exercise.id,
               name: de.exercise.name,
-              targetSets: de.exercise.targetSets ?? 3,
-              targetReps: de.exercise.targetReps ?? "8-12",
-              restSeconds: de.exercise.restSeconds ?? 90,
+              // Use override if set, otherwise fall back to exercise defaults
+              targetSets: de.targetSetsOverride ?? de.exercise.targetSets ?? 3,
+              targetReps: de.targetRepsOverride ?? de.exercise.targetReps ?? "8-12",
+              restSeconds: de.restSecondsOverride ?? de.exercise.restSeconds ?? 90,
               videoUrl: de.exercise.videoUrl ?? null,
               thumbnailUrl: de.exercise.thumbnailUrl ?? null,
               muscleGroupId: de.exercise.muscleGroupId ?? null,
