@@ -7,8 +7,8 @@ export function useHomeData() {
   return useQuery<HomeData>({
     queryKey: homeKeys.data(),
     queryFn: () => fetchHomeData(),
-    staleTime: 0, // Always consider data stale to ensure fresh state on navigation
-    refetchOnWindowFocus: true,
-    refetchOnMount: true,
+    staleTime: 60 * 1000, // Keep home data fresh without forcing full reload UX on every visit
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 }
