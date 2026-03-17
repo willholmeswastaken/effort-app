@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 import { History, Play, Check, Loader2, ChevronRight, Dumbbell, ArrowRight, TrendingUp, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import {
@@ -14,50 +15,9 @@ import {
 } from "@/components/ui/drawer";
 
 import { UserMenu } from "@/components/user-menu";
-import { useUpdatePreferences, useRestartProgram, useHomeData, usePrograms } from "@/lib/queries";
+import { homeKeys, useUpdatePreferences, useRestartProgram, useHomeData, usePrograms } from "@/lib/queries";
 
 interface HomeClientProps {}
-
-// Skeleton loader component for loading state
-function HomeSkeleton() {
-  return (
-    <main className="min-h-screen bg-black text-white">
-      {/* Header Skeleton */}
-      <div className="px-6 pt-14 pb-8">
-        <div className="flex items-center justify-between mb-10">
-          <div className="w-10 h-10 rounded-full bg-[#1C1C1E] animate-pulse" />
-          <div className="w-24 h-4 bg-[#1C1C1E] rounded animate-pulse" />
-          <div className="flex gap-2">
-            <div className="w-10 h-10 rounded-full bg-[#1C1C1E] animate-pulse" />
-            <div className="w-10 h-10 rounded-full bg-[#1C1C1E] animate-pulse" />
-          </div>
-        </div>
-        
-        {/* Big Week Number Skeleton */}
-        <div className="text-center mb-10">
-          <div className="w-32 h-12 bg-[#1C1C1E] rounded mx-auto mb-3 animate-pulse" />
-          <div className="w-24 h-5 bg-[#1C1C1E] rounded mx-auto mb-4 animate-pulse" />
-          <div className="w-36 h-4 bg-[#1C1C1E] rounded mx-auto animate-pulse" />
-        </div>
-        
-        {/* CTA Button Skeleton */}
-        <div className="flex justify-center mb-8">
-          <div className="w-full max-w-xs h-14 bg-[#1C1C1E] rounded-2xl animate-pulse" />
-        </div>
-      </div>
-      
-      {/* Week Tabs Skeleton */}
-      <div className="px-6 pb-6">
-        <div className="w-full h-12 bg-[#1C1C1E] rounded-2xl mb-6 animate-pulse" />
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="w-full h-16 bg-[#1C1C1E] rounded-2xl animate-pulse" />
-          ))}
-        </div>
-      </div>
-    </main>
-  );
-}
 
 // Empty state when no program selected
 function EmptyState({ onBrowsePrograms }: { onBrowsePrograms: () => void }) {
@@ -111,8 +71,9 @@ function EmptyState({ onBrowsePrograms }: { onBrowsePrograms: () => void }) {
 }
 
 export function HomeClient({}: HomeClientProps) {
-  const { data: homeData, isLoading } = useHomeData();
+  const { data: homeData, isLoading, isFetching } = useHomeData();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
   const [isRestartOpen, setIsRestartOpen] = useState(false);
   const [isProgramMenuOpen, setIsProgramMenuOpen] = useState(false);
@@ -133,6 +94,7 @@ export function HomeClient({}: HomeClientProps) {
   const { data: programs = [], isLoading: programsLoading } = usePrograms({
     enabled: isSwitcherOpen,
   });
+  const weeks = homeData?.activeProgram?.weeks ?? [];
 
   // Sync activeWeekIndex once when homeData loads for the first time
   useEffect(() => {
@@ -146,54 +108,6 @@ export function HomeClient({}: HomeClientProps) {
       }
     }
   }, [homeData, activeWeekIndex]);
-
-  // Loading state with skeleton
-  if (isLoading) {
-    return <HomeSkeleton />;
-  }
-
-  // Empty state when no program selected
-  if (!homeData || !homeData.activeProgram || !homeData.userPreferences) {
-    return <EmptyState onBrowsePrograms={() => setIsSwitcherOpen(true)} />;
-  }
-
-  const { activeProgram, userPreferences, isProgramComplete, nextWorkout } = homeData;
-  const weeks = activeProgram.weeks;
-
-  // Calculate completed sessions across all weeks
-  const totalSessions = weeks.reduce((acc: number, week: any) => acc + week.days.length, 0);
-  const completedSessions = weeks.reduce(
-    (acc: number, week: any) => acc + week.days.filter((d: any) => d.isCompleted).length,
-    0
-  );
-
-  const handleProgramChange = async (id: string) => {
-    await updatePreferences.mutateAsync({ activeProgramId: id });
-    setIsSwitcherOpen(false);
-    router.refresh(); 
-  };
-
-  const handleActionButtonClick = () => {
-    if (isProgramComplete) {
-      setIsRestartOpen(true);
-    } else if (nextWorkout) {
-      router.push(`/workout/${nextWorkout.programId}/${nextWorkout.dayId}`);
-    }
-  };
-
-  const handleRestartProgram = () => {
-    if (!userPreferences.activeProgramId) return;
-    
-    restartProgram.mutate(userPreferences.activeProgramId, {
-      onSuccess: () => {
-        setIsRestartOpen(false);
-        router.refresh();
-      },
-      onError: (e) => {
-        console.error("Failed to restart program", e);
-      },
-    });
-  };
 
   // Haptic feedback helper
   const triggerHaptic = () => {
@@ -274,6 +188,54 @@ export function HomeClient({}: HomeClientProps) {
     };
   }, [activeWeekIndex, weeks.length]);
 
+  // Route-level loading.tsx handles the first paint skeleton; keep this client
+  // component from flashing a second full-page loading state.
+  if (!homeData && isLoading) {
+    return null;
+  }
+
+  // Empty state when no program selected
+  if (!homeData || !homeData.activeProgram || !homeData.userPreferences) {
+    return <EmptyState onBrowsePrograms={() => setIsSwitcherOpen(true)} />;
+  }
+
+  const { activeProgram, userPreferences, isProgramComplete, nextWorkout } = homeData;
+
+  // Calculate completed sessions across all weeks
+  const totalSessions = weeks.reduce((acc: number, week: any) => acc + week.days.length, 0);
+  const completedSessions = weeks.reduce(
+    (acc: number, week: any) => acc + week.days.filter((d: any) => d.isCompleted).length,
+    0
+  );
+
+  const handleProgramChange = async (id: string) => {
+    await updatePreferences.mutateAsync({ activeProgramId: id });
+    setIsSwitcherOpen(false);
+    await queryClient.invalidateQueries({ queryKey: homeKeys.data() });
+  };
+
+  const handleActionButtonClick = () => {
+    if (isProgramComplete) {
+      setIsRestartOpen(true);
+    } else if (nextWorkout) {
+      router.push(`/workout/${nextWorkout.programId}/${nextWorkout.dayId}`);
+    }
+  };
+
+  const handleRestartProgram = () => {
+    if (!userPreferences.activeProgramId) return;
+    
+    restartProgram.mutate(userPreferences.activeProgramId, {
+      onSuccess: async () => {
+        setIsRestartOpen(false);
+        await queryClient.invalidateQueries({ queryKey: homeKeys.data() });
+      },
+      onError: (e) => {
+        console.error("Failed to restart program", e);
+      },
+    });
+  };
+
   return (
     <main className="min-h-screen bg-black text-white">
       {/* Pure black header */}
@@ -292,6 +254,9 @@ export function HomeClient({}: HomeClientProps) {
               <span className="text-[15px] font-medium text-white group-active:opacity-70 transition-opacity">
                 {activeProgram.name}
               </span>
+              {isFetching && (
+                <Loader2 className="w-3.5 h-3.5 text-[#8E8E93] animate-spin" />
+              )}
               <ChevronRight className="w-4 h-4 text-[#8E8E93] group-hover:translate-x-0.5 transition-transform" />
             </button>
             
