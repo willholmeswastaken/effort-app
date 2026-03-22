@@ -5,6 +5,7 @@ import { ProgramsService, ProgramsServiceLive } from "./Programs";
 import { WorkoutsService, WorkoutsServiceLive } from "./Workouts";
 import { InsightsService, InsightsServiceLive } from "./Insights";
 import { UserService, UserServiceLive } from "./User";
+import { AdminService, AdminServiceLive } from "./Admin";
 
 export { DatabaseService } from "./Database";
 export { ProgramsService, type ProgramWithDays, type ProgramForHome } from "./Programs";
@@ -22,12 +23,23 @@ export {
 } from "./Workouts";
 export { InsightsService, type InsightsSummary, type ExerciseProgressionPoint } from "./Insights";
 export { UserService, type UserPreferencesData } from "./User";
+export {
+  AdminService,
+  type AdminProgramSummary,
+  type AdminWeekDetail,
+  type CreateProgramInput,
+  type UpdateProgramInput,
+  type SaveWeekInput,
+  type SaveDay,
+  type SaveDayExercise,
+} from "./Admin";
 
 const ServicesLayer = Layer.mergeAll(
   ProgramsServiceLive,
   WorkoutsServiceLive,
   InsightsServiceLive,
-  UserServiceLive
+  UserServiceLive,
+  AdminServiceLive
 );
 
 export const AppLayer = Layer.provideMerge(ServicesLayer, DatabaseServiceLive);
@@ -37,7 +49,8 @@ export type AppContext =
   | ProgramsService
   | WorkoutsService
   | InsightsService
-  | UserService;
+  | UserService
+  | AdminService;
 
 export const runEffect = <A, E>(
   effect: Effect.Effect<A, E, AppContext>

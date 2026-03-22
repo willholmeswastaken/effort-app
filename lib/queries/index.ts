@@ -6,3 +6,4 @@ export * from "./home";
 export * from "./home-data";
 export * from "./programs";
 export * from "./history";
+export * from "./admin";
