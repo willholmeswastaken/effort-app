@@ -23,7 +23,7 @@ import {
   useInsightsSummary,
   useLoggedExercises,
   useExerciseProgression,
-} from "@/lib/queries/insights";
+} from "@/lib/queries/insights-hooks";
 
 type TimeRange = "1w" | "1m" | "3m" | "6m" | "1y" | "All";
 
