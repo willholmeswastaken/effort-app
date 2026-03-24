@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { BottomNav } from "@/components/bottom-nav";
 import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800"] });
@@ -21,6 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <QueryProvider>
           {children}
+          <BottomNav />
           <Toaster
             theme="dark"
             position="bottom-center"

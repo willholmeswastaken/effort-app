@@ -23,6 +23,8 @@ import {
   type MuscleGroupExerciseWithGroup 
 } from "@/lib/queries";
 import { type WorkoutSessionData } from "@/lib/services";
+import { formatTimer } from "@/lib/utils";
+import { AnimateIn } from "@/components/animate-in";
 import {
   Drawer,
   DrawerContent,
@@ -128,6 +130,7 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetStep, setResetStep] = useState<1 | 2>(1);
+  const [showFinishConfirm, setShowFinishConfirm] = useState(false);
   const [rating, setRating] = useState(0);
   const [showSwapDrawer, setShowSwapDrawer] = useState(false);
   const [swapExerciseIndex, setSwapExerciseIndex] = useState<number | null>(null);
@@ -326,16 +329,18 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
   }, [exercises]);
 
   const handleFinish = () => {
+    setShowFinishConfirm(true);
+  };
+
+  const handleConfirmFinish = () => {
+    setShowFinishConfirm(false);
     setFinishedAt(elapsed);
-    // Complete workout immediately without rating
     completeWorkout.mutate({
       workoutLogId: workoutId,
       durationSeconds: elapsed,
     }, {
       onSuccess: () => {
-        // Show rating modal after workout is completed
         setShowCompletionModal(true);
-        // Invalidate queries
         queryClient.invalidateQueries({ queryKey: workoutKeys.session(workoutId) });
         queryClient.invalidateQueries({ queryKey: homeKeys.all });
       },
@@ -393,15 +398,6 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
     });
   };
 
-  const formatTime = (seconds: number) => {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return hrs > 0
-      ? `${hrs}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
-      : `${mins}:${secs.toString().padStart(2, "0")}`;
-  };
-
   const handleSwapRequest = (index: number) => {
     setSwapExerciseIndex(index);
     setShowSwapDrawer(true);
@@ -437,6 +433,7 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
   const displayTime = isCompleted ? (workout?.durationSeconds ?? 0) : elapsed;
 
   return (
+    <AnimateIn>
     <div className="min-h-screen bg-black text-white overflow-x-hidden selection:bg-[#0078FF]/30" style={{ overscrollBehaviorX: 'none' }}>
       <header className="fixed top-0 left-0 right-0 z-100 bg-black/95 backdrop-blur-xl border-b border-white/6">
         <div className="flex items-center justify-between h-14 px-4">
@@ -449,7 +446,7 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
             {/* Compact Timer Pill - fades in when scrolled */}
             <div className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${isTimerCompact && !isCompleted ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
               <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1C1C1E] rounded-full border border-white/6">
-                <span className="text-[14px] font-medium text-white tabular-nums">{formatTime(elapsed)}</span>
+                <span className="text-[14px] font-medium text-white tabular-nums">{formatTimer(elapsed)}</span>
                 {isPaused && <Pause className="w-3 h-3 text-[#FF9F0A]" />}
               </div>
             </div>
@@ -494,7 +491,7 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
             } ${
               isPaused && !isCompleted ? 'opacity-40 scale-95' : 'opacity-100 scale-100'
             } ${!isPaused && !isCompleted ? 'animate-pulse' : ''}`}>
-              {formatTime(displayTime)}
+              {formatTimer(displayTime)}
             </p>
           </div>
         </div>
@@ -562,6 +559,38 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
         </div>
       )}
 
+      {/* Finish Confirmation Drawer */}
+      <Drawer open={showFinishConfirm} onOpenChange={setShowFinishConfirm}>
+        <DrawerContent className="max-w-lg mx-auto">
+          <DrawerHeader className="text-center">
+            <div className="w-16 h-16 rounded-full bg-[#0078FF]/15 flex items-center justify-center mx-auto mb-3">
+              <Check className="w-8 h-8 text-[#0078FF]" />
+            </div>
+            <DrawerTitle className="text-[22px] font-semibold text-white">Finish workout?</DrawerTitle>
+            <DrawerDescription className="text-[15px] text-[#8E8E93]">
+              You completed {completedSetsCount} of {totalSets} sets in {formatTimer(elapsed)}
+            </DrawerDescription>
+          </DrawerHeader>
+          
+          <DrawerFooter className="px-6 pb-8 gap-3">
+            <button 
+              onClick={handleConfirmFinish}
+              disabled={completeWorkout.isPending}
+              className="w-full py-4 bg-linear-to-br from-[#0078FF] to-[#0066DD] rounded-xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] shadow-[0_0_24px_rgba(0,120,255,0.3)] flex items-center justify-center gap-2"
+            >
+              {completeWorkout.isPending ? <Loader2 className="w-5 h-5 animate-spin" /> : "Finish"}
+            </button>
+            
+            <button 
+              onClick={() => setShowFinishConfirm(false)}
+              className="w-full py-4 bg-[#2C2C2E] rounded-xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] border border-white/6"
+            >
+              Keep Going
+            </button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+
       <Drawer 
         open={showCompletionModal} 
         onOpenChange={() => {}} 
@@ -579,7 +608,7 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
             </div>
             <DrawerTitle className="text-[24px] font-semibold text-white mb-1">Workout Complete!</DrawerTitle>
             <DrawerDescription className="text-[15px] text-[#8E8E93]">
-              Great job! You worked out for {formatTime(elapsed)}
+              Great job! You worked out for {formatTimer(elapsed)}
             </DrawerDescription>
           </DrawerHeader>
 
@@ -629,7 +658,7 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
                 </div>
                 <DrawerTitle className="text-[22px] font-semibold text-white">Restart workout?</DrawerTitle>
                 <DrawerDescription className="text-[15px] text-[#8E8E93]">
-                  You're {formatTime(elapsed)} into your session
+                  You're {formatTimer(elapsed)} into your session
                 </DrawerDescription>
               </DrawerHeader>
               
@@ -699,5 +728,6 @@ export default function WorkoutSessionClient({ workoutId, initialSessionData }: 
         isSwapping={swapExercise.isPending}
       />
     </div>
+    </AnimateIn>
   );
 }

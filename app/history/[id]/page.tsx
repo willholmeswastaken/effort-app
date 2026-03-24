@@ -5,6 +5,7 @@ import { Effect, pipe } from "effect";
 import { ChevronLeft } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { runEffect, WorkoutsService } from "@/lib/services";
+import { formatDuration } from "@/lib/utils";
 
 interface HistoryDetailPageProps {
   params: Promise<{ id: string }>;
@@ -48,13 +49,6 @@ export default async function HistoryDetailPage({ params }: HistoryDetailPagePro
 
   const workout = result.workout;
 
-  const formatTime = (seconds: number | null) => {
-    if (!seconds) return "—";
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, '0')}`;
-  };
-
   const formatDate = (date: Date) => {
     return date.toLocaleDateString(undefined, { 
       weekday: 'long',
@@ -65,7 +59,7 @@ export default async function HistoryDetailPage({ params }: HistoryDetailPagePro
   };
 
   return (
-    <div className="min-h-screen bg-black text-white pb-20">
+    <div className="min-h-screen bg-black text-white pb-20 animate-[content-reveal_200ms_ease-out_forwards]">
       <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/5">
         <div className="flex items-center h-14 px-4">
           <Link href="/history" className="p-2 -ml-2">
@@ -83,7 +77,7 @@ export default async function HistoryDetailPage({ params }: HistoryDetailPagePro
         <div className="flex gap-6 mt-4">
           <div>
             <p className="text-[13px] text-[#8E8E93]">Duration</p>
-            <p className="text-[17px] font-medium">{formatTime(workout.durationSeconds)}</p>
+            <p className="text-[17px] font-medium">{formatDuration(workout.durationSeconds)}</p>
           </div>
           <div>
             <p className="text-[13px] text-[#8E8E93]">Exercises</p>
@@ -106,7 +100,7 @@ export default async function HistoryDetailPage({ params }: HistoryDetailPagePro
             <div className="bg-[#1C1C1E] rounded-2xl overflow-hidden">
               <div className="grid grid-cols-3 px-4 py-2.5 border-b border-white/5">
                 <span className="text-[13px] text-[#8E8E93]">Set</span>
-                <span className="text-[13px] text-[#8E8E93] text-center">kg</span>
+                <span className="text-[13px] text-[#8E8E93] text-center">Weight</span>
                 <span className="text-[13px] text-[#8E8E93] text-center">Reps</span>
               </div>
               

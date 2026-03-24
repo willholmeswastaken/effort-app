@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { History, Play, Check, Loader2, ChevronRight, Dumbbell, ArrowRight, TrendingUp, RotateCcw } from "lucide-react";
+import { Play, Check, Loader2, ChevronRight, Dumbbell, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import {
   Drawer,
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/drawer";
 
 import { UserMenu } from "@/components/user-menu";
+import { AnimateIn } from "@/components/animate-in";
 import { homeKeys, useUpdatePreferences, useRestartProgram, useHomeData, usePrograms } from "@/lib/queries";
 
 interface HomeClientProps {}
@@ -22,18 +23,12 @@ interface HomeClientProps {}
 // Empty state when no program selected
 function EmptyState({ onBrowsePrograms }: { onBrowsePrograms: () => void }) {
   return (
+    <AnimateIn>
     <main className="min-h-screen bg-black text-white flex flex-col">
       {/* Header */}
       <div className="px-6 pt-14 pb-8">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center">
           <UserMenu />
-          <div className="flex items-center gap-3">
-            <Link href="/history">
-              <button className="w-10 h-10 rounded-full bg-[#1C1C1E] flex items-center justify-center active:bg-[#2C2C2E] transition-colors">
-                <History className="w-5 h-5 text-[#8E8E93]" />
-              </button>
-            </Link>
-          </div>
         </div>
       </div>
       
@@ -58,15 +53,9 @@ function EmptyState({ onBrowsePrograms }: { onBrowsePrograms: () => void }) {
           Browse Programs
           <ArrowRight className="w-5 h-5" />
         </button>
-        
-        <Link 
-          href="/history"
-          className="mt-4 text-[15px] text-[#8E8E93] hover:text-white transition-colors"
-        >
-          View Workout History
-        </Link>
       </div>
     </main>
+    </AnimateIn>
   );
 }
 
@@ -77,7 +66,6 @@ export function HomeClient({}: HomeClientProps) {
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
   const [isRestartOpen, setIsRestartOpen] = useState(false);
   const [isProgramMenuOpen, setIsProgramMenuOpen] = useState(false);
-  const [isInsightsMenuOpen, setIsInsightsMenuOpen] = useState(false);
   const updatePreferences = useUpdatePreferences();
   const restartProgram = useRestartProgram();
   const [activeWeekIndex, setActiveWeekIndex] = useState(0);
@@ -89,6 +77,8 @@ export function HomeClient({}: HomeClientProps) {
   const swipeContainerRef = useRef<HTMLDivElement>(null);
   const SWIPE_THRESHOLD = 50;
   const SWIPE_LOCK_ANGLE = 15; // Degrees - if angle is less than this, lock vertical scroll
+
+  const weekTabsRef = useRef<HTMLDivElement>(null);
 
   // Fetch programs only when drawer is opened (lazy loading with React Query)
   const { data: programs = [], isLoading: programsLoading } = usePrograms({
@@ -108,6 +98,16 @@ export function HomeClient({}: HomeClientProps) {
       }
     }
   }, [homeData, activeWeekIndex]);
+
+  // Auto-scroll week tabs to active week
+  useEffect(() => {
+    const container = weekTabsRef.current;
+    if (!container) return;
+    const activeTab = container.children[activeWeekIndex] as HTMLElement;
+    if (activeTab) {
+      activeTab.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    }
+  }, [activeWeekIndex]);
 
   // Haptic feedback helper
   const triggerHaptic = () => {
@@ -207,6 +207,19 @@ export function HomeClient({}: HomeClientProps) {
     (acc: number, week: any) => acc + week.days.filter((d: any) => d.isCompleted).length,
     0
   );
+  const progressPercent = totalSessions > 0 ? (completedSessions / totalSessions) * 100 : 0;
+
+  // Look up the next workout's day title from weeks data
+  const nextDayTitle = nextWorkout
+    ? weeks.flatMap((w: any) => w.days).find((d: any) => d.id === nextWorkout.dayId)?.title
+    : undefined;
+
+  // SVG progress ring math
+  const ringSize = 56;
+  const ringStroke = 3;
+  const ringRadius = (ringSize - ringStroke) / 2;
+  const ringCircumference = 2 * Math.PI * ringRadius;
+  const ringOffset = ringCircumference - (progressPercent / 100) * ringCircumference;
 
   const handleProgramChange = async (id: string) => {
     await updatePreferences.mutateAsync({ activeProgramId: id });
@@ -237,6 +250,7 @@ export function HomeClient({}: HomeClientProps) {
   };
 
   return (
+    <AnimateIn>
     <main className="min-h-screen bg-black text-white">
       {/* Pure black header */}
       <div>
@@ -259,39 +273,52 @@ export function HomeClient({}: HomeClientProps) {
               )}
               <ChevronRight className="w-4 h-4 text-[#8E8E93] group-hover:translate-x-0.5 transition-transform" />
             </button>
-            
-            <button 
-              onClick={() => {
-                triggerHaptic();
-                setIsInsightsMenuOpen(true);
-              }}
-              className="w-10 h-10 rounded-full bg-[#1C1C1E] flex items-center justify-center active:bg-[#2C2C2E] transition-colors"
-            >
-              <History className="w-5 h-5 text-[#8E8E93]" />
-            </button>
           </div>
           
-          {/* Big Week Status - Primary Info */}
-          <div className="text-center mb-2">
-            <div className="text-[48px] font-bold text-white tracking-tight leading-none">
-              Week {weeks[activeWeekIndex]?.weekNumber ?? 1}
-            </div>
-          </div>
-          
-          {/* Secondary: Session count */}
-          <div className="text-center mb-4">
-            <span className="text-[17px] text-[#8E8E93]">{completedSessions}/{totalSessions} sessions</span>
-          </div>
-          
-          {/* Tertiary: Program progress with insights link */}
-          <div className="flex justify-center mb-8">
-            <Link 
-              href="/progress" 
-              className="group inline-flex items-center gap-1.5 text-[14px] text-[#8E8E93] hover:text-white transition-colors"
-            >
-              <span>{Math.round((completedSessions / totalSessions) * 100)}% Program Complete</span>
-              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+          {/* Compact header: progress ring + week + sessions */}
+          <div className="flex items-center gap-4 mb-8">
+            {/* Progress Ring */}
+            <Link href="/progress" className="shrink-0">
+              <div className="relative w-14 h-14">
+                <svg width={ringSize} height={ringSize} className="-rotate-90">
+                  <circle
+                    cx={ringSize / 2}
+                    cy={ringSize / 2}
+                    r={ringRadius}
+                    fill="none"
+                    stroke="rgba(255,255,255,0.08)"
+                    strokeWidth={ringStroke}
+                  />
+                  <circle
+                    cx={ringSize / 2}
+                    cy={ringSize / 2}
+                    r={ringRadius}
+                    fill="none"
+                    stroke="#0078FF"
+                    strokeWidth={ringStroke}
+                    strokeLinecap="round"
+                    strokeDasharray={ringCircumference}
+                    strokeDashoffset={ringOffset}
+                    className="transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-[13px] font-semibold text-white">
+                    {Math.round(progressPercent)}%
+                  </span>
+                </div>
+              </div>
             </Link>
+
+            {/* Week + session info */}
+            <div className="flex-1 min-w-0">
+              <p className="text-[22px] font-bold text-white tracking-tight leading-none">
+                Week {weeks[activeWeekIndex]?.weekNumber ?? 1}
+              </p>
+              <p className="text-[13px] text-[#8E8E93] mt-1">
+                {completedSessions} of {totalSessions} sessions
+              </p>
+            </div>
           </div>
           
           {/* Start CTA - Single Primary Action */}
@@ -306,9 +333,9 @@ export function HomeClient({}: HomeClientProps) {
               {isProgramComplete ? (
                 <><Check className="w-5 h-5" /> Complete</>
               ) : nextWorkout?.isInProgress ? (
-                <><Play className="w-5 h-5 fill-current" /> Resume Workout</>
+                <><Play className="w-5 h-5 fill-current" /> Resume{nextDayTitle ? `: ${nextDayTitle}` : ''}</>
               ) : (
-                <><Play className="w-5 h-5 fill-current" /> Start Workout</>
+                <><Play className="w-5 h-5 fill-current" /> Start{nextDayTitle ? `: ${nextDayTitle}` : ''}</>
               )}
             </button>
           </div>
@@ -322,7 +349,7 @@ export function HomeClient({}: HomeClientProps) {
       >
         {/* Week Tabs - Pill style like muscle group filters */}
         <div className="sticky top-0 z-20 bg-black pt-3 pb-4 -mx-6 px-6">
-          <div data-week-tabs-scroll className="flex gap-2 overflow-x-auto">
+          <div ref={weekTabsRef} data-week-tabs-scroll className="flex gap-2 overflow-x-auto no-scrollbar">
             {weeks.map((week: any, index: number) => {
               const isWeekCompleted = week.days.every((d: any) => d.isCompleted);
               const isActive = activeWeekIndex === index;
@@ -347,25 +374,6 @@ export function HomeClient({}: HomeClientProps) {
                 </button>
               );
             })}
-          </div>
-          
-          {/* Page indicator dots */}
-          <div className="flex justify-center items-center gap-2 mt-3">
-            {weeks.map((_: any, index: number) => (
-              <button
-                key={index}
-                onClick={() => {
-                  triggerHaptic();
-                  setActiveWeekIndex(index);
-                }}
-                className={`rounded-full transition-all duration-200 ${
-                  activeWeekIndex === index
-                    ? 'w-2 h-2 bg-white'
-                    : 'w-1.5 h-1.5 bg-[#48484A]'
-                }`}
-                aria-label={`Go to week ${index + 1}`}
-              />
-            ))}
           </div>
         </div>
 
@@ -523,58 +531,8 @@ export function HomeClient({}: HomeClientProps) {
         </DrawerContent>
       </Drawer>
 
-      {/* Insights & History Menu Drawer */}
-      <Drawer open={isInsightsMenuOpen} onOpenChange={setIsInsightsMenuOpen}>
-        <DrawerContent className="max-w-lg mx-auto bg-[#0A0A0A]">
-          <DrawerHeader className="text-center pb-2">
-            <DrawerTitle className="text-[22px] font-semibold text-white">Your Data</DrawerTitle>
-            <DrawerDescription className="text-[15px] text-[#8E8E93]">
-              View your progress and workout history
-            </DrawerDescription>
-          </DrawerHeader>
-          
-          <DrawerFooter className="px-6 pb-8 gap-3">
-            <Link 
-              href="/progress"
-              onClick={() => setIsInsightsMenuOpen(false)}
-              className="w-full py-4 bg-[#2C2C2E] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 border border-white/6 flex items-center justify-center gap-3"
-            >
-              <TrendingUp className="w-5 h-5 text-[#8E8E93]" />
-              Progress & Insights
-            </Link>
-            
-            <Link 
-              href="/history"
-              onClick={() => setIsInsightsMenuOpen(false)}
-              className="w-full py-4 bg-[#2C2C2E] rounded-2xl text-[17px] font-semibold text-white active:scale-95 transition-all duration-200 border border-white/6 flex items-center justify-center gap-3"
-            >
-              <History className="w-5 h-5 text-[#8E8E93]" />
-              Workout History
-            </Link>
-            
-            {/* Divider */}
-            <div className="h-px bg-white/6 my-1" />
-            
-            <button 
-              onClick={() => {
-                setIsInsightsMenuOpen(false);
-                setIsRestartOpen(true);
-              }}
-              className="w-full py-4 bg-transparent rounded-2xl text-[17px] font-semibold text-[#FF3B30] active:scale-95 transition-all duration-200 flex items-center justify-center gap-3"
-            >
-              <RotateCcw className="w-5 h-5" />
-              Restart Program
-            </button>
-            
-            <button 
-              onClick={() => setIsInsightsMenuOpen(false)}
-              className="w-full py-4 bg-transparent rounded-2xl text-[17px] font-medium text-[#8E8E93] active:scale-95 transition-all duration-200"
-            >
-              Cancel
-            </button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+
     </main>
+    </AnimateIn>
   );
 }

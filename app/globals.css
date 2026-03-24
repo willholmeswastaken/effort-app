@@ -124,6 +124,18 @@
   scrollbar-width: none;
 }
 
+/* Content reveal - smooth skeleton-to-content transition */
+@keyframes content-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Countdown animation for progress bars */
 @keyframes countdown {
   from {

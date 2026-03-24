@@ -1,18 +1,11 @@
-import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
-
 export default function ProgressLoading() {
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-black text-white pb-20">
       <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/5">
         <div className="flex items-center h-14 px-4">
-          <Link href="/" className="p-2 -ml-2">
-            <ChevronLeft className="w-6 h-6" />
-          </Link>
           <h1 className="flex-1 text-center text-[17px] font-semibold">
             Progress
           </h1>
-          <div className="w-10" />
         </div>
       </header>
 
@@ -32,11 +25,11 @@ export default function ProgressLoading() {
       <div className="p-4 pt-2">
         <div className="h-4 w-24 bg-[#3A3A3C] rounded animate-pulse mb-3" />
         <div className="bg-[#1C1C1E] rounded-2xl p-4">
-          <div className="flex gap-2 mb-4">
-            {Array.from({ length: 3 }).map((_, i) => (
+          <div className="flex gap-2 mb-4 overflow-hidden">
+            {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="h-8 w-24 bg-[#3A3A3C] rounded-full animate-pulse"
+                className="h-8 w-24 bg-[#3A3A3C] rounded-full animate-pulse shrink-0"
               />
             ))}
           </div>

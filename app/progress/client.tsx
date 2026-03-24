@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Link from "next/link";
 import {
-  ChevronLeft,
   TrendingUp,
   Flame,
   Calendar,
@@ -24,6 +22,8 @@ import {
   useLoggedExercises,
   useExerciseProgression,
 } from "@/lib/queries/insights-hooks";
+import { formatDuration } from "@/lib/utils";
+import { AnimateIn } from "@/components/animate-in";
 
 type TimeRange = "1w" | "1m" | "3m" | "6m" | "1y" | "All";
 
@@ -73,17 +73,14 @@ export function ProgressClient() {
   }
 
   return (
+    <AnimateIn>
     <div className="min-h-screen bg-black text-white pb-20">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/5">
         <div className="flex items-center h-14 px-4">
-          <Link href="/" className="p-2 -ml-2">
-            <ChevronLeft className="w-6 h-6" />
-          </Link>
           <h1 className="flex-1 text-center text-[17px] font-semibold">
             Progress
           </h1>
-          <div className="w-10" />
         </div>
       </header>
 
@@ -109,8 +106,7 @@ export function ProgressClient() {
           <InsightTile
             icon={<Clock className="w-4 h-4 text-[#FF9500]" />}
             iconBg="bg-[#FF9500]/20"
-            value={Math.floor((insights?.totalTimeSeconds ?? 0) / 60)}
-            suffix="m"
+            value={formatDuration(insights?.totalTimeSeconds ?? 0)}
             label="Total time"
           />
           <InsightTile
@@ -144,8 +140,8 @@ export function ProgressClient() {
 
           <div className="bg-[#1C1C1E] rounded-2xl p-4">
             {/* Exercise Selector */}
-            <div className="flex gap-2 overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
-              {exercises.slice(0, 5).map((ex) => (
+            <div className="flex gap-2 overflow-x-auto pb-4 -mx-4 px-4 no-scrollbar">
+              {exercises.map((ex) => (
                 <button
                   key={ex.id}
                   onClick={() => setSelectedExerciseId(ex.id)}
@@ -277,6 +273,7 @@ export function ProgressClient() {
         </div>
       )}
     </div>
+    </AnimateIn>
   );
 }
 
@@ -316,13 +313,9 @@ function ProgressSkeleton() {
     <div className="min-h-screen bg-black text-white">
       <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/5">
         <div className="flex items-center h-14 px-4">
-          <Link href="/" className="p-2 -ml-2">
-            <ChevronLeft className="w-6 h-6" />
-          </Link>
           <h1 className="flex-1 text-center text-[17px] font-semibold">
             Progress
           </h1>
-          <div className="w-10" />
         </div>
       </header>
 

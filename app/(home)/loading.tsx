@@ -7,32 +7,25 @@ export default function HomeLoading() {
     <main className="min-h-screen bg-black text-white">
       <div>
         <div className="relative z-10 px-6 pt-14 pb-4">
+          {/* Top Bar - user menu + program name */}
           <div className="flex items-center justify-between mb-10">
             <PulseBlock className="h-9 w-9 rounded-full" />
-
             <div className="flex items-center gap-1">
               <PulseBlock className="h-4 w-28" />
               <PulseBlock className="h-4 w-4 rounded-full" />
             </div>
-
-            <PulseBlock className="h-10 w-10 rounded-full" />
           </div>
 
-          <div className="text-center mb-2">
-            <PulseBlock className="mx-auto h-12 w-40 rounded-xl" />
-          </div>
-
-          <div className="text-center mb-4">
-            <PulseBlock className="mx-auto h-5 w-32" />
-          </div>
-
-          <div className="flex justify-center mb-8">
-            <div className="flex items-center gap-1.5">
-              <PulseBlock className="h-4 w-28" />
-              <PulseBlock className="h-3.5 w-3.5 rounded-full" />
+          {/* Compact header: progress ring + week info */}
+          <div className="flex items-center gap-4 mb-8">
+            <div className="w-14 h-14 rounded-full bg-[#1C1C1E] animate-pulse shrink-0" />
+            <div className="flex-1">
+              <PulseBlock className="h-7 w-24 mb-1.5" />
+              <PulseBlock className="h-4 w-32" />
             </div>
           </div>
 
+          {/* CTA */}
           <div className="flex justify-center">
             <div className="flex h-14 w-full max-w-xs items-center justify-center gap-2 rounded-2xl bg-[#0078FF]/70 px-6 animate-pulse">
               <div className="flex items-center justify-center gap-2">
@@ -57,16 +50,6 @@ export default function HomeLoading() {
               >
                 <PulseBlock className="h-5 w-14 bg-[#2C2C2E]" />
               </div>
-            ))}
-          </div>
-
-          <div className="mt-3 flex items-center justify-center gap-2">
-            <div className="h-2 w-2 rounded-full bg-white/70 animate-pulse" />
-            {[1, 2, 3].map((item) => (
-              <div
-                key={item}
-                className="h-1.5 w-1.5 rounded-full bg-[#48484A] animate-pulse"
-              />
             ))}
           </div>
         </div>

@@ -647,9 +647,20 @@ export function ExerciseCard({
             <div className="px-4 py-3 bg-[#0078FF]/10 border-t border-[#0078FF]/20">
               <div className="flex items-center justify-between">
                 <span className="text-[14px] font-medium text-[#0078FF]">Rest Timer</span>
-                <span className="text-[18px] font-bold text-[#0078FF] tabular-nums">
-                  {formatRestTime(restTimeRemaining)}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="text-[18px] font-bold text-[#0078FF] tabular-nums">
+                    {formatRestTime(restTimeRemaining)}
+                  </span>
+                  <button
+                    onClick={() => {
+                      setShowRestTimer(null);
+                      setRestTimeRemaining(0);
+                    }}
+                    className="text-[13px] font-medium text-[#0078FF]/70 active:text-white transition-colors"
+                  >
+                    Skip
+                  </button>
+                </div>
               </div>
               <div className="mt-2 h-1 bg-[#0078FF]/20 rounded-full overflow-hidden">
                 <div 
